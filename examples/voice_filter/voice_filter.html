@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Filter</title>
+    <script type="text/javascript" 
+        src="https://public.tableau.com/javascripts/api/tableau-2.js"></script>
+    <script src="filter.js"></script>
+    <script src="voice.js"></script>
+    
+</head>
+
+<body onload="initViz();">
+    <div id="recognize" style="padding=20px;" align="right">
+        <button type="button" onclick="startRecognition();">Listen</button>
+    </div>
+    <div id="yearFilter" style="padding:20px;" align="top">
+        Year: <button type="button" onclick="yearFilter('');">All</button>
+        <button type="button" onclick="yearFilter('2013');">2013</button>
+        <button type="button" onclick="yearFilter('2014');">2014</button>
+        Gender: <button type="button" onclick="genderFilter('');">All</button>
+        <button type="button" onclick="genderFilter('Men');">Men</button>
+        <button type="button" onclick="genderFilter('Women');">Women</button>
+    </div>
+    <div id="vizContainer" style="width:800px; height:700px;"></div>
+</body>
+
+</html>

@@ -2,38 +2,46 @@ var viz;
         
 function initViz() {
     var containerDiv = document.getElementById("vizContainer"),
+        //url = "https://public.tableau.com/views/13_Addinginteractivitytoadashboard_End_1/InteractiveDashboard?:embed=y&:display_count=yes";
         url = "http://public.tableau.com/views/RegionalSampleWorkbook/College",
         options = {
             "Academic Year": "",
-            hideTabs: true
+            hideTabs: false
         };
     
     viz = new tableau.Viz(containerDiv, url, options);
 }
 
-function yearFilter(year) {
+function filterByName(field, filter, type) {
     var sheet = viz.getWorkbook().getActiveSheet();
-    if (year === "") {
-        sheet.clearFilterAsync("Academic Year");
-    } else {
-        sheet.applyFilterAsync("Academic Year", year, tableau.FilterUpdateType.REPLACE);
+    var fTypes = ["ALL", "REPLACE", "ADD", "REMOVE"];
+    var fTypeEnum = {
+
+    }
+    var t = fTypes.indexOf(type.toUpperCase());
+    field = uFirst(field);
+    filter = uFirst(filter);
+
+    switch(t){
+        case 0:
+            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.ALL);
+            break;
+        case 1:
+            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.REPLACE);
+            break;
+        case 2:
+            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.ADD);
+            break;
+        case 3:
+            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.REMOVE);
+            break;
+        default:
+            alert("invalid filter type");
+
     }
 }
 
-function collegeFilter(college) {
-    var sheet = viz.getWorkbook().getActiveSheet();
-    if (college === "") {
-        sheet.clearFilterAsync("College");
-    } else {
-        sheet.applyFilterAsync("College", college, tableau.FilterUpdateType.REPLACE);
-    }
-}
-
-function genderFilter(gender) {
-    var sheet = viz.getWorkbook().getActiveSheet();
-    if (gender === "") {
-        sheet.clearFilterAsync("Gender");
-    } else {
-        sheet.applyFilterAsync("Gender", gender, tableau.FilterUpdateType.REPLACE);
-    }
+function uFirst(string) 
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }

@@ -18,9 +18,9 @@ recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
-//var diagnostic = document.querySelector('.output');
-//var bg = document.querySelector('html');
-//var hints = document.querySelector('.hints');
+var diagnostic = document.querySelector('.output');
+var bg = document.querySelector('html');
+var hints = document.querySelector('.hints');
 
 //var colorHTML= '';
 colors.forEach(function(v, i, a){

@@ -3,7 +3,8 @@ var viz;
 function initViz() {
     var containerDiv = document.getElementById("vizContainer"),
         //url = "https://public.tableau.com/views/13_Addinginteractivitytoadashboard_End_1/InteractiveDashboard?:embed=y&:display_count=yes";
-        url = "http://public.tableau.com/views/RegionalSampleWorkbook/College",
+        //url = "http://public.tableau.com/views/RegionalSampleWorkbook/College",
+        url = "https://public.tableau.com/views/RegionalSampleWorkbook_9/Obesity?:embed=y&:display_count=yes",
         options = {
             "Academic Year": "",
             hideTabs: false
@@ -18,6 +19,7 @@ function filterByName(field, filter, type) {
     var fTypeEnum = {
 
     }
+
     var t = fTypes.indexOf(type.toUpperCase());
     field = uFirst(field);
     filter = uFirst(filter);
@@ -39,6 +41,16 @@ function filterByName(field, filter, type) {
             alert("invalid filter type");
 
     }
+}
+
+function getFields(){
+
+    var wb = viz.getWorkbook(); //Workbook object
+    var ws = wb.getPublishedSheetsInfo(); //Worksheet object
+    var ds = ws.getSummaryDataAsync(); //
+    
+    var cd = ds.getColumns();
+
 }
 
 function uFirst(string) 

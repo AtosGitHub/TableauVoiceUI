@@ -84,3 +84,20 @@ function startDictation() {
 
     }
   }
+
+// checking to see button respond and oreply with written text
+  function returnVoice() {
+
+    var synth = window.speechSynthesis;
+    voices = synth.getVoices();
+    var inputTxt = document.querySelector('.input');
+
+    var utterThis = new SpeechSynthesisUtterance(inputTxt.value);
+
+    utterThis.voice = voices[1];
+
+    synth.speak(utterThis);
+
+
+
+  }

@@ -1,0 +1,44 @@
+body
+  {
+    max-width: 500px;
+    margin: 2em auto;
+    font-size: 20px;
+  }
+
+  .speech {border: 1px solid #DDD; width: 300px; padding: 0; margin: 0}
+  .speech input {border: 0; width: 255px; display: inline-block; height: 50px;}
+  .speech img {float: right; width: 40px }
+
+
+  h1
+  {
+    text-align: center;
+  }
+
+  .buttons-wrapper
+  {
+    text-align: center;
+  }
+
+  .hidden
+  {
+    display: none;
+  }
+
+  #transcription,
+  #log
+  {
+    display: block;
+    width: 100%;
+    height: 5em;
+    overflow-y: scroll;
+    border: 1px solid #333333;
+    line-height: 1.3em;
+  }
+
+  .button-demo
+  {
+    padding: 0.5em;
+    display: inline-block;
+    margin: 1em auto;
+  }

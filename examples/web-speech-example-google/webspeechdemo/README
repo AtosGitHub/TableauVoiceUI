@@ -1,0 +1,3 @@
+README
+
+webspeech_edit.html differs from webspeechdemo.html in lines 289 and 292 of '_edit.html which add the result index to the result before it is inserted into the html for the purpose of understanding how results are organized. Try speaking at different speeds to see the variance in result size.

@@ -41,8 +41,14 @@ function filterByName(field, filter, type) {
 }
 
 function getFields(){
-    var wb = viz.getWorkbook(); //Workbook object
-    var dta = wb.getFields();
+    var workBook = viz.getWorkbook(); //Workbook object
+    var activeSheet = workbook.getActiveSheet();
+    var sheetType = activeSheet.getSheetType();
+    var workSheets = activeSheet.getWorkSheets();
+    var numWorkSheets = workSheets.length;
+
+
+    alert('type = ' + typ);
     var dtLen = dta.length;
     var i;
     for(i = 0; i < dtLen; i++){
@@ -53,6 +59,8 @@ function getFields(){
     var cd = ds.getColumns();
 }
 
+
+// IT WORKS!!!!!!
 function querySheets() {
     var workbook = viz.getWorkbook();
     var sheets = workbook.getPublishedSheetsInfo();
@@ -69,6 +77,19 @@ function querySheets() {
     }
     alert(actN);
 }
+
+function querySheetName() {
+  var sheets = workbook.getPublishedSheetsInfo();
+  var text = getSheetsAlertText(sheets);
+  text = "Sheets in the workbook:\n" + text;
+  alert(text);
+}
+
+
+
+
+
+
 
 function queryFields() {
     var wb = viz.getWorkbook();
@@ -132,11 +153,3 @@ function printSheet(sheet){
     alert(msg);
 }
 
-
-
-function querySheets() {
-  var sheets = workbook.getPublishedSheetsInfo();
-  var text = getSheetsAlertText(sheets);
-  text = "Sheets in the workbook:\n" + text;
-  alert(text);
-}

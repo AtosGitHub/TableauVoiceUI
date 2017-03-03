@@ -38,8 +38,11 @@ function startReco(event){
     if(recognizing){
       recognition.stop();
       recognizing = false;
-      return;
+
+      start_img.src = 'mic.gif';
       log.textContent = 'recognition stopped';
+
+      return;
     }
     else {
       recognition.start();
@@ -71,4 +74,21 @@ recognition.onresult = function(event) {
 
     log.textContent = 'Command Received to be '+ command + ' ';
 
+}
+
+
+var viz, workbook, activeSheet;
+
+function initViz() {
+    var containerDiv = document.getElementById("vizContainer");
+    url = "https://public.tableau.com/views/RegionalSampleWorkbook_9/Obesity?:embed=y&:display_count=yes";
+
+    var options = {
+        onFirstInteractive: function () {
+            workbook = viz.getWorkbook();
+            activeSheet = workbook.getActiveSheet();
+        }
+    };
+
+    viz = new tableau.Viz(containerDiv, url, options);
 }

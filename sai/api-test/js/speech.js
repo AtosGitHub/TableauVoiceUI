@@ -72,6 +72,11 @@ recognition.onresult = function(event) {
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
 
+    if(command == 'start'){
+      initViz();
+    }
+
+
     log.textContent = 'Command Received to be '+ command + ' ';
 
 }
@@ -79,6 +84,9 @@ recognition.onresult = function(event) {
 
 var viz, workbook, activeSheet;
 
+
+// this function fills the div for the worksheet in the html
+// only if the command is start
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
     url = "https://public.tableau.com/views/RegionalSampleWorkbook_9/Obesity?:embed=y&:display_count=yes";

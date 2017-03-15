@@ -72,9 +72,7 @@ recognition.onresult = function(event) {
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
 
-    if(command == 'start'){
-      initViz();
-    }
+    parser(command);
 
 
     log.textContent = 'Command Received to be '+ command + ' ';
@@ -89,9 +87,11 @@ var viz, workbook, activeSheet;
 // only if the command is start
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
-    url = "https://public.tableau.com/views/RegionalSampleWorkbook_9/Obesity?:embed=y&:display_count=yes";
+    url = "http://public.tableau.com/views/WorldIndicators/GDPpercapita";
 
     var options = {
+
+
         onFirstInteractive: function () {
             workbook = viz.getWorkbook();
             activeSheet = workbook.getActiveSheet();

@@ -1,4 +1,4 @@
-var viz, workbook, activeSheet;        
+var viz, workbook, activeSheet, fields, sheets;        
 
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
@@ -41,8 +41,14 @@ function filterByName(field, filter, type) {
 }
 
 function getFields(){
-    var wb = viz.getWorkbook(); //Workbook object
-    var dta = wb.getFields();
+    var workBook = viz.getWorkbook(); //Workbook object
+    var activeSheet = workbook.getActiveSheet();
+    var sheetType = activeSheet.getSheetType();
+    var workSheets = activeSheet.getWorkSheets();
+    var numWorkSheets = workSheets.length;
+
+
+    alert('type = ' + typ);
     var dtLen = dta.length;
     var i;
     for(i = 0; i < dtLen; i++){
@@ -53,9 +59,11 @@ function getFields(){
     var cd = ds.getColumns();
 }
 
+
+// IT WORKS!!!!!!
 function querySheets() {
-    var workbook = viz.getWorkbook();
-    var sheets = workbook.getPublishedSheetsInfo();
+    workbook = viz.getWorkbook();
+    sheets = workbook.getPublishedSheetsInfo();
     var numSheets = sheets.length;    
     var i;
     var actS = workbook.getActiveSheet();
@@ -68,6 +76,13 @@ function querySheets() {
         actN += sheets[i].getSheetType() + "\n";
     }
     alert(actN);
+}
+
+function querySheetName() {
+  var sheets = workbook.getPublishedSheetsInfo();
+  var text = getSheetsAlertText(sheets);
+  text = "Sheets in the workbook:\n" + text;
+  alert(text);
 }
 
 function queryFields() {
@@ -86,10 +101,12 @@ function queryFields() {
     alert(colList);
 }
 
+// WORKS
 function uFirst(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+//getSummaryData() and combine with printSheet
 function getUnderlyingData() {
             var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
             var sheets;
@@ -110,33 +127,95 @@ function getUnderlyingData() {
                 printSheet(sheet);
             }
 }
-
+// combine with getUnderlyingData()
 function printSheet(sheet){
     var msg = "";
-    msg += "name: " + sheet.getName() + "\n"; 
-    msg += "index: " + sheet.getIndex() + "\n";
-    msg += "isActive: " + sheet.getIsActive() + "\n";
-    msg += "isHidden: " + sheet.getIsHidden() + "\n";
-    msg += "type: " + sheet.getSheetType() + "\n";
-    msg += "size: " + sheet.getSize() + "\n";
-    //msg += "URL: " + sheet.getUrl() + "\n";
-    msg += "WorkBook: " + sheet.getWorkbook().getName() + "\n";
-    var uData = sheet.getSummaryDataAsync();
-    //alert("uData type: " + uData.getName());
-    var cols = uData.getColumns();
-    var nc = cols.length;
+    var summaryData;
+    var columns;
+    var numColumns;
     var i;
-    for(i = 0; i < nc; i++){
-        msg += "field(" + i + "): " + cols[i].getName();
+
+    //msg += "name: " + sheet.getName() + "\n";
+    msg += "name: " + sheet.getName() + "<br>"; 
+
+    //msg += "index: " + sheet.getIndex() + "\n";
+    //msg += "isActive: " + sheet.getIsActive() + "\n";
+    //msg += "isHidden: " + sheet.getIsHidden() + "\n";
+    //msg += "type: " + sheet.getSheetType() + "\n";
+    //msg += "size: " + sheet.getSize() + "\n";
+    //msg += "URL: " + sheet.getUrl() + "\n";
+    //msg += "WorkBook: " + sheet.getWorkbook().getName() + "\n";
+    
+    sheet.getSummaryDataAsync().then(function(summaryData){
+        this.summaryData = summaryData;
+        //msg += "SheetData \nName: " + summaryData.getName() + "\n";
+        //msg += "RowCount: " + summaryData.getTotalRowCount(); + "\n";
+        //msg += "Is Summary Data?: " + summaryData.getIsSummaryData() + "\n";
+        columns = summaryData.getColumns();
+        numColumns = columns.length;
+
+        //msg += "\nField Names:\n";
+        msg += "Field Names:<br>";
+    
+        //var colNames = [numColums];
+        for(i = 0; i < numColumns; i++){
+            msg += columns[i].getFieldName() + " " 
+            + columns[i].getDataType() + " " + columns[i].getIndex() + "<br>";
+        }
+
+        msg += "Data:<br>" + JSON.stringify(summaryData.getData());
+        //alert(msg);
+
+        var tgt = document.getElementById("dataTarget");
+                tgt.innerHTML = "<h4>Underlying Data:</h4><p>" + msg + "</p>";
+    });
+    
+}
+
+
+function storeData(){
+
+
+    var Sheets = querySheets(Sheets);
+    var Fields = getUnderlyingData(Fields); //need to change to getSummaryData()
+}
+
+// Class Field: Declared as function; create instance with
+// var Field = new Field(name, type, range, index);
+// or var Field [] = new ?
+// if 'type' == string, range == array of acceptable string values
+// else if 'type' == (integer | float | date | time), range == array {minVal, maxval}
+function Field(name, type, range, index){
+    var RangeEnum = {"minVal":0, "maxVal":1};
+    Object.freeze(RangeEnum);
+    if(type != 'string'){
+        this.range[minVal] = range[minVal];
+        this.range[maxval] = range[maxVal];
     }
-    alert(msg);
+    else{
+        this.range = range;
+    }
+    this.name = name;
+    this.type = type;
+    this.index = index;
+}
+
+function Sheets(name, type, index){
+    this.name = name;
+    this.type = type;
+    this.index = index;
 }
 
 
 
-function querySheets() {
-  var sheets = workbook.getPublishedSheetsInfo();
-  var text = getSheetsAlertText(sheets);
-  text = "Sheets in the workbook:\n" + text;
-  alert(text);
-}
+
+
+
+
+
+
+
+
+
+
+

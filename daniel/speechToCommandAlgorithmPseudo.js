@@ -1,5 +1,5 @@
 //Pseudocode of the speech to command algorithm
-//version 1.0
+//version 1.1
 //currently I plan to put this into the parser.js which means it runs everytime user input a command
 
 //Assume we are getting an object 'info' from the tableau side by calling this function
@@ -60,17 +60,18 @@ var addLibrary = {'list of words that can tell the user want to use add function
 var removeLibrary = {'list of words that can tell the user want to use remove function'};
 var allLibrary = {'list of words that can tell the user want to use reset function'};
 
+//seperate the command into array of words
+var words = command.match(/\S+\s*/g);
+
 //it search for every field name to see if any of the fields appears in the command
 for (var i=0; i< currentWorkbooks.fieldNames.length; i++)
 {
-	if (command.includes(currentWorkbooks.fieldNames[i]))
+	//this loop search search through each word of the command, check which type of command it belongs to
+	//the checking order still needs some research
+	for (var j=0; j< words.length; j++)
 	{
-		//seperate the command into array of words
-		var words = command.match(/\S+\s*/g);
-
-		//this loop search search through each word of the command, check which type of command it belongs to
-		//the checking order still needs some research
-		for (var j=0; j< words.length; j++)
+		
+		if (command.includes(currentWorkbooks.fieldNames[i]))
 		{
 			if (addLibrary.includes(words[j]))
 			{
@@ -82,11 +83,7 @@ for (var i=0; i< currentWorkbooks.fieldNames.length; i++)
 				//call the remove function from tableau side
 				tableau.remove(currentWorkbooks.fieldNames[i]);
 			}
-			else if (allLibrary.includes(words[j]))
-			{
-				//call the reset function from tableau side
-				tableau.reset(currentWorkbooks.fieldNames[i]);
-			}
+			
 			else 
 			{
 				//call the default replace function from tableau side
@@ -95,7 +92,15 @@ for (var i=0; i< currentWorkbooks.fieldNames.length; i++)
 		}
 		legal = true;
 	}
-
+	
+	//call the reset function from tableau side
+	else if (allLibrary.includes(words[j]))
+	{
+		//call the reset function from tableau side
+		tableau.reset(currentWorkbooks.fieldNames[i]);
+		legal = true;
+	}
+	
 	//if we still dont know what to do with this command, then report the error
 	else if (legal == false)
 	{

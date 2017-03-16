@@ -8,7 +8,13 @@
 
 // this function is called with each voice command
 // so far it is a bunch of if statements based on the word spoken
-function parser(command){
+function parser(){
+
+  var command = document.getElementById("command").value;
+  var bog = document.querySelector('.output');
+
+
+  bog.textContent = command;
 
   if(command == 'start'){
       initViz();

@@ -4,9 +4,23 @@
 
 }
 
+
+#test {
+  position: absolute;
+  right: 15px;
+  bottom: 20px;
+
+}
+
 #log {
   position: absolute;
   right: 15px;
   bottom: 50px;
+
+}
+
+.output{
+  font-size: 45px;
+  right: 15px;
 
 }

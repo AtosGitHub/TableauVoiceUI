@@ -210,7 +210,7 @@ function Sheets(name, type, index){
 
 
 
-
+Fields[i] = new Field(name, type, range, index)
 
 
 

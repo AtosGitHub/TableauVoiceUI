@@ -5,7 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
 
+    <!-- Load all the scripts -->
     <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/speech.js"></script>
+    <script src="/js/parser.js"></script>
 
     <title> API DEMO </title>
 
@@ -25,6 +28,16 @@
 
     </div>
 
+
+    <div id="test">
+      <form name="myForm" action="javascript:parser()">
+          Command: <input type="text" id="command"><br>
+          <input name="forminput" type="submit" value="Submit">
+      </form>
+
+    </div>
+
+    <!-- This is the div which outputs the speech for testing  -->
     <div id="log" class="bottom">
       <p class="output"> <em> diagnostic... </em> </p>
 
@@ -33,13 +46,12 @@
 
 
     <!-- This is the graph section taken from the Tableau API
-        This Div onlu becomes visible once the correct command is input
+        This Div only becomes visible once the correct command is input
     -->
     <div id="vizContainer" style="width:800px; height:700px;"></div>
 
 
 
-    <script src="/js/speech.js"></script>
   </body>
 
 

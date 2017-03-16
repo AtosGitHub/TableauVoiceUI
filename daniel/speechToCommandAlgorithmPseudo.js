@@ -1,6 +1,6 @@
 //Pseudocode of the speech to command algorithm
 //version 1.0
-
+//currently I plan to put this into the parser.js which means it runs everytime user input a command
 
 //Assume we are getting an object 'info' from the tableau side by calling this function
 var info = tableau.getInfo();//Assume the tableau side will initialize the workbook in this function

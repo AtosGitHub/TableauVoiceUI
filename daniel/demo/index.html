@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Load all the scripts -->
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/speech.js"></script>
+    <script src="/js/parser.js"></script>
+
+    <title> API DEMO </title>
+
+    <script type="text/javascript"
+        src="https://public.tableau.com/javascripts/api/tableau-2.js">
+    </script>
+
+  </head>
+
+  <body>
+
+    <!--This div simply waits for user to click the picture and starts recognition -->
+    <div id="input" class="center" float:"right">
+        <button id="start_button" onclick="startReco(event)">
+        <img id="start_img" src="mic.gif"></button>
+
+
+    </div>
+
+
+    <div id="test">
+      <form name="myForm" action="javascript:parser()">
+          Command: <input type="text" id="command"/><br>
+          <input name="forminput" type="submit" value="Submit"/>
+      </form>
+
+    </div>
+
+    <!-- This is the div which outputs the speech for testing  -->
+    <div id="log" class="bottom">
+      <p class="output"> <em> diagnostic... </em> </p>
+
+    </div>
+
+
+
+    <!-- This is the graph section taken from the Tableau API
+        This Div only becomes visible once the correct command is input
+    -->
+    <div id="vizContainer" style="width:800px; height:700px;"></div>
+
+
+
+  </body>
+
+
+
+</html>

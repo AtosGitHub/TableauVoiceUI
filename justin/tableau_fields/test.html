@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tutorial</title>
+
+    <script src="test.js"></script>
+   
+    
+</head>
+
+<body onload="initViz();">
+    
+    <div id="terminal" style ="padding=20px;" align="left">
+        <button type="button" onclick="querySheets()" align="right">querySheets</button>
+        <button type="button" onclick="getUnderlyingData()" align="right">getUnderlyingData</button>
+    </div>
+
+    <div id="recognize" style="padding=20px;" align="right">
+        <button type="button" onclick="startRecognition();">Listen</button>
+    </div>
+
+    <div id="vizContainer" style="width:800px; height:700px;"></div>
+
+    <div id="dataTarget"></div>
+
+</body> 
+
+</html>

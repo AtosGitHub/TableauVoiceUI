@@ -1,4 +1,4 @@
-//Sudo of the speech to command algorithm
+//Pseudocode of the speech to command algorithm
 //version 1.0
 
 

@@ -26,7 +26,6 @@ recognition.grammars = speechRecognitionList;
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
-var bog = document.querySelector('.output');
 
 
 
@@ -41,7 +40,7 @@ function startReco(event){
       recognizing = false;
 
       start_img.src = 'mic.gif';
-      bog.textContent = 'recognition stopped';
+      log.textContent = 'recognition stopped';
 
       return;
     }
@@ -56,15 +55,16 @@ function startReco(event){
 }
 
 recognition.onstart = function(event) {
-  recognizing = true;
-}
+    recognizing = true;
+
+  }
 
 
 
 // no match for the voice calls this
 recognition.onnomatch = function(event) {
-  log.textContent = 'No match for Command';
-}
+      log.textContent = 'No match for Command';
+  }
 
 
 // after the app gets a voice result it prints it to log
@@ -74,12 +74,15 @@ recognition.onresult = function(event) {
     var command = event.results[last][0].transcript;
 
     parser(command);
-    
     var bog = document.querySelector('.output');
 
     bog.textContent = 'Command Received to be '+ command + ' ';
-    
-    
+    recognition.stop();
+      recognizing = false;
+
+      start_img.src = 'mic.gif';
+      log.textContent = 'recognition stopped';
+
 }
 
 
@@ -90,7 +93,7 @@ var viz, workbook, activeSheet;
 // only if the command is start
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
-    url = "http://public.tableau.com/views/RegionalSampleWorkbook/College";
+    url = "http://public.tableau.com/views/WorldIndicators/GDPpercapita";
 
     var options = {
 

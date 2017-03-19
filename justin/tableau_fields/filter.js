@@ -19,8 +19,8 @@ function filterByName(field, filter, type) {
     var sheet = viz.getWorkbook().getActiveSheet();
     var fTypes = ["ALL", "REPLACE", "ADD", "REMOVE"];
     var t = fTypes.indexOf(type.toUpperCase());
-    field = uFirst(field);
-    filter = uFirst(filter);
+    //field = uFirst(field);
+    //filter = uFirst(filter);
     
     switch(t){
         case 0:
@@ -206,16 +206,6 @@ function Sheets(name, type, index){
     this.index = index;
 }
 
-
-
-
-
 Fields[i] = new Field(name, type, range, index)
-
-
-
-
-
-
 
 

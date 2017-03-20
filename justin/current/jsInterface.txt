@@ -1,0 +1,106 @@
+*TO ATOS: in tableau workbook, publish sheets as tabs
+
+
+
+changeSheet(sheet){
+	
+}
+
+Filter
+	ADD
+	REPLACE
+	REMOVE
+	ALL
+
+Select
+	REPLACE
+	ADD
+	REMOVE
+
+
+
+
+function filter(field, names, type){
+	return filtered workbook
+}
+
+function selectMarks(filed)
+
+
+//*****************************************
+class VizManager
+	class Viz
+		class Workbook
+			class SheetInfo
+			abstract class Sheet
+				class Dashboard extends Sheet
+					class DashboardObject
+				class Worksheet extends Sheet
+				class Story extends Sheet
+					class StoryPointInfo
+
+	
+class Promise
+
+class TableauException
+
+class VizManager
+class Viz
+class Workbook
+class SheetInfo
+
+
+//******************************
+abstract class Sheet
+	
+	class Dashboard extends Sheet
+		class DashboardObject
+		class SheetInfo
+
+	class Worksheet extends Sheet
+		class Filter
+			class CategoricalFilter
+			class QuantitativeFilter
+			class RelativeDateFilter
+		selectMarks functions
+	
+	class SheetData
+		Class ColumnData
+
+	
+
+
+
+
+class Story extends Sheet
+class StoryPointInfo
+class StoryPoint
+
+class Parameter
+
+	
+class Promise
+
+class TableauException
+
+
+
+
+
+info = tableau.getInfo();
+
+grammar worksheets = info.worksheets;
+
+grammar fields = info.getfields
+
+fied k =, filter j, option i;
+tableau.command(j, i, k)
+
+
+
+
+
+
+selectFilter(fieldName, filter, option)
+
+options = ADD, REPLACE, ALL, REMOVE

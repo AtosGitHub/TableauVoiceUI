@@ -1,0 +1,11 @@
+"querySheets" returns list of sheets, their index, their sheet type, and the active sheet.
+
+"getSummaryData" returns summary data of all worksheets in the active sheet at the bottom of the page.
+
+"getUnderlyingData" returns underlying (more detailed) data of all worksheets in the active sheet at the bottom of the page.
+
+"clear" clears "Summary Data" and "Underlying Data" from bottom of page.
+
+"filter" applies filter	to <field> <filter> <type> where field and filter are case sensitive, filter can be multiple values separated by ';'
+
+	filters can be applied to any field name and value returned by getUnderlyingData

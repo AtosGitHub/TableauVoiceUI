@@ -94,18 +94,20 @@ for (var i=0; i< currentWorkbooks.fieldNames.length; i++)
 	}
 	
 	//call the reset function from tableau side
-	else if (allLibrary.includes(words[j]))
-	{
+	
+}
+
+if (allLibrary.includes(words[j]))
+{
 		//call the reset function from tableau side
-		tableau.reset(currentWorkbooks.fieldNames[i]);
-		legal = true;
-	}
+	tableau.reset(currentWorkbooks.fieldNames[i]);
+	legal = true;
+}
 	
 	//if we still dont know what to do with this command, then report the error
-	else if (legal == false)
-	{
-		log.textContent('This is not a legal command');
-	}
+if (legal == false)
+{
+	log.textContent('This is not a legal command');
 }
 
 //this is what I get so far, currently I don't see the need to know the filter's information, but I still keep it inside the structure

@@ -70,7 +70,7 @@ recognition.onresult = function(event) {
 
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
-    initViz();
+
     parser(command);
     log.textContent = 'Command Received to be '+ command + ' ';
     

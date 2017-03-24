@@ -8,12 +8,11 @@
 
 // this function is called with each voice command
 // so far it is a bunch of if statements based on the word spoken
-function parser(){
+function parser(command){
 
-  var command = document.getElementById("command").value;
+  var cm = document.getElementById("command").value;
   var bog = document.querySelector('.output');
   var legal = false;
-  bog.textContent = 'Command Received to be '+ command + ' ';
 
   var info = tableau.getInfo();
 

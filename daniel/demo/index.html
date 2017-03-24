@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width">
 
     <!-- Load all the scripts -->
-    <link rel="stylesheet" href="/css/main.css">
-    <script src="js/speech.js"></script>
-    <script src="js/parser.js"></script>
-    <script src="js/tableau.js"></script>
+    <link rel="stylesheet" href="/css/main.css"/>
+    <script type="text/javascript" src="speech.js"></script>
+    <script type="text/javascript" src="parser.js"></script>
+    <script type="text/javascript" src="tableau.js"></script>
+    <script type="text/javascript" src="getData.js"></script>
 
     <title> API DEMO </title>
 
@@ -24,7 +25,7 @@
     <!--This div simply waits for user to click the picture and starts recognition -->
     <div id="input" class="center" float:"right">
         <button id="start_button" onclick="startReco(event)">
-        <img id="start_img" src="mic.gif"></button>
+        <img id="start_img" src="mic.gif"/></button>
 
 
     </div>
@@ -40,7 +41,7 @@
 
     <!-- This is the div which outputs the speech for testing  -->
     <div id="log" class="bottom">
-      <p class="output"> <em> diagnostic... </em> </p>
+      <p class="output"> <em> ... </em> </p>
 
     </div>
 
@@ -49,6 +50,6 @@
     <!-- This is the graph section taken from the Tableau API
         This Div only becomes visible once the correct command is input
     -->
-    <div id="vizContainer" style="width:800px; height:700px;"></div>
+    <div id="vizContainer" style="width:900px; height:700px;"></div>
   </body>
 </html>

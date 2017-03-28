@@ -1,21 +1,41 @@
 *TO ATOS: in tableau workbook, publish sheets as tabs
 
 
+function field(){
+	var worksheetName; 
+	var fieldName;
+	
+	var type; //float, integer, string, boolean, date, datetime
+	
+	var values; // if(type == string){values = an array of strings for all unique values}
+				// else {values = array[2] : array[0] = minVal, array[1] = maxVal}
+}
 
 changeSheet(sheet){
 	
 }
 
-Filter
+filter(){
+
+	CATEGORICAL
+	RANGE
+	RELATIVE_DATE
+	HIERARCHICAL
+
+
 	ADD
 	REPLACE
 	REMOVE
 	ALL
+}
+	
 
-Select
+selectMarks(){
 	REPLACE
 	ADD
 	REMOVE
+}
+	
 
 
 

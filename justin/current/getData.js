@@ -2,6 +2,8 @@
 // the data by changing the 'maxRows' option
 
 var viz, workbook, activeSheet, fields, sheets;        
+var Worksheets
+var SheetList = [];
 
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
@@ -49,6 +51,144 @@ function changeSheet(){
     workbook.activateSheetAsync(newSheet);
 }
 
+function getUnderlyingData() {
+            var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
+            var sheets;
+            var i;
+
+            if(sheet.getSheetType() === "dashboard"){
+                sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
+                var sLen = sheets.length;
+                for(i = 0; i < sLen; i++){
+                    printUnderlying(sheets[i]);
+                }
+            }
+            else{
+                printUnderlying(sheet);
+            }
+}
+
+function printUnderlying(sheet){
+    var msg = "";
+    var summaryData;
+    var columns;
+    var numColumns;
+    var i;
+
+    msg += "Name: " + sheet.getName() +  "<br>"; 
+
+    var sht = new Sheet(sheet.getName());
+    
+     options = {
+                ignoreAliases: false,
+                ignoreSelection: false,
+                includeAllColumns: false,
+                maxRows: 0, // Max rows to return. Use 0 to return all rows
+            };
+
+    sheet.getUnderlyingDataAsync(options).then(function(summaryData){
+        this.summaryData = summaryData;
+        columns = summaryData.getColumns();
+        numColumns = columns.length;
+        msg += "Field Names:<br>";
+
+        var rawdata = summaryData.getData();
+        var strData = rawdata.map(JSON.stringify);
+        var flds = [];
+        var dta = [];
+        
+        for(i = 0; i < numColumns; i++){
+            msg += columns[i].getIndex() + "_/_" + columns[i].getFieldName() + "_/_" 
+            + columns[i].getDataType() + "<br>";
+            var fld = new Field(columns[i].getFieldName(), columns[i].getDataType());
+            flds.push(fld);
+        }
+
+        msg += "<br>Data Column:<br>";
+
+        for(j = 0; j < strData.length; j++){
+            var sdsplit = strData[j].split("},{");
+            var row = [];
+    
+            for(i = 0; i < sdsplit.length; i++){
+                var rw = sdsplit[i].split("\"");
+                row.push(rw[rw.length-2]);
+            }
+            dta.push(row);
+        }
+
+        msg += "#<br>";
+        msg += dta[0] + "<br>";
+        msg += dta[1] + "<br>";
+        msg += dta[2] + "<br>";
+        //msg += dta[0][0] + "<br>";
+
+        var col0 = dta.map(function(value,index) { return value[0]; });
+        //msg += "col0.length :" + col0.length + "<br>";
+        col0 = unique(col0);
+
+        msg += "<br>";
+
+
+        // for(i = 0; i < flds.length; i++){
+        //     flds[i].values = dta.map(function(value,index) { return value[i]; });
+        //     msg += flds[i].name + ": " + flds[i].values[0] + ", " + flds[i].values[1] + ", " + flds[i].type + "<br>";
+        // }
+
+
+
+        //msg += "col0.length :" + col0.length + "<br>";
+        msg += "<br>####<br>";
+        msg += dta[0] + "<br>";
+
+        var tgt = document.getElementById("dataTarget");
+        tgt.innerHTML += "<h4>Underlying Data:</h4><p>" + msg + "</p>";
+
+        msg = "";
+
+
+        for(i = 0; i < dta[0].length; i++){
+            var col = dta.map(function(value,index) { return value[i]; });
+            col = unique(col);
+
+            if(flds[i].type === "string"){
+                flds[i].values.push(col);    
+            }
+            else{
+                flds[i].values[0] = col[0];
+                flds[i].values[1] = col[col.length-1];
+            }
+
+            msg += "after parse: " + flds[i].values[0] + ", " + flds[i].values[1] + "<br>";
+
+        }
+
+        tgt.innerHTML += "<h4>values</h4><p>" + msg + "</p>";
+
+    });
+    
+}
+
+
+function Field(name, type){
+    //var worksheetName; 
+    //alert("field created");
+    this.name = name; 
+
+    this.type = type; //float, integer, string, boolean, date, datetime
+
+    var sheets;
+
+    var values = []; // if(type == string){values = an array of strings for all unique values}
+    // else { : array[0] = minVal, array[1] = maxVal}
+}
+
+function Sheet(name){
+    //alert("sheet create");
+    this.name = name;
+    var fields = [];
+}
+
 function getSummaryData() {
             var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
             var sheets;
@@ -78,7 +218,7 @@ function printSummary(sheet){
     options = {
                 ignoreAliases: false,
                 ignoreSelection: false,
-                maxRows: 3, // Max rows to return. Use 0 to return all rows
+                maxRows: 0, // Max rows to return. Use 0 to return all rows
             };
     
     sheet.getSummaryDataAsync(options).then(function(summaryData){
@@ -87,14 +227,15 @@ function printSummary(sheet){
         columns = summaryData.getColumns();
         numColumns = columns.length;
 
+        msg += "NumRows: " + summaryData.getTotalRowCount() + "<br>";
         msg += "Field Names:<br>";
     
         for(i = 0; i < numColumns; i++){
-            msg += columns[i].getIndex() + "____" + columns[i].getFieldName() + "_" 
+            msg += columns[i].getIndex() + "_/_" + columns[i].getFieldName() + "_/_" 
             + columns[i].getDataType() + "<br>";
         }
 
-        msg += "Data:<br>" + JSON.stringify(summaryData.getData());
+        msg += "Data:<br>" + JSON.stringify(summaryData.getData()).substring(0,1000);
         //alert(msg);
 
         var tgt = document.getElementById("dataTarget");
@@ -104,70 +245,94 @@ function printSummary(sheet){
 }
 
 
-function getUnderlyingData() {
-            var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
-            var sheets;
-            var i;
-
-            if(sheet.getSheetType() === "dashboard"){
-                sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
-                var sLen = sheets.length;
-                for(i = 0; i < sLen; i++){
-                    printUnderlying(sheets[i]);
-                }
-            }
-            else{
-                printUnderlying(sheet);
-            }
-}
-
-function printUnderlying(sheet){
-    var msg = "";
-    var summaryData;
-    var columns;
-    var numColumns;
+function getFields(){
+    var sheet = viz.getWorkbook().getActiveSheet();
+    var sheets;
     var i;
 
-    //msg += "name: " + sheet.getName() + "\n";
-    msg += "Name: " + sheet.getName() + "<br>" + "Type: " + sheet.getSheetType() + "<br>"; 
-
-     options = {
-                ignoreAliases: false,
-                ignoreSelection: false,
-                includeAllColumns: false,
-                maxRows: 3, // Max rows to return. Use 0 to return all rows
-            };
-    
-    sheet.getUnderlyingDataAsync(options).then(function(summaryData){
-        this.summaryData = summaryData;
-        //msg += "Name: " + summaryData.getName() + "<br>";
-        columns = summaryData.getColumns();
-        numColumns = columns.length;
-
-        msg += "Field Names:<br>";
-    
-        for(i = 0; i < numColumns; i++){
-            msg += columns[i].getIndex() + "____" + columns[i].getFieldName() + "_" 
-            + columns[i].getDataType() + "_" + columns[i].getIsReferenced() + "<br>";
+    if(sheet.getSheetType() === "dashboard"){
+        sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
+        var sLen = sheets.length;
+        for(i = 0; i < sLen; i++){
+            printFields(sheets[i]);
         }
+    }
+    else{
+        printFields(sheet);
+    }
 
-        //msg += "Data:<br>" + JSON.stringify(summaryData.getData());
-        msg += "Data:<br>" + JSON.stringify(summaryData.getData());
-        //alert(msg);
+}
 
-        var tgt = document.getElementById("dataTarget");
-            tgt.innerHTML += "<h4>Underlying Data:</h4><p>" + msg + "</p>";
-    });
-    
+function printFields(sheet){
+    var dSource, fields, len;
+    alert("printing sheet: " + sheet.getName());
+    sheet.getDataSourcesAsync().then(function (dSource){
+        var fields = dSource.getFields();
+        var len = fields.length;
+        var i;
+        var msg = "";
+        msg += "name: " + fields[0].getName() + "\n";
+        msg += "aggr: " + fields[0].getAggregation() + "\n";
+        msg += "role: " + fields[0].getRole() + "\n";
+
+        alert(msg);
+    }, alert("failed to get fields"));
+}
+
+
+function parseRow(row){
+    var spl = row.split("},{");
+    //console.log("parse");
+    console.log("p1: " +  spl);
+    //alert("p1: " + spl);
+    var prow = [];
+    var i, j;
+
+    for(i = 0; i < spl.length; i++){
+        //spl = spl[i].split(":");
+        spl  = spl[i].split("\"");
+        console.log("p2: " + spl);
+        console.log("p2.len: " + spl.length);
+
+        for(j = 0; j < spl.length; j++){
+
+            prow.push(spl[spl.length-2]);    
+        }
+        
+    }
+    //console.log("parse:\n" + row + "\n" + prow);
+    return prow;
+}
+
+function testPush(){
+    var arr = [];
+    var a1 = ["abc", "bcd"];
+    var a2 = ["efg", "hik"];
+    arr.push(a1);
+    arr.push(a2);
+    //var col3 = arr.map(function(value,index) { return value[2]; });
+    var msg = "array: \n" + arr[0][0] + "\n";
+    msg += arr[1][0];
+
+    alert(msg);
+
+}
+
+var unique = function(xs) {
+  var seen = {};
+  xs.sort();
+  return xs.filter(function(x) {
+    if (seen[x])
+      return;
+    seen[x] = true;
+    return x;
+  })
 }
 
 function clearInnerHTML(){
     var tgt = document.getElementById("dataTarget");
         tgt.innerHTML = "";
 }
-
-
-
 
 function getParameters(){
     workbook.getParametersAsync().then(function(parameters){
@@ -199,8 +364,6 @@ function clearFilter(){
     var sheet = viz.getWorkbook().getActiveSheet();
     sheet.applyFilterAsync("Major", "AUND", tableau.FilterUpdateType.ALL);
 }
-
-
 
 function filterByName(field, filter, type) {
 
@@ -246,8 +409,6 @@ function applyFilter(sheet, field, filter, type){
 
 }
 
-
-
 function getFilters(){
 
     var sheet = viz.getWorkbook().getActiveSheet();
@@ -260,11 +421,12 @@ function getFilters(){
         for(i = 0; i < sLen; i++){
             sheets[i].getFiltersAsync().then(function (filters){
                 fLen = filters.length;
+                //filterList += "Sheet Name: " + sheets[i].getName() + "\n";
                 for(j = 0; j < fLen; j++){
-                    filterList += filters[j].getFieldName() + "\n";
+                    filterList += filters[j].getFieldName() + " " + filters[j].getFilterType() + "\n";
                 }
-                filterList += "\n";
                 alert(filterList);
+                filterList = "";
                 
             });
         }
@@ -287,6 +449,4 @@ function getWorkbookName(){
     var wbn = viz.getWorkbook().getName();
     alert(wbn);
 }
-
-
 

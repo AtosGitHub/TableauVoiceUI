@@ -13,7 +13,7 @@ var recognizing = false;
 //var comms = ['start', 'exit', 'test'];
 
 // This is the Grammar we would like to target for commands
-var grammar='#JSGF V1.0 grammar <basicCommands>;public <commands>=<startpolite><action><the><nexORPrev><sheetname><object><endpolite>;<startpolite>=(please|can you|could you)*;<action>=open|close|show|filter|go to|;<the>=[the];<nexORPrev>=(next|previous)*;<sheetname>=<NULL>;<object>=(worksheet|dashboard|story);<endpolite>=[please];'  
+var grammar='#JSGF V1.0 grammar <basicCommands>;public <startpolite>=(please|"can you"|"could you")*; public <action>=(open|close|show|filter|"go to");public <the>=[the];public <nexORPrev>=[next|previous];public <sheetname>=<NULL>;public <object>=(worksheet|dashboard|story)*;public <filter>=(filter out <NULL>)*;public <showOnly>=(show only <NULL>)*;public <endpolite>=[please];'
 
 // Grammar and Speech variable set up
 var recognition = new SpeechRecognition();

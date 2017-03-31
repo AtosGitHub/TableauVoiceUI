@@ -10,11 +10,10 @@ var log = document.querySelector('.output');
 var recognizing = false;
 
 //command array
-var comms = ['start', 'exit', 'test'];
+//var comms = ['start', 'exit', 'test'];
 
 // This is the Grammar we would like to target for commands
-var grammar = '#JSGF V1.0; grammer commands; public <commands> = (start | exit | test);'
-
+var grammar='#JSGF V1.0 grammar <basicCommands>;public <commands>=<startpolite><action><the><nexORPrev><sheetname><object><endpolite>;<startpolite>=(please|can you|could you)*;<action>=open|close|show|filter|go to|;<the>=[the];<nexORPrev>=(next|previous)*;<sheetname>=<NULL>;<object>=(worksheet|dashboard|story);<endpolite>=[please];'  
 
 // Grammar and Speech variable set up
 var recognition = new SpeechRecognition();

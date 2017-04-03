@@ -1,3 +1,9 @@
+Files used in this example: getData.html and getData.js. All other code files are misc tests.
+
+
+
+
+
 "querySheets" returns list of sheets, their index, their sheet type, and the active sheet.
 
 "getSummaryData" returns summary data of all worksheets in the active sheet at the bottom of the page.

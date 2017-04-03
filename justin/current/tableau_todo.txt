@@ -1,0 +1,29 @@
+//-----------------------------------------------------------------------
+function rangeFilter(field, range){
+	...
+	worksheet.applyRangeFilterAsync(fieldName: string, range: RangeFilterOptions);
+	
+}
+
+applyRangeFilterAsync( 
+fieldName: string, 
+range: RangeFilterOptions)
+
+	returns Promise<string>
+
+Applies a quantitative filter to a field or to a date. If a range is specified that is outside of the domain min/max values, no error is raised and the command is allowed. Subsequent calls to getFiltersAsync[] will return these values even if they are outside of the bounds of the domain. This is equivalent to the behavior in Tableau Desktop.
+
+
+//-----------------------------------------------------------------------
+function clearFilter(field){
+	...
+	worksheet.clearFilterAsync(fieldName: string);
+}
+
+clearFilterAsync(fieldName: string)	
+
+	returns Promise<string>	
+
+Clears the filter, no matter what kind of filter it is. Note that the filter is removed as long as no associated quick filter is showing for the field. If there is a quick filter showing, then the filter is kept, but it’s reset to the “All” state (effectually canceling the filter). For relative date filters, however, an error is returned since there is no “All” state for a relative date filter. To clear a relative date filter with a quick filter showing, you can call applyRelativeDateFilter() instead using a range that makes sense for the specific field.
+
+//-----------------------------------------------------------------------

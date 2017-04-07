@@ -140,7 +140,114 @@ function printUnderlying(sheet){
     });
     
 }
+//----------------------------------------------------------------
+// get and print underlying spreadsheet data
 
+function getUnderlyingDataB() {
+            var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
+            var sheets;
+            var i;
+
+            if(sheet.getSheetType() === "dashboard"){
+                sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
+                var sLen = sheets.length;
+                for(i = 0; i < sLen; i++){
+                    printUnderlyingB(sheets[i]);
+                }
+            }
+            else{
+                printUnderlyingB(sheet);
+            }
+}
+
+function printUnderlyingB(sheet){
+    var msg = "";
+    var summaryData;
+    var columns;
+    var numColumns;
+    var i;
+
+    msg += "Name: " + sheet.getName() +  "<br>"; 
+
+    var sht = new Sheet(sheet.getName());
+    
+     options = {
+                ignoreAliases: false,
+                ignoreSelection: false,
+                includeAllColumns: false,
+                maxRows: 0, // Max rows to return. Use 0 to return all rows
+            };
+
+    sheet.getUnderlyingDataAsync(options).then(function(summaryData){
+        this.summaryData = summaryData;
+        columns = summaryData.getColumns();
+        numColumns = columns.length;
+        msg += "Field Names:<br>";
+
+        var rawdata = summaryData.getData();
+        var strData = rawdata.map(JSON.stringify);
+        var flds = [];
+        var dta = [];
+        
+        for(i = 0; i < numColumns; i++){
+            msg += columns[i].getIndex() + "_/_" + columns[i].getFieldName() + "_/_" 
+            + columns[i].getDataType() + "<br>";
+            var fld = new Field(columns[i].getFieldName(), columns[i].getDataType());
+            flds.push(fld);
+        }
+
+        msg += "<br>Data Column:<br>";
+
+        for(j = 0; j < strData.length; j++){
+            var sdsplit = strData[j].split("},{");
+            var row = [];
+    
+            for(i = 0; i < sdsplit.length; i++){
+                var rw = sdsplit[i].split("\"");
+                row.push(rw[rw.length-2]);
+            }
+            dta.push(row);
+        }
+
+        msg += "#<br>";
+        msg += dta[0] + "<br>";
+        msg += dta[1] + "<br>";
+        msg += dta[2] + "<br>";
+        //msg += dta[0][0] + "<br>"; // experiment; uncomment to test
+
+        var col0 = dta.map(function(value,index) { return value[0]; });
+        col0 = unique(col0);
+
+        msg += "<br>";
+        msg += "<br>####<br>";
+        msg += dta[0] + "<br>";
+
+        var tgt = document.getElementById("dataTarget");
+        tgt.innerHTML += "<h4>Underlying Data:</h4><p>" + msg + "</p>";
+
+        msg = "";
+
+        for(i = 0; i < dta[0].length; i++){
+            var col = dta.map(function(value,index) { return value[i]; });
+            col = unique(col);
+
+            if(flds[i].type === "string"){
+                flds[i].values.push(col);    
+            }
+            else{
+                flds[i].values[0] = col[0];
+                flds[i].values[1] = col[col.length-1];
+            }
+
+            msg += "after parse: " + flds[i].values[0] + ", " + flds[i].values[1] + "<br>";
+
+        }
+
+        tgt.innerHTML += "<h4>values</h4><p>" + msg + "</p>";
+
+    });
+    
+}
 //----------------------------------------------------------------
 // calls alert(<list of sheets (tabs), their index, and indicates active sheet)
 // called by pressing 'querySheets' button

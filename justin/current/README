@@ -1,7 +1,7 @@
-Files used in this example: getData.html and getData.js. All other code files are misc tests.
+Files used in this example: 'select_workbook.html', 'getData.html' and 'getData.js'. All other code files are misc tests.
 
 
-
+To Run: Open 'select_workbook.html', select 'Workbook01' from drop-down, you will be directed to the Tableau page.
 
 
 "querySheets" returns list of sheets, their index, their sheet type, and the active sheet.

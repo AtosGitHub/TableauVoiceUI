@@ -1,0 +1,126 @@
+*TO ATOS: in tableau workbook, publish sheets as tabs
+
+
+function field(){
+	var worksheetName; 
+	var fieldName;
+	
+	var type; //float, integer, string, boolean, date, datetime
+	
+	var values; // if(type == string){values = an array of strings for all unique values}
+				// else {values = array[2] : array[0] = minVal, array[1] = maxVal}
+}
+
+changeSheet(sheet){
+	
+}
+
+filter(){
+
+	CATEGORICAL
+	RANGE
+	RELATIVE_DATE
+	HIERARCHICAL
+
+
+	ADD
+	REPLACE
+	REMOVE
+	ALL
+}
+	
+
+selectMarks(){
+	REPLACE
+	ADD
+	REMOVE
+}
+	
+
+
+
+
+function filter(field, names, type){
+	return filtered workbook
+}
+
+function selectMarks(filed)
+
+
+//*****************************************
+class VizManager
+	class Viz
+		class Workbook
+			class SheetInfo
+			abstract class Sheet
+				class Dashboard extends Sheet
+					class DashboardObject
+				class Worksheet extends Sheet
+				class Story extends Sheet
+					class StoryPointInfo
+
+	
+class Promise
+
+class TableauException
+
+class VizManager
+class Viz
+class Workbook
+class SheetInfo
+
+
+//******************************
+abstract class Sheet
+	
+	class Dashboard extends Sheet
+		class DashboardObject
+		class SheetInfo
+
+	class Worksheet extends Sheet
+		class Filter
+			class CategoricalFilter
+			class QuantitativeFilter
+			class RelativeDateFilter
+		selectMarks functions
+	
+	class SheetData
+		Class ColumnData
+
+	
+
+
+
+
+class Story extends Sheet
+class StoryPointInfo
+class StoryPoint
+
+class Parameter
+
+	
+class Promise
+
+class TableauException
+
+
+
+
+
+info = tableau.getInfo();
+
+grammar worksheets = info.worksheets;
+
+grammar fields = info.getfields
+
+fied k =, filter j, option i;
+tableau.command(j, i, k)
+
+
+
+
+
+
+selectFilter(fieldName, filter, option)
+
+options = ADD, REPLACE, ALL, REMOVE

@@ -23,10 +23,14 @@
     <button type="button" onclick="process()" align="right">filter</button>
     <br>
     <div id="filterInstructions">(case sensitive)____(case sensitive)____(add/replace/remove/all)</div>
+    <div>(Field)____________(str_filter)____________(filter_type)</div>
     <br>
 
     <input type="text" id="changeSheet" value="Flights">
-    <button type="button" onclick="changeSheet()" align="right">changeSheet</button>
+    <button type="button" onclick="changeSheet()" align="right">changeSheet</button> 
+    <div id="csInstr">(Enter any tab name)</div>
+
+    <br>
 
     <div id="terminal" style ="padding=20px;" align="left">
         <button type="button" onclick="getUnderlyingData()" align="right">getUnderlyingData</button>

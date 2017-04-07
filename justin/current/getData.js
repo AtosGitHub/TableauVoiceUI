@@ -1,9 +1,11 @@
-// getUnderlyingData and getSummaryData can by adjusted to show more
-// the data by changing the 'maxRows' option
+
 
 var viz, workbook, activeSheet, fields, sheets;        
 var Worksheets
 var SheetList = [];
+
+//----------------------------------------------------------------
+// initialize Tableau Viz
 
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
@@ -30,26 +32,8 @@ function initViz() {
     viz = new tableau.Viz(containerDiv, url, options);
 }
 
-function querySheets() {
-    workbook = viz.getWorkbook();
-    sheets = workbook.getPublishedSheetsInfo();
-    var numSheets = sheets.length;    
-    var i;
-    var actS = workbook.getActiveSheet();
-    var actN = actS.getName();
-    var actN = "active sheet : " + actN + "\n";
-    for(i = 0; i < numSheets; i++){
-        actN += i + " : " + sheets[i].getName() + "; ";
-        actN += sheets[i].getSheetType() + "\n";
-    }
-    alert(actN);
-}
-
-function changeSheet(){
-    var newSheet = document.getElementById("changeSheet").value;
-    workbook = viz.getWorkbook();
-    workbook.activateSheetAsync(newSheet);
-}
+//----------------------------------------------------------------
+// get and print underlying spreadsheet data
 
 function getUnderlyingData() {
             var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
@@ -121,23 +105,12 @@ function printUnderlying(sheet){
         msg += dta[0] + "<br>";
         msg += dta[1] + "<br>";
         msg += dta[2] + "<br>";
-        //msg += dta[0][0] + "<br>";
+        //msg += dta[0][0] + "<br>"; // experiment; uncomment to test
 
         var col0 = dta.map(function(value,index) { return value[0]; });
-        //msg += "col0.length :" + col0.length + "<br>";
         col0 = unique(col0);
 
         msg += "<br>";
-
-
-        // for(i = 0; i < flds.length; i++){
-        //     flds[i].values = dta.map(function(value,index) { return value[i]; });
-        //     msg += flds[i].name + ": " + flds[i].values[0] + ", " + flds[i].values[1] + ", " + flds[i].type + "<br>";
-        // }
-
-
-
-        //msg += "col0.length :" + col0.length + "<br>";
         msg += "<br>####<br>";
         msg += dta[0] + "<br>";
 
@@ -145,7 +118,6 @@ function printUnderlying(sheet){
         tgt.innerHTML += "<h4>Underlying Data:</h4><p>" + msg + "</p>";
 
         msg = "";
-
 
         for(i = 0; i < dta[0].length; i++){
             var col = dta.map(function(value,index) { return value[i]; });
@@ -169,6 +141,97 @@ function printUnderlying(sheet){
     
 }
 
+//----------------------------------------------------------------
+// calls alert(<list of sheets (tabs), their index, and indicates active sheet)
+// called by pressing 'querySheets' button
+function querySheets() {
+    workbook = viz.getWorkbook();
+    sheets = workbook.getPublishedSheetsInfo();
+    var numSheets = sheets.length;    
+    var i;
+    var actS = workbook.getActiveSheet();
+    var actN = actS.getName();
+    var actN = "active sheet : " + actN + "\n";
+    for(i = 0; i < numSheets; i++){
+        actN += i + " : " + sheets[i].getName() + "; ";
+        actN += sheets[i].getSheetType() + "\n";
+    }
+    alert(actN);
+}
+
+//----------------------------------------------------------------
+// changes active sheet (tab) by name
+function changeSheet(){
+    var newSheet = document.getElementById("changeSheet").value;
+    workbook = viz.getWorkbook();
+    workbook.activateSheetAsync(newSheet);
+}
+
+
+//----------------------------------------------------------------
+// clears innerHTML attribute of <div> object that contains results
+// getUnderlyingData()
+
+function clearInnerHTML(){
+    var tgt = document.getElementById("dataTarget");
+        tgt.innerHTML = "";
+}
+
+//----------------------------------------------------------------
+// process and apply categorical filter
+
+function filterByName(field, filter, type) {
+
+    var sheet = viz.getWorkbook().getActiveSheet();
+    if(filter.includes(";")){
+        filter = filter.split(";");
+    }
+
+    if(sheet.getSheetType() === "dashboard"){
+        sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
+        var sLen = sheets.length;
+        for(i = 0; i < sLen; i++){
+            applyFilter(sheets[i], field, filter, type);
+        }
+    }
+    else{
+        applyFilter(sheet, field, filter, type);
+    }
+    
+    
+}
+
+function applyFilter(sheet, field, filter, type){
+    var fTypes = ["ALL", "REPLACE", "ADD", "REMOVE"];
+    var t = fTypes.indexOf(type.toUpperCase());
+
+    switch(t){
+        case 0:
+            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.ALL);
+            break;
+        case 1:
+            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.REPLACE);
+            break;
+        case 2:
+            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.ADD);
+            break;
+        case 3:
+            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.REMOVE);
+            break;
+        default:
+            alert("invalid filter type");
+    }
+
+}
+//----------------------------------------------------------------
+// data structures for undlerying spreadsheet data to be passed to 
+// Web Speech implementation to dynamically define a grammar
+//
+// TODO : current configuration stores some redundant data when
+//  multiple sheets in the same dashboard have overlapping fields;
+//  task: modify functions: Field(), Sheet(), getUnderlying(), and printUnderlying() to 
+//  create only unique instances of Field() with a list of associated Sheets 
+//  stored as a list of strings.
 
 function Field(name, type){
     //var worksheetName; 
@@ -188,6 +251,33 @@ function Sheet(name){
     this.name = name;
     var fields = [];
 }
+//----------------------------------------------------------------
+// utility function: returns ascending-ordered array of unique items from xs
+// used to efficiently store/search array 'values' in function-object 'Field'
+
+var unique = function(xs) {
+  var seen = {};
+  xs.sort();
+  return xs.filter(function(x) {
+    if (seen[x])
+      return;
+    seen[x] = true;
+    return x;
+  })
+}
+
+//----------------------------------------------------------------
+// experiment that work's : filter a field that is not filterable
+// through GUI
+function filterHidden(){
+    var sheet = viz.getWorkbook().getActiveSheet();
+    sheet.applyFilterAsync("Major", "AUND", tableau.FilterUpdateType.REPLACE);
+}
+
+//----------------------------------------------------------------
+// get summary of spreadsheet data, not used because it does not 
+// retrieve complete data; getUnderlyingData() is used instead
+
 
 function getSummaryData() {
             var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
@@ -244,6 +334,18 @@ function printSummary(sheet){
     
 }
 
+//----------------------------------------------------------------
+// ideas and experiments that don't work
+
+function rangeFilter(){
+    var sheet = viz.getWorkbook().getActiveSheet();
+    sheet.applyFilterAsync("Major", "AUND", tableau.FilterUpdateType.REPLACE);
+}
+
+function clearFilter(){
+    var sheet = viz.getWorkbook().getActiveSheet();
+    sheet.applyFilterAsync("Major", "AUND", tableau.FilterUpdateType.ALL);
+}
 
 function getFields(){
     var sheet = viz.getWorkbook().getActiveSheet();
@@ -318,21 +420,7 @@ function testPush(){
 
 }
 
-var unique = function(xs) {
-  var seen = {};
-  xs.sort();
-  return xs.filter(function(x) {
-    if (seen[x])
-      return;
-    seen[x] = true;
-    return x;
-  })
-}
 
-function clearInnerHTML(){
-    var tgt = document.getElementById("dataTarget");
-        tgt.innerHTML = "";
-}
 
 function getParameters(){
     workbook.getParametersAsync().then(function(parameters){
@@ -350,64 +438,6 @@ function getParameters(){
 
 }
 
-function filterHidden(){
-    var sheet = viz.getWorkbook().getActiveSheet();
-    sheet.applyFilterAsync("Major", "AUND", tableau.FilterUpdateType.REPLACE);
-}
-
-function rangeFilter(){
-    var sheet = viz.getWorkbook().getActiveSheet();
-    sheet.applyFilterAsync("Major", "AUND", tableau.FilterUpdateType.REPLACE);
-}
-
-function clearFilter(){
-    var sheet = viz.getWorkbook().getActiveSheet();
-    sheet.applyFilterAsync("Major", "AUND", tableau.FilterUpdateType.ALL);
-}
-
-function filterByName(field, filter, type) {
-
-    var sheet = viz.getWorkbook().getActiveSheet();
-    if(filter.includes(";")){
-        filter = filter.split(";");
-    }
-
-    if(sheet.getSheetType() === "dashboard"){
-        sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
-        var sLen = sheets.length;
-        for(i = 0; i < sLen; i++){
-            applyFilter(sheets[i], field, filter, type);
-        }
-    }
-    else{
-        applyFilter(sheet, field, filter, type);
-    }
-    
-    
-}
-
-function applyFilter(sheet, field, filter, type){
-    var fTypes = ["ALL", "REPLACE", "ADD", "REMOVE"];
-    var t = fTypes.indexOf(type.toUpperCase());
-
-    switch(t){
-        case 0:
-            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.ALL);
-            break;
-        case 1:
-            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.REPLACE);
-            break;
-        case 2:
-            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.ADD);
-            break;
-        case 3:
-            sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.REMOVE);
-            break;
-        default:
-            alert("invalid filter type");
-    }
-
-}
 
 function getFilters(){
 
@@ -450,3 +480,4 @@ function getWorkbookName(){
     alert(wbn);
 }
 
+//----------------------------------------------------------------

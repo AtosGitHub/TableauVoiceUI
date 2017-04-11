@@ -31,6 +31,8 @@ recognition.maxAlternatives = 1;
 
 
 
+
+
 // what runs after the click on the mic
 function startReco(event){
 
@@ -99,4 +101,12 @@ function initViz() {
     };
 
     viz = new tableau.Viz(containerDiv, url, options);
+}
+
+function hide() {
+		
+	viz.hide();
+	
+	
+	
 }

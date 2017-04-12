@@ -13,6 +13,10 @@
 
 
 
+  <script type="text/javascript" src="localStorageJS/loginLS.js"></script>
+
+
+
 
 </head>
 
@@ -24,11 +28,11 @@
     <div class="container">
       <div class="row">
         <div class="form_bg">
-            <form method="get" action="input.html">
+            <form onsubmit="mainLocal()">
               <h2 class="text-center"> ATOS User Login</h2>
                     <br/>
                 <div class="form-group">
-                  <input type="email" class="form-control" id="userid" placeholder="User">
+                  <input class="form-control" id="userid" placeholder="User">
                 </div>
                 <div class="form-group">
                   <input type="password" class="form-control" id="pwd" placeholder="Password">

@@ -5,15 +5,14 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 
 
 // for testing purposes I need a log on the html
-var log = document.querySelector('.output');
+//var log = document.getElementById('output');
 
-var recognizing = false;
 
 //command array
 var comms = ['start', 'exit', 'test'];
 
 // This is the Grammar we would like to target for commands
-var grammar = '#JSGF V1.0; grammer commands; public <commands> = (start | exit | test);'
+//var grammar = '#JSGF V1.0; grammer commands; public <commands> = (start | exit | test);'
 
 
 // Grammar and Speech variable set up
@@ -28,6 +27,7 @@ recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
 
+var recognizing = false;
 
 
 
@@ -36,8 +36,14 @@ recognition.maxAlternatives = 1;
 // what runs after the click on the mic
 function startReco(event){
 
+
+    var log = document.getElementById('output');
+
+
     // if app is listening already, then stop
     if(recognizing){
+
+
       recognition.stop();
       recognizing = false;
 
@@ -47,8 +53,12 @@ function startReco(event){
       return;
     }
     else {
+
+
       recognition.start();
-      start_img.src = '/js/mic-slash.gif';
+
+      recognizing = true;
+      start_img.src = 'js/mic-slash.gif';
       log.textContent = 'recognition started';
 
     }
@@ -74,10 +84,12 @@ recognition.onresult = function(event) {
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
 
-    parser(command);
+    speechParse(command);
+
+    //var log = document.getElementById('output');
 
 
-    log.textContent = 'Command Received to be '+ command + ' ';
+    //log.textContent = 'Command Received to be '+ command + ' ';
 
 }
 
@@ -120,6 +132,48 @@ function testLocal() {
 } else {
   document.getElementById("test").innerHTML = "Sorry, your browser does not support Web Storage...";
 }
+
+
+}
+
+
+function speechParse(command) {
+
+
+  if(command == 'start'){
+    initViz();
+
+    //bog.textContent == 'Command received is '+ command ' note the sample workbook is now loaded';
+  }
+  else if(command == 'switch' || command == 'tab'){
+
+      switchToMapTab();
+
+    //bog.textContent == 'Command received is '+ command + ' note how the tab switched';
+
+
+  }
+  else if(command == 'exit' || command == 'hide' || command == 'close') {
+
+    hide();
+
+    //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
+
+
+  }
+  else if(command == 'reload'){
+
+    window.location.reload();
+
+  }
+
+
+
+
+
+
+
+
 
 
 }

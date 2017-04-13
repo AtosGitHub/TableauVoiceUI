@@ -104,9 +104,22 @@ function initViz() {
 }
 
 function hide() {
-		
+
 	viz.hide();
-	
-	
-	
+
+
+
+}
+
+// only for testing local storage usage for url
+function testLocal() {
+
+  if (typeof(Storage) !== "undefined") {
+
+  document.getElementById("test").innerHTML = localStorage.getItem("url");
+} else {
+  document.getElementById("test").innerHTML = "Sorry, your browser does not support Web Storage...";
+}
+
+
 }

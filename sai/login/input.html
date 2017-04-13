@@ -11,7 +11,8 @@
   <!-- Custom CSS -->
   <link href="css_input/input.css" rel="stylesheet">
 
-
+  <!-- load the javascript file -->
+  <script type="text/javascript" src="localStorageJS/loginLS.js"></script>
 
 
 </head>
@@ -24,17 +25,17 @@
     <div class="container">
       <div class="row">
         <div class="form_bg">
-            <form onsubmit="inputLocal()">
+
               <h2 class="text-center">Enter Worksheet URL</h2>
                   <br/>
               <div class="form-group">
-                <input type="password" class="form-control" id="url" placeholder="location">
+                <input type="text" class="form-control" placeholder="location" id="url"/>
               </div>
                   <br/>
               <div class="align-center">
-                <button type="submit" class="btn btn-default" id="login">Enter</button>
+                <button onclick="inputLocal()" type="submit" class="btn btn-default" id="login">Enter</button>
               </div>
-            </form>
+
           </div>
         </div>
       </div>

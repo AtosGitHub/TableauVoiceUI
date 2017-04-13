@@ -19,25 +19,25 @@
 
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-	
-	
-	
-	
+
+
+
+
 	<!-- SCRIPTS FOR NEW API DEMO DIV -->
-	
+
 	<!-- Load all the scripts -->
     <link rel="stylesheet" href="/css/main.css">
-    <script src="/js/speech.js"></script>
-    <script src="/js/parser.js"></script>
-	
+    <script type="text/javascript" src="js/speech.js"></script>
+    <script type="text/javascript" src="js/parser.js"></script>
+
 	<!-- Tableau api script load -->
-	
+
 	<script type="text/javascript"
         src="https://public.tableau.com/javascripts/api/tableau-2.js">
     </script>
-	
-	
-	
+
+
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -174,7 +174,7 @@
                     <li>
                         <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
-                    
+
                     <li>
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="demo" class="collapse">
@@ -189,22 +189,22 @@
                     <li class="active">
                         <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Demo Page</a>
                     </li>
-                    
+
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
         </nav>
 
-		
-		
-		<!-- 
-		
+
+
+		<!--
+
 			This is where the API test DEMO comes in
-			Need to keep it all within the wrapper and 
+			Need to keep it all within the wrapper and
 			include all relevant js and css scripts
 
 		-->
-		
+
         <div id="page-wrapper">
 
             <div class="container-fluid">
@@ -230,27 +230,26 @@
 
             </div>
             <!-- /.container-fluid -->
-			
-			
+
+
 					<!--This div simply waits for user to click the picture and starts recognition -->
 					<div id="input" class="center" float:"right">
 						<button id="start_button" onclick="startReco(event)">
-						<img id="start_img" src="mic.gif"></button> 
+						<img id="start_img" src="mic.gif"></button>
 
 					</div>
 
 
-					<div id="test">
-						<form name="myForm" action="javascript:parser()">
-						<input type="text" id="command"><br>
-						<input name="forminput" type="submit" value="Submit">
-						</form>
+					<div id="parserButton">
+            <input type="text" id="command" />
+
+            <button onclick="parser()" type="submit" class="btn btn-default">Enter</button>
 
 					</div>
 
 					<!-- This is the div which outputs the speech for testing  -->
 					<div id="log" class="bottom">
-						<p class="output"> <em> diagnostic... </em> </p>
+						<p id="output" class="output"> <em> diagnostic... </em> </p>
 
 					</div>
 
@@ -260,12 +259,12 @@
 						 This Div only becomes visible once the correct command is input
 					-->
 					<div id="vizContainer" style="width:800px; height:650px;"></div>
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
 
         </div>
         <!-- /#page-wrapper -->

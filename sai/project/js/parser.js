@@ -10,7 +10,7 @@
 // so far it is a bunch of if statements based on the word spoken
 function parser() {
 
-  var command = document.getElementById("command").value;
+  var command = document.getElementById('command').value;
   //var bog = document.getElementById("output");
 
 
@@ -19,7 +19,7 @@ function parser() {
 		if(command == 'start'){
 			initViz();
 
-			bog.textContent == 'Command received is '+ command ' note the sample workbook is now loaded';
+			//bog.textContent == 'Command received is '+ command ' note the sample workbook is now loaded';
 		}
 		else if(command == 'switch' || command == 'tab'){
 

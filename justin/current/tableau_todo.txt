@@ -1,4 +1,19 @@
 //-----------------------------------------------------------------------
+// initial commands to support *indicates done
+
+*start
+
+show <single filter name> 
+
+tab <tab name>
+
+*reload
+
+*exit
+
+
+
+//-----------------------------------------------------------------------
 function rangeFilter(field, range){
 	...
 	worksheet.applyRangeFilterAsync(fieldName: string, range: RangeFilterOptions);

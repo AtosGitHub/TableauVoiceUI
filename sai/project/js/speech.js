@@ -12,7 +12,7 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 var comms = ['start', 'exit', 'test'];
 
 // This is the Grammar we would like to target for commands
-//var grammar = '#JSGF V1.0; grammer commands; public <commands> = (start | exit | test);'
+var grammar = '#JSGF V1.0; grammer commands; public <commands> = (exit | test);'
 
 
 // Grammar and Speech variable set up
@@ -36,8 +36,8 @@ var recognizing = false;
 // what runs after the click on the mic
 function startReco(event){
 
-
     var log = document.getElementById('output');
+
 
 
     // if app is listening already, then stop
@@ -61,6 +61,7 @@ function startReco(event){
       start_img.src = 'js/mic-slash.gif';
       log.textContent = 'recognition started';
 
+
     }
 
 }
@@ -74,7 +75,7 @@ recognition.onstart = function(event) {
 
 // no match for the voice calls this
 recognition.onnomatch = function(event) {
-      log.textContent = 'No match for Command';
+      //log.textContent = 'No match for Command';
   }
 
 
@@ -84,9 +85,10 @@ recognition.onresult = function(event) {
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
 
+
+
     speechParse(command);
 
-    //var log = document.getElementById('output');
 
 
     //log.textContent = 'Command Received to be '+ command + ' ';

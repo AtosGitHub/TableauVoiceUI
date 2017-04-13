@@ -1,8 +1,8 @@
 
 
 var viz, workbook, activeSheet, fields, sheets;        
-var Worksheets
 var SheetList = [];
+var FieldList = [];
 
 //----------------------------------------------------------------
 // initialize Tableau Viz
@@ -140,6 +140,14 @@ function printUnderlying(sheet){
     });
     
 }
+
+//----------------------------------------------------------------
+
+
+function showData(){
+    console.log(FieldList);
+}
+
 //----------------------------------------------------------------
 // get and print underlying spreadsheet data
 
@@ -147,6 +155,7 @@ function getUnderlyingDataB() {
             var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
             var sheets;
             var i;
+            FieldList = [];
 
             if(sheet.getSheetType() === "dashboard"){
                 sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
@@ -167,16 +176,21 @@ function printUnderlyingB(sheet){
     var numColumns;
     var i;
 
-    msg += "Name: " + sheet.getName() +  "<br>"; 
+    //msg += "Name: " + sheet.getName() +  "<br>"; 
 
-    var sht = new Sheet(sheet.getName());
+    //var sht = new Sheet(sheet.getName());
     
      options = {
-                ignoreAliases: false,
-                ignoreSelection: false,
-                includeAllColumns: false,
+                ignoreAliases: true,
+                ignoreSelection: true,
+                includeAllColumns: true,
                 maxRows: 0, // Max rows to return. Use 0 to return all rows
             };
+
+    /*sheet.clearFilterAsync(columns[i].getFieldName()).then(function() {
+        console.log("cleared filter");
+
+    });*/
 
     sheet.getUnderlyingDataAsync(options).then(function(summaryData){
         this.summaryData = summaryData;
@@ -189,6 +203,10 @@ function printUnderlyingB(sheet){
         var flds = [];
         var dta = [];
         
+        // columns[] contains tableau-column objects
+        // with methods: getFieldName(), getDataType() {string/int/float/date}, 
+        // getIsReferenced() {boolean: is field referenced in worksheet?}, 
+        // getIndex() {index of object in columns[i]}
         for(i = 0; i < numColumns; i++){
             msg += columns[i].getIndex() + "_/_" + columns[i].getFieldName() + "_/_" 
             + columns[i].getDataType() + "<br>";
@@ -198,6 +216,9 @@ function printUnderlyingB(sheet){
 
         msg += "<br>Data Column:<br>";
 
+
+
+        // parse strData
         for(j = 0; j < strData.length; j++){
             var sdsplit = strData[j].split("},{");
             var row = [];
@@ -215,39 +236,103 @@ function printUnderlyingB(sheet){
         msg += dta[2] + "<br>";
         //msg += dta[0][0] + "<br>"; // experiment; uncomment to test
 
-        var col0 = dta.map(function(value,index) { return value[0]; });
-        col0 = unique(col0);
+        //var col0 = dta.map(function(value,index) { return value[0]; });
+        //col0 = unique(col0);
 
         msg += "<br>";
         msg += "<br>####<br>";
         msg += dta[0] + "<br>";
 
+        msg += "<br>after parse:<br>";
+
         var tgt = document.getElementById("dataTarget");
         tgt.innerHTML += "<h4>Underlying Data:</h4><p>" + msg + "</p>";
 
-        msg = "";
+        msgg = "";
+        
+        dlen = dta[0].length;
 
-        for(i = 0; i < dta[0].length; i++){
+        for(i = 0; i < dlen; i++){
             var col = dta.map(function(value,index) { return value[i]; });
-            col = unique(col);
+            col = unique(col, columns[i].getDataType());
+            //console.log("len: ", dlen);
+            //console.log("col[0]: ", col[0]);
+            console.log("# : ", columns[i].getFieldName(), ", type: ", flds[i].type);
 
             if(flds[i].type === "string"){
-                flds[i].values.push(col);    
+                //console.log("string");
+                flds[i].values = col;  
+                //flds[i].values.push(col);  
+                //console.log("after push");
+                console.log("values[0]/[1]: ", flds[i].values[0], ', ', flds[i].values[1]);  
             }
             else{
-                flds[i].values[0] = col[0];
-                flds[i].values[1] = col[col.length-1];
-            }
+                //console.log("not string");
+                //console.log("col.length: ", col.length);
+                //console.log("col[0]: ", col[0], "col[col.length-1]: ", col[col.length-1]);
+                //console.log(col);
+                //console.log("after col");
 
-            msg += "after parse: " + flds[i].values[0] + ", " + flds[i].values[1] + "<br>";
+                if( flds[i].type === "date" || flds[i].type === "datetime"){
+                    //console.log(col);
+                }
+                //console.log("after col 2");
+                flds[i].values = [col[0], col[col.length-1]];
+                //flds[i].values[0] = col[0];
+                //flds[i].values[1] = col[col.length-1];
+                //console.log("after push");
+                console.log("non-string values: ", flds[i].values);
+                console.log("col: ", col);
+
+                //console.log("###values[0]/[1]: ", flds[i].values[0], ', ', flds[i].values[1]);  
+
+            }
+            //console.log("fields 0, 1: ", flds[i].values[0], ", ", flds[i].values[1]);
+
+            //msgg += flds[i].values[0] + ", " + flds[i].values[1] + "<br>";
 
         }
 
-        tgt.innerHTML += "<h4>values</h4><p>" + msg + "</p>";
+        FieldList.push(flds);
+
+        //console.log("after loop");
+
+        //tgt.innerHTML += "<h4>values</h4><p>" + msg + "</p>";
 
     });
     
 }
+
+//----------------------------------------------------------------
+// Data structures for undlerying spreadsheet data to be passed to 
+// Web Speech implementation to dynamically define a grammar
+//
+// TODO : current configuration stores some redundant data when
+//  multiple sheets in the same dashboard have overlapping fields;
+//  task: modify functions: Field(), Sheet(), getUnderlying(), and printUnderlying() to 
+//  create only unique instances of Field() with a list of associated Sheets 
+//  stored as a list of strings.
+
+function Field(name, type){
+    //var worksheetName; 
+    //alert("field created");
+    this.name = name; 
+
+    this.type = type; //float, integer, string, boolean, date, datetime
+
+
+    var sheets = [];
+
+    var values = []; // if(type == string){values = an array of strings for all unique values}
+    // else { : array[0] = minVal, array[1] = maxVal}
+}
+
+function Sheet(name){
+    //alert("sheet create");
+    this.name = name;
+    var fields = [];
+}
+
 //----------------------------------------------------------------
 // calls alert(<list of sheets (tabs), their index, and indicates active sheet)
 // called by pressing 'querySheets' button
@@ -274,6 +359,68 @@ function changeSheet(){
     workbook.activateSheetAsync(newSheet);
 }
 
+
+//----------------------------------------------------------------
+// get tableau field-object info
+function getFields(){
+    var sheet = viz.getWorkbook().getActiveSheet();
+    var sheets;
+    var i;
+
+    if(sheet.getSheetType() === "dashboard"){
+        sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
+        var sLen = sheets.length;
+        for(i = 0; i < sLen; i++){
+            printFields(sheets[i]);
+        }
+    }
+    else{
+        printFields(sheet);
+    }
+
+}
+
+function printFields(sheet){
+    var dSource, fields, len;
+    console.log("printing sheet: " + sheet.getName());
+
+    sheet.getDataSourcesAsync().then(function (dSources){
+        dSource = dSources[0];
+        console.log("geting data sources");
+        var fields = dSource.getFields();
+        console.log("2");
+        var len = fields.length;
+        console.log("3");
+        var i;
+        var msg = "";
+
+        var nds = dSources.length;
+        var dslens = '';
+
+        //msg += "DataSource: " + dSource;
+
+        //console.log("num data sources: ", nds);
+        //console.log("dSource.length: ", dSource.length);
+
+
+        
+        for(i = 0; i < nds; i++){
+            dslens += dSources[i].getFields().length + ", ";
+        }
+
+        console.log("dslens: ", dslens);
+        
+
+        for(i = 0; i < len; i++){
+            msg += "name: " + fields[i].getName() + ", ";
+            msg += "aggr: " + fields[i].getAggregation() + ", ";
+            msg += "role: " + fields[i].getRole() + "\n";    
+        }
+        
+
+        console.log(msg);
+    }, console.log("failed to get fields"));
+}
 
 //----------------------------------------------------------------
 // clears innerHTML attribute of <div> object that contains results
@@ -330,47 +477,32 @@ function applyFilter(sheet, field, filter, type){
     }
 
 }
-//----------------------------------------------------------------
-// data structures for undlerying spreadsheet data to be passed to 
-// Web Speech implementation to dynamically define a grammar
-//
-// TODO : current configuration stores some redundant data when
-//  multiple sheets in the same dashboard have overlapping fields;
-//  task: modify functions: Field(), Sheet(), getUnderlying(), and printUnderlying() to 
-//  create only unique instances of Field() with a list of associated Sheets 
-//  stored as a list of strings.
 
-function Field(name, type){
-    //var worksheetName; 
-    //alert("field created");
-    this.name = name; 
-
-    this.type = type; //float, integer, string, boolean, date, datetime
-
-    var sheets;
-
-    var values = []; // if(type == string){values = an array of strings for all unique values}
-    // else { : array[0] = minVal, array[1] = maxVal}
-}
-
-function Sheet(name){
-    //alert("sheet create");
-    this.name = name;
-    var fields = [];
-}
 //----------------------------------------------------------------
 // utility function: returns ascending-ordered array of unique items from xs
 // used to efficiently store/search array 'values' in function-object 'Field'
 
-var unique = function(xs) {
+var unique = function(xs, type) {
   var seen = {};
+  
+  var dtypes = ["string", "integer", "float", "date", "datetime"];
+
+  /*
+  switch(type){
+    case 
+  }
+  */
+
   xs.sort();
+
+  
   return xs.filter(function(x) {
     if (seen[x])
       return;
     seen[x] = true;
     return x;
   })
+    
 }
 
 //----------------------------------------------------------------
@@ -414,7 +546,7 @@ function printSummary(sheet){
 
     options = {
                 ignoreAliases: false,
-                ignoreSelection: false,
+                ignoreSelection: true,
                 maxRows: 0, // Max rows to return. Use 0 to return all rows
             };
     
@@ -433,10 +565,12 @@ function printSummary(sheet){
         }
 
         msg += "Data:<br>" + JSON.stringify(summaryData.getData()).substring(0,1000);
-        //alert(msg);
+        console.log(msg);
 
+        
+        /*
         var tgt = document.getElementById("dataTarget");
-                tgt.innerHTML += "<h4>Summary Data:</h4><p>" + msg + "</p>";
+                tgt.innerHTML += "<h4>Summary Data:</h4><p>" + msg + "</p>";*/
     });
     
 }
@@ -454,39 +588,6 @@ function clearFilter(){
     sheet.applyFilterAsync("Major", "AUND", tableau.FilterUpdateType.ALL);
 }
 
-function getFields(){
-    var sheet = viz.getWorkbook().getActiveSheet();
-    var sheets;
-    var i;
-
-    if(sheet.getSheetType() === "dashboard"){
-        sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
-        var sLen = sheets.length;
-        for(i = 0; i < sLen; i++){
-            printFields(sheets[i]);
-        }
-    }
-    else{
-        printFields(sheet);
-    }
-
-}
-
-function printFields(sheet){
-    var dSource, fields, len;
-    alert("printing sheet: " + sheet.getName());
-    sheet.getDataSourcesAsync().then(function (dSource){
-        var fields = dSource.getFields();
-        var len = fields.length;
-        var i;
-        var msg = "";
-        msg += "name: " + fields[0].getName() + "\n";
-        msg += "aggr: " + fields[0].getAggregation() + "\n";
-        msg += "role: " + fields[0].getRole() + "\n";
-
-        alert(msg);
-    }, alert("failed to get fields"));
-}
 
 
 function parseRow(row){
@@ -527,28 +628,35 @@ function testPush(){
 
 }
 
-
+//----------------------------------------------------------------
 
 function getParameters(){
+    workbook = viz.getWorkbook();
+    console.log("wb name; ", workbook.getName());
     workbook.getParametersAsync().then(function(parameters){
         var plen = parameters.length;
-        alert("num parameters: " + plen);
+        console.log("num parameters: " + plen);
         var i;
         var pmsg = "";
         for(i = 0; i < plen; i++){
-            pmsg += parameters[i].getName() + "<br>";
+            pmsg += parameters[i].getName() + "\n";
+            //pmsg += parameters[i].getName() + "<br>";
         }
-        var tgt = document.getElementById("dataTarget");
-                tgt.innerHTML = "<h4>Parameters:</h4><p>" + pmsg + "</p>";
+        console.log("parameters\n", pmsg);
+        // var tgt = document.getElementById("dataTarget");
+        //         tgt.innerHTML = "<h4>Parameters:</h4><p>" + pmsg + "</p>";
 
     });
 
 }
 
+//----------------------------------------------------------------
 
 function getFilters(){
 
     var sheet = viz.getWorkbook().getActiveSheet();
+
+    var appliedVals = [];
 
     if(sheet.getSheetType() === "dashboard"){
         sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
@@ -560,9 +668,13 @@ function getFilters(){
                 fLen = filters.length;
                 //filterList += "Sheet Name: " + sheets[i].getName() + "\n";
                 for(j = 0; j < fLen; j++){
-                    filterList += filters[j].getFieldName() + " " + filters[j].getFilterType() + "\n";
+                    filterList += filters[j].getFieldName() + ", " + filters[j].getFilterType() + "\n";
+                    if(filters[j].getFilterType() == "categorical"){
+                        appliedVals.push(filters[j].getAppliedValues());
+                    }
                 }
-                alert(filterList);
+                console.log(filterList);
+                console.log(appliedVals);
                 filterList = "";
                 
             });
@@ -572,15 +684,21 @@ function getFilters(){
         sheet.getFiltersAsync().then(function (filters){
             fLen = filters.length;
             for(j = 0; j < fLen; j++){
-                filterList += filters[j].getFieldName() + "\n";
-            }2
+                filterList += filters[j].getFieldName() + ", " + filters[j].getFilterType() + "\n";
+                if(filters[j].getFilterType() == "categorical"){
+                        appliedVals.push(filters[j].getAppliedValues());
+                    }
+            }
             filterList += "\n";
-            alert(filterList);
+            console.log(filterList);
+            console.log(appliedVals);
         });
     }
     
 
 }
+
+
 
 function getWorkbookName(){
     var wbn = viz.getWorkbook().getName();

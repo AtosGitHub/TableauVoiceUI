@@ -5,11 +5,23 @@
 
 show <single filter name> 
 
+    (show) (show me) (filter) <filter name>
+
+    
+
 tab <tab name>
+
+    (tab) (change tab) (show) (show me) <tab name>
+
+
 
 *reload
 
 *exit
+
+
+
+
 
 
 

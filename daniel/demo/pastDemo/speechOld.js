@@ -88,8 +88,6 @@ function initViz() {
     url = "http://public.tableau.com/views/RegionalSampleWorkbook/College";
 
     var options = {
-
-
         onFirstInteractive: function () {
             workbook = viz.getWorkbook();
             activeSheet = workbook.getActiveSheet();

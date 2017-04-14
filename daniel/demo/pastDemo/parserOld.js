@@ -4,17 +4,15 @@
     necessary Tableau API functions
 
 */
-
+var log = document.querySelector('.output');
 
 // this function is called with each voice command
 // so far it is a bunch of if statements based on the word spoken
 function parser(command){
 
-  var cm = document.getElementById("command").value;
-  var bog = document.querySelector('.output');
   var legal = false;
 
-  var info = tableau.getInfo();
+  var info = FildList;
 
   var workbooks = [];
 
@@ -38,7 +36,7 @@ function parser(command){
       legal = true;
     }
   }
-    
+
   if(command.includes('start') || cm.includes('start')){
       initViz();
   }
@@ -47,7 +45,7 @@ function parser(command){
 
   }
 
-  
+
 
   //library variables that can guess which function user want to use
   var addLibrary = {'add'};
@@ -66,13 +64,14 @@ function parser(command){
           if (addLibrary.includes(words[j]))
           {
             filterByName(info[i].fieldName, info[i].values[j], 'ADD');
+            bog.textContent == 'Command received is '+ command + ' note how the tab switched';
           }
           else if (removeLibrary.includes(words[j]))
           {
             //call the remove function from tableau side
             filterByName(info[i].fieldName, info[i].values[j], 'REMOVE');
-          }      
-          else 
+          }
+          else
           {
             //call the default replace function from tableau side
             filterByName(info[i].fieldName, info[i].values[j], 'REPLACE');
@@ -93,10 +92,10 @@ function parser(command){
     for (var k=0; k< allLibrary.length; k++)
     {
       if (command.includes(allLibrary[k]))
-        {filterByName(info[0].fieldName, info[0].values[0], 'ALL');}
+        {log.}
     }
   }
-  
+
   //if we still dont know what to do with this command, then report the error
   if (legal == false)
   {
@@ -108,4 +107,3 @@ function parser(command){
 function switchToMapTab() {
   workbook.activateSheetAsync("GDP per capita map");
 }
-

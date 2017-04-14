@@ -12,7 +12,7 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 var comms = ['start', 'exit', 'test'];
 
 // This is the Grammar we would like to target for commands
-//var grammar = '#JSGF V1.0; grammer commands; public <commands> = (start | exit | test);'
+var grammar = '#JSGF V1.0; grammer commands; public <commands> = (start | exit | test);'
 
 
 // Grammar and Speech variable set up

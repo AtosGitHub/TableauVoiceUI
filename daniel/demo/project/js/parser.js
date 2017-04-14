@@ -7,13 +7,13 @@
 var info;
 var addLibrary = ['add', 'plus', 'put in'];
 var removeLibrary = ['remove', 'reduce', 'delete'];
-var allLibrary = ['reset','all', 'everything', 'clear'];
+var allLibrary = ['reset', 'all', 'everything', 'clear'];
 
 // this function is called with each voice command
 // so far it is a bunch of if statements based on the word spoken
 function parser(command) {
   var legal = false;
-  var tabs = ['Obesity', 'College', 'Economy', 'Stocks', 'Storms ', 'Flights'];
+  var tabs = ['Obesity', 'College', 'Economy', 'Stocks', 'Storms', 'Flights'];
 
   var cmd = document.getElementById('command').value.toLowerCase();
   document.getElementById("output").innerHTML = "Command recieved as:"+command+'...';
@@ -49,7 +49,7 @@ function parser(command) {
     filterByName(info[0][0].name, info[0][0].values[1], 'replace');
   }*/
 
-  else if(command == 'Apple'){
+  else if(command == 'Apple' || command == 'apple'){
     getUnderlyingDataB();
     info = FieldList;
     legal = true;
@@ -149,7 +149,7 @@ function parser(command) {
 
   }
   if (legal === false){
-    document.getElementById("output").innerHTML = "Sorry, your Command is not legal...";
+    document.getElementById("output").innerHTML = "Sorry, your Command: ''" + command + "' is not legal";
   }
 
 

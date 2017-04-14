@@ -136,40 +136,6 @@ function testLocal() {
 function speechParse() {
   var command = document.getElementById('command').value.toLowerCase();
 
-  if(command == 'start'){
-    initViz();
-
-    //bog.textContent == 'Command received is '+ command ' note the sample workbook is now loaded';
-  }
-  else if(command == 'switch' || command == 'tab'){
-
-      switchToMapTab();
-
-    //bog.textContent == 'Command received is '+ command + ' note how the tab switched';
-
-
-  }
-  else if(command == 'exit' || command == 'hide' || command == 'close') {
-
-    hide();
-
-    //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
-
-
-  }
-  else if(command == 'reload'){
-
-    window.location.reload();
-
-  }
-
-
-
-
-
-
-
-
-
+  parser(command);
 
 }

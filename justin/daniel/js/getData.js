@@ -24,6 +24,7 @@ function initViz() {
             workbook = viz.getWorkbook();
             activeSheet = workbook.getActiveSheet();
             getUnderlyingDataB();
+            viz.addEventListener(tableau.TableauEventName.TAB_SWITCH, updateData);
         },
         onFirstVizSizeKnown: function(){
 
@@ -48,7 +49,7 @@ function getUnderlyingDataB() {
             var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
             var sheets;
             var i;
-            FieldList = [];
+            //FieldList = [];
 
 
             if(sheet.getSheetType() === "dashboard"){

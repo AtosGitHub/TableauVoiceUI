@@ -1,5 +1,7 @@
-// Imports for WebSpeech API
 // from folder justin/currentSpeech
+
+// Imports for WebSpeech API
+
 var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
 var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
 var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;

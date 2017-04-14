@@ -1,3 +1,5 @@
+// from folder justin/currentSpeech
+
 var SheetList = []; // type Sheet
 var activeIndex;
 //----------------------------------------------------------------

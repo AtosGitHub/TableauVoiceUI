@@ -11,11 +11,11 @@ var allLibrary = ['reset','all', 'everything', 'clear'];
 
 // this function is called with each voice command
 // so far it is a bunch of if statements based on the word spoken
-function parser() {
+function parser(command) {
   var legal = false;
   var tabs = ['Obesity', 'College', 'Economy', 'Stocks', 'Storms ', 'Flights'];
 
-  var command = document.getElementById('command').value.toLowerCase();
+  var cmd = document.getElementById('command').value.toLowerCase();
   document.getElementById("output").innerHTML = "Command recieved as:"+command+'...';
   //var bog = document.getElementById("output");
 
@@ -49,7 +49,7 @@ function parser() {
     filterByName(info[0][0].name, info[0][0].values[1], 'replace');
   }*/
 
-  else if(command == 'get'){
+  else if(command == 'Apple'){
     getUnderlyingDataB();
     info = FieldList;
     legal = true;

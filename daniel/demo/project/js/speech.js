@@ -84,7 +84,7 @@ recognition.onresult = function(event) {
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
 
-    speechParse(command);
+    parser(command);
 
     //var log = document.getElementById('output');
 
@@ -133,8 +133,8 @@ function testLocal() {
 }
 
 
-function speechParse(command) {
-
+function speechParse() {
+  var command = document.getElementById('command').value.toLowerCase();
 
   if(command == 'start'){
     initViz();

@@ -41,11 +41,11 @@ function getUnderlyingDataD() {
             var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
 
             if(SheetList[sheet.getIndex()].visited){
-                console.log("already visited sheet");
+                //console.log("already visited sheet");
                 return;
             }
             else{
-                console.log("not yet visited");
+                //console.log("not yet visited");
             }
 
             if(sheet.getSheetType() === "dashboard"){
@@ -72,14 +72,14 @@ function printUnderlyingD(sheet){
     if(dash){
         dname = dash.getName();    
         idx = dash.getIndex();
-        console.log("dashboard name: ", dname);
-        console.log("dashboard index: ", idx);
+        //console.log("dashboard name: ", dname);
+        //console.log("dashboard index: ", idx);
     }
     else{
         dname = sheet.getName();
         idx = sheet.getIndex();
-        console.log("worksheet name: ", sheet.getName());
-        console.log("worksheet index: ", sheet.getIndex());
+        // console.log("worksheet name: ", sheet.getName());
+        // console.log("worksheet index: ", sheet.getIndex());
     }
     
      options = {
@@ -134,9 +134,7 @@ function printUnderlyingD(sheet){
             }
 
         }
-
-
-        console.log("sheet index: ", sheet.getIndex());
+        //console.log("sheet index: ", sheet.getIndex());
 
         SheetList[idx].fields = flds;
         SheetList[idx].visited = true;
@@ -213,9 +211,11 @@ var uniqueD = function(xs, type) {
     
 }
 //----------------------------------------------------------------
+function printSheetList(){
+    console.log(SheetList);
+}
 
-
-
-
-
+function printActive(){
+    console.log("SheetList[activeIndex] returns:\n", SheetList[activeIndex]);
+}
 //----------------------------------------------------------------

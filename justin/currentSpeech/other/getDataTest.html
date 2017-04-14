@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>getData() Basic Example</title>
+		<script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.js"></script>
+        <script type="text/javascript">
+            var viz, sheet, table;
+
+            function initViz() {
+		var containerDiv = document.getElementById("vizContainer"),
+                    url = "http://public.tableau.com/views/RegionalSampleWorkbook/Storms",
+                    options = {
+                        hideTabs: true,
+                        hideToolbar: true,
+                        onFirstInteractive: function () {
+                            document.getElementById('getData').disabled = false; // Enable our button
+                        }
+                    };
+                viz = new tableau.Viz(containerDiv, url, options);
+            }
+
+            function getUnderlyingData(){
+                sheet = viz.getWorkbook().getActiveSheet().getWorksheets().get("Storm Map Sheet");
+		 // If the active sheet is not a dashboard, then you can just enter:
+		 // viz.getWorkbook().getActiveSheet();
+                options = {
+                    maxRows: 0, // Max rows to return. Use 0 to return all rows
+                    ignoreAliases: false,
+                    ignoreSelection: true,
+                    includeAllColumns: false
+                };
+
+                sheet.getUnderlyingDataAsync(options).then(function(t){
+                       table = t;
+			var tgt = document.getElementById("dataTarget");
+			tgt.innerHTML = "<h4>Underlying Data:</h4><p>" + JSON.stringify(table.getData()) + "</p>";
+                });
+            }
+        </script>
+    </head>
+
+    <body onload="initViz();">
+        <div class="page-header">
+            <h1>getData() Basic Example</h1>
+            <p>Click the "Get Data" button to get underlying data for the viz.</p>
+            <button id="getData" onclick="getUnderlyingData()" class="btn" disabled>Get Data</button>
+        </div>
+        <div id="vizContainer" style="width:600px; height:600px;"></div>
+        <div id="dataTarget"></div>
+    </body>
+</html>
+
+

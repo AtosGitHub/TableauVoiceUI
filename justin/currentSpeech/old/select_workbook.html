@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Select Workbook</title>
+</head>
+
+<body>
+    <img src="atos.png" alt="Atos Header" style="width:100%;height:400px;">
+    
+    <div id="url" style ="padding-top=200px;" align="center">
+        Workbook URL: <input type="text" id="field" value="" style="width:400px;height:30px">
+    </div>
+
+    <div id="controls" style="padding:20px;" align="center">
+        Select Previous: 
+        <select id="changeYear" onchange="initViz(value)">
+                <option value="">Select</option>
+                <option value="College Admissions">College Admissions</option>
+                <option value="Stock Prices">Stock Prices</option>         
+        </select>
+    </div>
+
+    <script>
+    function process(){
+        var field = document.getElementById("field").value;
+        var filter = document.getElementById("filter").value;
+        var type = document.getElementById("type").value;
+        filterByName(field, filter, type);
+    }</script>
+
+</body> 
+
+</html>

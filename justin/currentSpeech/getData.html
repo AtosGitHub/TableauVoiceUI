@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<!-- from folder justin/currentSpeech -->
+<head>
+    <title>Filter</title>
+
+    <script type="text/javascript" 
+        src="https://public.tableau.com/javascripts/api/tableau-2.js">
+    </script>
+    <script src="getData.js"></script>
+    <script src="speech.js"></script>
+    <script src="data.js"></script>
+</head>
+
+<body onload="initViz();">
+
+    <div id="input" class="center" float:"right">
+        <button id="start_button" onclick="startReco(event)">
+            <img id="start_img" src="mic.gif">
+        </button>
+    </div>
+
+    <div id="vizContainer" style="width:800px; height:700px;"></div>
+
+    <br>
+    <br>
+
+    <input type="text" id="field" value="State">
+    <input type="text" id="filter" value="Texas;Oklahoma;Arkansas">
+    <input type="text" id="type" value="replace">
+    <button type="button" onclick="process()" align="right">filter</button>
+    <br>
+    <div id="filterInstructions">(case sensitive)____(case sensitive)____(add/replace/remove/all)</div>
+    <div>(Field)____________(str_filter)____________(filter_type)</div>
+    <br>
+
+    <input type="text" id="changeSheet" value="Flights">
+    <button type="button" onclick="changeSheet()" align="right">changeSheet</button> 
+    <div id="csInstr">(Enter any tab name)</div>
+
+
+    <script>
+    function process(){
+        var field = document.getElementById("field").value;
+        var filter = document.getElementById("filter").value;
+        var type = document.getElementById("type").value;
+        //alert(field + "<br>" + filter + "<br>" + type);
+        filterByName(field, filter, type);
+    }</script>
+
+</body> 
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Speech color changer</title>
+
+    <link rel="stylesheet" href="style.css">
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <h1>Tableau speech recognition</h1>
+
+    <p class="hints"></p>
+    <div>
+        <p class="output"><em>...diagnostic messages</em></p>
+    </div>
+    <div id="vizContainer" style="width:900px; height:700px;"> </div>
+    <script> 
+      var viz, workbook, activeSheet, fields, sheets;        
+
+      function initViz() {
+    var containerDiv = document.getElementById("vizContainer");
+    url = "https://public.tableau.com/views/RegionalSampleWorkbook_9/Obesity?:embed=y&:display_count=yes";
+  
+    var options = {
+        hideTabs: false,
+        hideToolBar: false,
+
+        onFirstInteractive: function () {
+            workbook = viz.getWorkbook();
+            activeSheet = workbook.getActiveSheet();
+        },
+        onFirstVizSizeKnown: function(){
+
+        },
+    };
+    viz = new tableau.Viz(containerDiv, url, options);
+} 
+  </script>
+
+    <script src="script.js"></script>
+    <script src="parser.js"></script>
+    <script src="tableau.js"></script>
+  </body>
+</html>

@@ -5,17 +5,12 @@ var viz, workbook, activeSheet, fields, sheets;
 
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
-    //url = "http://public.tableau.com/views/ATOSCarrierReport/Sheet1?:retry=yes&:embed=y&:display_count=yes&:showTabs=y";
     url = "https://public.tableau.com/views/RegionalSampleWorkbook_9/Obesity?:embed=y&:display_count=yes";
   
     var options = {
         hideTabs: false,
         hideToolBar: false,
-        //instanceIdToClone:   ,
-        //height: ,
-        //width: ,
-        //device: ,
-        //"filterName": ,
+
         onFirstInteractive: function () {
             workbook = viz.getWorkbook();
             activeSheet = workbook.getActiveSheet();
@@ -24,7 +19,6 @@ function initViz() {
 
         },
     };
-
     viz = new tableau.Viz(containerDiv, url, options);
 }
 

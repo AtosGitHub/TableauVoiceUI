@@ -28,6 +28,7 @@
 	<!-- Load all the scripts -->
     <link rel="stylesheet" href="css/main.css">
     <script type="text/javascript" src="js/speech.js"></script>
+    <script type="text/javascript" src="js/getData.js"></script>
     <script type="text/javascript" src="js/parser.js"></script>
 
 	<!-- Tableau api script load -->
@@ -239,19 +240,17 @@
 
 					</div>
 
-          <!--
+
 					<div id="parserButton">
 
             <input type="text" id="command" />
-            <button onclick="parser()">Enter</button>
+            <button onclick="speechParse()">Enter</button>
 
 					</div>
-        -->
-
 
 					<!-- This is the div which outputs the speech for testing  -->
 					<div id="log" class="bottom">
-						<em> <p id="output" class="output">  diagnostic...  </p> </em>
+						<p id="output" class="output"> <em> diagnostic... </em> </p>
 
 					</div>
 

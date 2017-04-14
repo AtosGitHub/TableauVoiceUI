@@ -27,7 +27,6 @@ function getInfo(){
   		workbook.activateSheetAsync(worksheet);
 	}
 
-	var viz, workbook, activeSheet;
 	function initViz() {
     	var containerDiv = document.getElementById("vizContainer");
     	url = "http://public.tableau.com/views/RegionalSampleWorkbook/College";

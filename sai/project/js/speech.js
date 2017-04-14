@@ -34,7 +34,7 @@ var recognizing = false;
 
 
 // what runs after the click on the mic
-function startReco(event){
+function startReco(event) {
 
     var log = document.getElementById('output');
 
@@ -142,16 +142,19 @@ function testLocal() {
 function speechParse(command) {
 
 
+  //document.getElementById("output").innerHTML =
+
+
   if(command == 'start'){
     initViz();
 
-    //bog.textContent == 'Command received is '+ command ' note the sample workbook is now loaded';
+    log.textContent = 'Command received is '+ command +' note the sample workbook is now loaded';
   }
   else if(command == 'switch' || command == 'tab'){
 
       switchToMapTab();
 
-    //bog.textContent == 'Command received is '+ command + ' note how the tab switched';
+    log.textContent = 'Command received is '+ command + ' note how the tab switched';
 
 
   }
@@ -159,7 +162,7 @@ function speechParse(command) {
 
     hide();
 
-    //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
+    log.textContent = 'Command received is '+ command + ' note how the Workbook is hidden';
 
 
   }

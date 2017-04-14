@@ -146,6 +146,7 @@ function printUnderlying(sheet){
 
 function showData(){
     console.log(FieldList);
+    return FieldList;
 }
 
 //----------------------------------------------------------------

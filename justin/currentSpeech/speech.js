@@ -12,20 +12,7 @@ var log = document.querySelector('.output');
 
 var recognizing = false;
 
-//command array
-var comms = ['start', 'exit', 'test'];
-
-// This is the Grammar we would like to target for commands
-var grammar = '#JSGF V1.0; grammer commands; public <commands> = (start | exit | test);'
-
-
-// Grammar and Speech variable set up
 var recognition = new SpeechRecognition();
-var speechRecognitionList = new SpeechGrammarList();
-speechRecognitionList.addFromString(grammar, 1);
-
-// Recognition attributes
-recognition.grammars = speechRecognitionList;
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
@@ -76,7 +63,6 @@ recognition.onresult = function(event) {
     console.log("speech command: ", command);
 
     interpCommand(command);
-
 
     //log.textContent = 'Command Received to be '+ command + ' ';
 

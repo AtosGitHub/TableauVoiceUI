@@ -1,4 +1,4 @@
-
+// justin/daniel
 
 var viz, workbook, activeSheet, fields, sheets;
 var SheetList = [];
@@ -10,7 +10,8 @@ var FieldList = [];
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
     //url = "http://public.tableau.com/views/ATOSCarrierReport/Sheet1?:retry=yes&:embed=y&:display_count=yes&:showTabs=y";
-    url = "http://public.tableau.com/views/RegionalSampleWorkbook/College";
+    //url = "http://public.tableau.com/views/RegionalSampleWorkbook/College";
+    url = "https://public.tableau.com/views/RegionalSampleWorkbook_9/Obesity?:embed=y&:display_count=yes";
 
     var options = {
         hideTabs: false,
@@ -24,7 +25,7 @@ function initViz() {
             workbook = viz.getWorkbook();
             activeSheet = workbook.getActiveSheet();
             getUnderlyingDataB();
-            viz.addEventListener(tableau.TableauEventName.TAB_SWITCH, updateData);
+            viz.addEventListener(tableau.TableauEventName.TAB_SWITCH, getUnderlyingDataB);
         },
         onFirstVizSizeKnown: function(){
 
@@ -54,10 +55,11 @@ function getUnderlyingDataB() {
 
             if(sheet.getSheetType() === "dashboard"){
                 sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
-                var sLen = sheets.length;
-                for(i = 0; i < sLen; i++){
-                    printUnderlyingB(sheets[i]);
-                }
+                printUnderlyingB(sheets[0]);
+                //var sLen = sheets.length;
+                // for(i = 0; i < sLen; i++){
+                //     printUnderlyingB(sheets[i]);
+                // }
             }
             else{
                 printUnderlyingB(sheet);
@@ -190,8 +192,9 @@ function printUnderlyingB(sheet){
         }
 
         FieldList.push(flds);
+        //FieldList = flds;
 
-        console.log("FieldList: ", FieldList);
+        console.log("FieldList in printUnderlyingB): ", FieldList);
 
         //tgt.innerHTML += "<h4>values</h4><p>" + msg + "</p>";
 

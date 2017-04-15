@@ -1,7 +1,7 @@
 // Imports for WebSpeech API
-var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
-var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
-var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
 
 
 // for testing purposes I need a log on the html
@@ -74,7 +74,9 @@ recognition.onresult = function(event) {
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
 
-    parser(command);
+    console.log("speech command: ", command);
+
+    //parser(command);
 
 
     log.textContent = 'Command Received to be '+ command + ' ';

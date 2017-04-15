@@ -1,3 +1,5 @@
+// justin/daniel
+
 //temp JavaScript file to enable the function of tableau api call for testing purpose
 function getInfo(){
 	initViz();

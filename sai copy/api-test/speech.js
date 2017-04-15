@@ -1,7 +1,7 @@
 // Imports for WebSpeech API
-var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
-var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
-var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
 
 
 // for testing purposes I need a log on the html
@@ -26,8 +26,6 @@ recognition.grammars = speechRecognitionList;
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
-
-
 
 
 
@@ -74,6 +72,8 @@ recognition.onresult = function(event) {
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
 
+    console.log("speech command: ", command);
+
     parser(command);
 
 
@@ -101,12 +101,4 @@ function initViz() {
     };
 
     viz = new tableau.Viz(containerDiv, url, options);
-}
-
-function hide() {
-		
-	viz.hide();
-	
-	
-	
 }

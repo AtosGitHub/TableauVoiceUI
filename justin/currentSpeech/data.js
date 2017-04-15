@@ -2,6 +2,7 @@
 
 var SheetList = []; // type Sheet
 var activeIndex;
+
 //----------------------------------------------------------------
 // Data structures for undlerying spreadsheet data to be passed to 
 // Web Speech implementation to dynamically define a grammar
@@ -13,53 +14,74 @@ var activeIndex;
 //  stored as a list of strings.
 
 function Field(name, type){
-    //var worksheetName; 
-    //alert("field created");
+    
     this.name = name; 
 
-    this.type = type; //float, integer, string, boolean, date, datetime
+    //float, integer, string, boolean, date, datetime
+    this.type = type; 
 
-    this.values = []; // if(type == string){values = an array of strings for all unique values}
+    // if(type == string){values = an array of strings for all unique values}
     // else { : array[0] = minVal, array[1] = maxVal}
+    this.values = []; 
 }
 
 function Sheet(name, type){
-    //alert("sheet create");
+
     this.name = name;
+
+    // dashboard or worksheet
     this.type = type;
+
     this.visited = false;
+
     this.fields = [];
-    //var workSheets = [];
+
 }
+
+//----------------------------------------------------------------
+// populates SheetList with Sheet objects, called right after Viz 
+// initialized
+function loadSheetList() {
+
+    sheets = viz.getWorkbook().getPublishedSheetsInfo();
+    var numSheets = sheets.length;    
+    var i;
+    var actS = workbook.getActiveSheet();
+
+    for(i = 0; i < numSheets; i++){
+        SheetList.push(new Sheet(sheets[i].getName(), sheets[i].getSheetType()));
+    }
+}
+
 //----------------------------------------------------------------
 // called each time a new tab is loaded, which adds fields for that tab to SheetList
-function updateData(){
-    getUnderlyingDataD();
+function updateSheetList(){
+    activeIndex = workbook.getActiveSheet().getIndex();
+    activeSheet = workbook.getActiveSheet();
+
+    if(SheetList[activeIndex].visited){
+                console.log("already visited");
+                return;
+    }
+    else{
+        getData();
+    }
 }
 //----------------------------------------------------------------
 // gets field data for active sheet
 
-function getUnderlyingDataD() {
-            var sheet = viz.getWorkbook().getActiveSheet();//.getWorksheets();
+function getData() {
 
-            if(SheetList[sheet.getIndex()].visited){
-                //console.log("already visited sheet");
-                return;
+            if(activeSheet.getSheetType() === "dashboard"){
+                var sheets = activeSheet.getWorksheets();
+                getWorksheetData(sheets[0]);
             }
             else{
-                //console.log("not yet visited");
-            }
-
-            if(sheet.getSheetType() === "dashboard"){
-                var sheets = sheet.getWorkbook().getActiveSheet().getWorksheets();
-                printUnderlyingD(sheets[0]);
-            }
-            else{
-                printUnderlyingD(sheet);
+                getWorksheetData(activeSheet);
             }
 }
 
-function printUnderlyingD(sheet){
+function getWorksheetData(sheet){
 
     var summaryData;
     var columns;
@@ -74,14 +96,10 @@ function printUnderlyingD(sheet){
     if(dash){
         dname = dash.getName();    
         idx = dash.getIndex();
-        //console.log("dashboard name: ", dname);
-        //console.log("dashboard index: ", idx);
     }
     else{
         dname = sheet.getName();
         idx = sheet.getIndex();
-        // console.log("worksheet name: ", sheet.getName());
-        // console.log("worksheet index: ", sheet.getIndex());
     }
     
      options = {
@@ -136,33 +154,16 @@ function printUnderlyingD(sheet){
             }
 
         }
-        //console.log("sheet index: ", sheet.getIndex());
 
         SheetList[idx].fields = flds;
         SheetList[idx].visited = true;
-
-        activeIndex = idx;
 
     });
     
 }
 //----------------------------------------------------------------
 
-//----------------------------------------------------------------
-// populates SheetList with Sheet objects, called right after Viz 
-// initialized
-function querySheetsD() {
-    workbook = viz.getWorkbook();
-    sheets = workbook.getPublishedSheetsInfo();
-    var numSheets = sheets.length;    
-    var i;
-    var actS = workbook.getActiveSheet();
 
-    for(i = 0; i < numSheets; i++){
-        SheetList.push(new Sheet(sheets[i].getName(), sheets[i].getSheetType()));
-    }
-
-}
 //----------------------------------------------------------------
 // returns properly formatted sheet name if str is a valid sheet name
 function isSheet(str){
@@ -177,13 +178,13 @@ function isSheet(str){
             idx = sl.indexOf(strl[x]);
         }
     }
+
     return sL[idx];
 }
 
 // returns an array of all legal sheet names
 function getSheetNames(){
     shts = SheetList.map(function(value){return value.name});
-    //console.log(shts);
     return shts;
 }
 
@@ -191,18 +192,9 @@ function getSheetNames(){
 // utility function: returns ascending-ordered array of unique items from xs
 // used to efficiently store/search array 'values' in function-object 'Field'
 var uniqueD = function(xs, type) {
-  var seen = {};
   
-  var dtypes = ["string", "integer", "float", "date", "datetime"];
-
-  /*
-  switch(type){
-    case 
-  }
-  */
-
+  var seen = {};
   xs.sort();
-
   
   return xs.filter(function(x) {
     if (seen[x])
@@ -212,12 +204,16 @@ var uniqueD = function(xs, type) {
   })
     
 }
+
 //----------------------------------------------------------------
 function printSheetList(){
-    console.log(SheetList);
+    console.log( "SheetList: ", SheetList);
+    return SheetList;
 }
 
 function printActive(){
     console.log("SheetList[activeIndex] returns:\n", SheetList[activeIndex]);
+    return SheetList[activeSheet];
 }
 //----------------------------------------------------------------
+//#####################_________________________###################

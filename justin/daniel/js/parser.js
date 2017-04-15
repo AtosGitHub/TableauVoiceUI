@@ -1,3 +1,5 @@
+// justin/daniel
+
 /*
     This javacript file is meant to hold all the
     parsing from the speech processor and call the
@@ -14,9 +16,11 @@ var allLibrary = ['reset','all', 'everything', 'clear'];
 function parser(command) {
   console.log("parser recieved command: ", command);
   var legal = false;
-  var tabs = ['Obesity', 'College', 'Economy', 'Stocks', 'Storms ', 'Flights'];
+  var tabs = ['Obesity', 'College', 'Economy', 'Stocks', 'Storms', 'Flights'];
 
-  var cmd = document.getElementById('command').value.toLowerCase();
+  var cmd = command.toLowerCase();
+  //var cmd = document.getElementById('command').value.toLowerCase();
+  //command = command.toLowerCase();
   document.getElementById("output").innerHTML = "Command recieved as:"+command+'...';
   //var bog = document.getElementById("output");
 
@@ -70,7 +74,8 @@ function parser(command) {
     console.log("switch tab");
     //This part check for tab switching
     for (var t=0; t< tabs.length; t++){
-      if (command.includes(tabs[t].toLowerCase()) && legal === false){
+      console.log("\"", cmd, "\",", cmd.length, ", ", tabs[t], ",", tabs[t].length);
+      if (cmd.includes(tabs[t].toLowerCase()) && legal === false){
         switchToMapTab(tabs[t]);
         legal = true;
         break;
@@ -110,11 +115,13 @@ function parser(command) {
       console.log("filter add");
       addLoop:
       for (var k = 0; k < addLibrary.length; k++){
-        if (command.includes(addLibrary[k])){ // @# may need to use addLibrary[k].toLowerCase()
+        if (cmd.includes(addLibrary[k])){ 
+          console.log(cmd, ", ", addLibrary[k]);
           for (var i=0; i< info[0].length; i++){
             if (info[0][i].type == 'string'){
+              console.log("type == string");
               for (var j=0; j< info[0][i].values.length; j++){
-                if (command.includes(info[0][i].values[j].toLowerCase())){
+                if (cmd.includes(info[0][i].values[j].toLowerCase())){
                   filterByName(info[0][i].name, info[0][i].values[j], 'add');
                   console.log("added ", info[0][i].values[j], "to filter ", info[0][i].name);
                   legal = true;
@@ -167,12 +174,15 @@ function parser(command) {
     if(legal == false){
       info = FieldList;
       console.log("filter replace");
-      console.log("FieldList (in replace): ", FieldList);
+      //console.log("FieldList (in replace): ", FieldList);
+      console.log("info (in replace): ", info);
       replaceLoop:
       for (var i=0; i< info[0].length; i++){
+        //console.log("info[0][i]: ", info[0][i]);
         if (info[0][i].type == 'string'){
           for (var j=0; j< info[0][i].values.length; j++){
-            if (command.includes(info[0][i].values[j].toLowerCase())){
+            //console.log(cmd, ", ", info[0][i].values[j]);
+            if (cmd.includes(info[0][i].values[j].toLowerCase())){
               filterByName(info[0][i].name, info[0][i].values[j], 'replace');
               console.log("replaced ", info[0][i].values[j], "on filter ", info[0][i].name);
               legal = true;

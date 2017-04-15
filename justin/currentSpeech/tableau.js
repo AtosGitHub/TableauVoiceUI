@@ -15,6 +15,7 @@ function initViz() {
     var options = {
         hideTabs: false,
         hideToolBar: false,
+        //width: 500,
         //(optionl) instanceIdToClone: , height: ,width: ,device: ,"filterName": ,
         onFirstInteractive: function () {
             workbook = viz.getWorkbook();

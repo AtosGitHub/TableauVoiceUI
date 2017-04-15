@@ -7,7 +7,7 @@
     <script type="text/javascript" 
         src="https://public.tableau.com/javascripts/api/tableau-2.js">
     </script>
-    <script src="getData.js"></script>
+    <script src="tableau.js"></script>
     <script src="speech.js"></script>
     <script src="data.js"></script>
     <!--      -->
@@ -20,15 +20,18 @@
         <button id="start_button" onclick="startReco(event)">
             <img id="start_img" src="mic.gif">
         </button>
-        <button type="button" onclick="printSheetList()" align="right">printSheetList</button>
-        <button type="button" onclick="printActive()" align="right">printActive</button>
+        <button type="button" onclick="getSheetList()" align="right">getSheetList</button>
+        <button type="button" onclick="getActiveSheetData()" align="right">getActiveSheetData</button>
+        <button type="button" onclick="getSheetNames()" align="right">getSheetNames</button>
     </div>
 
     <div id="vizContainer" style="width:800px; height:700px;"></div>
 
+    
+<!-- uncomment to add debugging buttons; better option would be to 
+    just call the commands you want to test from the console
+    
     <br>
-    <br>
-
     <input type="text" id="field" value="State">
     <input type="text" id="filter" value="Texas;Oklahoma;Arkansas">
     <input type="text" id="type" value="replace">
@@ -51,6 +54,7 @@
         //alert(field + "<br>" + filter + "<br>" + type);
         filterByName(field, filter, type);
     }</script>
+    -->
 
 </body> 
 

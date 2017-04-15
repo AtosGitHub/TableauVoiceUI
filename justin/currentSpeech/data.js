@@ -1,7 +1,7 @@
 // from folder justin/currentSpeech
 
 var SheetList = []; // type Sheet
-var activeIndex;
+var activeSheetIndex;
 
 //----------------------------------------------------------------
 // Data structures for undlerying spreadsheet data to be passed to 
@@ -56,10 +56,10 @@ function loadSheetList() {
 //----------------------------------------------------------------
 // called each time a new tab is loaded, which adds fields for that tab to SheetList
 function updateSheetList(){
-    activeIndex = workbook.getActiveSheet().getIndex();
+    activeSheetIndex = workbook.getActiveSheet().getIndex();
     activeSheet = workbook.getActiveSheet();
 
-    if(SheetList[activeIndex].visited){
+    if(SheetList[activeSheetIndex].visited){
                 console.log("already visited");
                 return;
     }
@@ -185,6 +185,7 @@ function isSheet(str){
 // returns an array of all legal sheet names
 function getSheetNames(){
     shts = SheetList.map(function(value){return value.name});
+    console.log("getSheetNames() returns:\n", shts);
     return shts;
 }
 
@@ -206,13 +207,13 @@ var uniqueD = function(xs, type) {
 }
 
 //----------------------------------------------------------------
-function printSheetList(){
+function getSheetList(){
     console.log( "SheetList: ", SheetList);
     return SheetList;
 }
 
-function printActive(){
-    console.log("SheetList[activeIndex] returns:\n", SheetList[activeIndex]);
+function getActiveSheetData(){
+    console.log("SheetList[activeSheetIndex] returns:\n", SheetList[activeSheetIndex]);
     return SheetList[activeSheet];
 }
 //----------------------------------------------------------------

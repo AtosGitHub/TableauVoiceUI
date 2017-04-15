@@ -1,0 +1,29 @@
+// from folder justin/currentSpeech
+
+To Run: (pick one)
+
+1) open tableau.html
+
+2) open 'select_workbook.html', select 'Workbook01' from drop-down, you will be directed to tableau.html.
+
+
+
+
+usage for Speech team
+
+-to understand objects : Sheet, and Field and their structures
+* Sheets are part of SheetList, but that is handled by the tableau code
+	full sheet list can be printed and returned using getSheetList button
+{
+
+	button: "getActiveSheetData" calls function getActiveSheetData() which prints (to console) and returns The active sheet object in SheetList information for the active sheet 
+
+		*this function should be used by the Speech team to obtain relevant data to compare speech results against.
+
+
+	button: "getSheetNames" demonstraits calling function getSheetNames() which prints and returns an array containing all tab names.
+
+
+}
+
+-

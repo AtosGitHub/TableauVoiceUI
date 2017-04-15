@@ -3,27 +3,30 @@
 
 *start
 
+	loads viz if not loaded by default
+
 show <single filter name> 
 
     (show) (show me) (filter) <filter name>
 
+    apply single categorical filter and support all filter options (i.e. ALL, ADD, REMOVE, REPLACE)
     
 
 tab <tab name>
 
     (tab) (change tab) (show) (show me) <tab name>
 
+    change tab by name
+
 
 
 *reload
 
+	refreshes page
+
 *exit
 
-
-
-
-
-
+	hides viz if it is showing
 
 //-----------------------------------------------------------------------
 function rangeFilter(field, range){

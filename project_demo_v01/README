@@ -20,4 +20,4 @@ selecting items from 'debug' drop-down menu will call useful functions which pri
 
 }
 
--
+-speech.js supports Sai's commands plus tab swiching by name

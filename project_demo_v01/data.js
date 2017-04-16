@@ -217,7 +217,7 @@ function getSheetList(){
 
 function getActiveSheetData(){
     console.log("SheetList[activeSheetIndex] returns:\n", SheetList[activeSheetIndex]);
-    return SheetList[activeSheet];
+    return SheetList[activeSheetIndex];
 }
 //----------------------------------------------------------------
 //#####################_________________________###################

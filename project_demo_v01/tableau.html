@@ -16,6 +16,7 @@
     <script src="tableau.js"></script>
     <script src="speech.js"></script>
     <script src="data.js"></script>
+    <script src="parser.js"></script>
     <!--      -->
 
 </head>
@@ -25,13 +26,13 @@
     <div id="main">
 
          <div style="width:800px; height:28px; margin:0 auto;" align="right">
-            debug:
-            <select id="debug" onchange="window.location.href=value" dir="rtl">
+            <!-- debug:
+            <select id="debug" onchange="value" dir="rtl">
                     <option value="">Select</option>
                     <option value="getActiveSheetData()">getActiveSheetData</option>
                     <option value="getSheetNames()">getSheetNames</option>
                     <option value="getSheetList()">getSheetList</option>
-            </select>
+            </select> -->
             <button id="start_button" align="right" onclick="startReco(event)">
                 <img id="start_img" src="mic.gif" height="20px" width="20px"></button>
         </div>

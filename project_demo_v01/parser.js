@@ -90,7 +90,7 @@ function parser(command) {
           for (i in info.fields){
             if (cmd.includes(info.fields[i].name.toLowerCase())){
               filterByName(info.fields[i].name, '', 'all');
-              console.log("cleared filter for: ", info.fields.name);
+              console.log("cleared filter for: ", info.fields[i].name);
               legal = true;
               break allLoop;
             }

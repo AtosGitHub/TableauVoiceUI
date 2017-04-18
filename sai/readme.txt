@@ -1,3 +1,5 @@
 This is Sai's repo and branch section
 
-so far i uploaded a working example on getting speech and performing actions
+
+To do the Demo, navigate to login folder and open main.html in chrome browser, This should work without a web server. If speech recognition isn't working, try to deploy it
+from Chrome web server

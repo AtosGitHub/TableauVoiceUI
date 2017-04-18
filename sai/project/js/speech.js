@@ -130,9 +130,9 @@ function testLocal() {
 
   if (typeof(Storage) !== "undefined") {
 
-  document.getElementById("test").innerHTML = localStorage.getItem("url");
+  document.getElementById("testDiv").innerHTML = localStorage.getItem("urlSet");
 } else {
-  document.getElementById("test").innerHTML = "Sorry, your browser does not support Web Storage...";
+  document.getElementById("testDiv").innerHTML = "Sorry, your browser does not support Web Storage...";
 }
 
 

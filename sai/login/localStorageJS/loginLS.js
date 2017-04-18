@@ -1,8 +1,8 @@
 function inputLocal() {
 
-   //var location = document.getElementById('url').value;
+    var location = document.getElementById('locationURL').value;
 
-   localStorage.setItem("url", location);
+    localStorage.setItem("urlSet", location);
 
 
     location.href = "../project/blank-page.html";
@@ -15,8 +15,9 @@ function inputLocal() {
 
 function mainLocal() {
 
-    //var user = document.getElementById("userid").value;
+    var user = document.getElementById('userid').value;
 
+    localStorage.setItem("userName", user);
 
     location.href = "input.html";
 

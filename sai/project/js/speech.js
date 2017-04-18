@@ -29,6 +29,33 @@ recognition.maxAlternatives = 1;
 
 var recognizing = false;
 
+/*
+  Quick function to remember User's name from Login
+  This is run as page loads and gives application a personal touch
+*/
+
+window.onload = function() {
+
+    if (typeof(Storage) !== "undefined") {
+
+          var username = localStorage.getItem("userName");
+          var usernameFinal = capitalizeFirstLetter(username);
+          document.getElementById("NAME").textContent = "     " + usernameFinal + "     ";
+      }
+    else {
+
+          document.getElementById("NAME").textContent = "User";
+
+      }
+
+
+
+};
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 
 
 
@@ -103,7 +130,11 @@ var viz, workbook, activeSheet;
 // only if the command is start
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
-    url = "http://public.tableau.com/views/WorldIndicators/GDPpercapita";
+
+
+    // This url is set dynamically from the input page prior to the main application page
+    // The url must be an active tableau sheet for the Viz to work and for the application to run
+    url = localStorage.getItem("urlSet");
 
     var options = {
 
@@ -128,13 +159,7 @@ function hide() {
 // only for testing local storage usage for url
 function testLocal() {
 
-  if (typeof(Storage) !== "undefined") {
-
-  document.getElementById("testDiv").innerHTML = localStorage.getItem("urlSet");
-} else {
-  document.getElementById("testDiv").innerHTML = "Sorry, your browser does not support Web Storage...";
-}
-
+  initViz();
 
 }
 

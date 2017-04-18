@@ -28,7 +28,10 @@
 	<!-- Load all the scripts -->
     <link rel="stylesheet" href="css/main.css">
     <script type="text/javascript" src="js/speech.js"></script>
+    <script type="text/javascript" src="js/getData.js"></script>
     <script type="text/javascript" src="js/parser.js"></script>
+    <script type="text/javascript" src="js/tableau.js"></script>
+
 
 	<!-- Tableau api script load -->
 
@@ -152,18 +155,13 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">  <i class="fa fa-user" id="NAME"></i>   <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
-                        </li>
+
                         <li>
                             <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                            <a href="../login/main.html"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
                         </li>
                     </ul>
                 </li>
@@ -218,7 +216,7 @@
                         </h1>
                         <ol class="breadcrumb">
                             <li>
-                                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
+                                <i class="fa fa-dashboard"></i>  <a href="../login/input.html">Change Dashboard</a>
                             </li>
                             <li class="active">
                                 <i class="fa fa-file"></i> Blank Page
@@ -239,14 +237,22 @@
 
 					</div>
 
+
+
+
           <!--
-					<div id="parserButton">
+
+            For Testing purposes, this textbox takes
+            text and passes it through the command parser
+
+          -->
+
+          <div id="parserButton">
 
             <input type="text" id="command" />
-            <button onclick="parser()">Enter</button>
+            <button onclick="speechParse()">Enter</button>
 
-					</div>
-        -->
+          </div>
 
 
 					<!-- This is the div which outputs the speech for testing  -->

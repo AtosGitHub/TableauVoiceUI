@@ -12,6 +12,7 @@ var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEv
 var comms = ['start', 'exit', 'test'];
 
 // This is the Grammar we would like to target for commands
+// This is no longer necessary
 var grammar = '#JSGF V1.0; grammer commands; public <commands> = (exit | test);'
 
 
@@ -40,7 +41,7 @@ window.onload = function() {
 
           var username = localStorage.getItem("userName");
           var usernameFinal = capitalizeFirstLetter(username);
-          document.getElementById("NAME").textContent = "     " + usernameFinal + "     ";
+          document.getElementById("NAME").textContent = " " + usernameFinal + " ";
       }
     else {
 
@@ -52,6 +53,8 @@ window.onload = function() {
 
 };
 
+
+// function is to merely capitlise first letter of string
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -61,6 +64,10 @@ function capitalizeFirstLetter(string) {
 
 
 // what runs after the click on the mic
+// IMPORTANT: For some systems, the recognizing only occurs
+// if these javascript files are being hosted on a web server
+// if you are having trouble starting the speech recognition, simply
+// run the application again from a web server environment
 function startReco(event) {
 
     var log = document.getElementById('output');
@@ -114,7 +121,7 @@ recognition.onresult = function(event) {
 
 
 
-    speechParse(command);
+    parser(command);
 
 
 
@@ -164,46 +171,16 @@ function testLocal() {
 }
 
 
-function speechParse(command) {
+/*
+    This is an elementary speech-parse-to-command function.
+    It only executes select commands and displays what its doing
+    in the log
+*/
 
 
-  //document.getElementById("output").innerHTML =
+function speechParse() {
+  var command = document.getElementById('command').value.toLowerCase();
 
-
-  if(command == 'start'){
-    initViz();
-
-    log.textContent = 'Command received is '+ command +' note the sample workbook is now loaded';
-  }
-  else if(command == 'switch' || command == 'tab'){
-
-      switchToMapTab();
-
-    log.textContent = 'Command received is '+ command + ' note how the tab switched';
-
-
-  }
-  else if(command == 'exit' || command == 'hide' || command == 'close') {
-
-    hide();
-
-    log.textContent = 'Command received is '+ command + ' note how the Workbook is hidden';
-
-
-  }
-  else if(command == 'reload'){
-
-    window.location.reload();
-
-  }
-
-
-
-
-
-
-
-
-
+  parser(command);
 
 }

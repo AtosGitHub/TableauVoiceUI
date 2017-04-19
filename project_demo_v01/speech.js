@@ -21,6 +21,8 @@ var speechRecognitionList = new SpeechGrammarList();
 speechRecognitionList.addFromString(grammar, 1);
 
 // Recognition attributes
+//recognition will continue even if the user pauses while speaking
+recognition.continuous = true;
 recognition.grammars = speechRecognitionList;
 recognition.lang = 'en-US';
 recognition.interimResults = false;

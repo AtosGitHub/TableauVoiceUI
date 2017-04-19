@@ -77,9 +77,11 @@ recognition.onstart = function(event) {
 
 
 // no match for the voice calls this
+// I believe this only applies if you're using a grammar
+//    which we aren't because it isn't supported in chrome. -Justin
 recognition.onnomatch = function(event) {
       //log.textContent = 'No match for Command';
-      console.log('No match for Command');
+      //console.log('No match for Command');
   }
 
 
@@ -92,7 +94,7 @@ recognition.onresult = function(event) {
     parser(command);
 
     //var log = document.getElementById('output');
-    console.log('Command Received to be '+ command + ' ');
+    //console.log('Command Received to be '+ command + ' ');
     //log.textContent = 'Command Received to be '+ command + ' ';
 
 }

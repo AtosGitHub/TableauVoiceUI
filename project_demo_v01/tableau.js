@@ -89,7 +89,7 @@ function applyFilter(sheet, field, filter, type){
             sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.REMOVE);
             break;
         default:
-            alert("invalid filter type");
+            console.log("invalid filter type");
     }
 
 }

@@ -63,7 +63,7 @@ function updateSheetList(){
     activeSheet = workbook.getActiveSheet();
 
     if(SheetList[activeSheetIndex].visited){
-                console.log("already visited");
+                //console.log("already visited");
                 return;
     }
     else{
@@ -185,12 +185,7 @@ function isSheet(str){
     return sL[idx];
 }
 
-// returns an array of all legal sheet names
-function getSheetNames(){
-    shts = SheetList.map(function(value){return value.name});
-    console.log("getSheetNames() returns:\n", shts);
-    return shts;
-}
+
 
 //----------------------------------------------------------------
 // utility function: returns ascending-ordered array of unique items from xs
@@ -210,14 +205,36 @@ var uniqueD = function(xs, type) {
 }
 
 //----------------------------------------------------------------
+// Sheet Names
+// returns an array of all legal sheet names
+function getSheetNames(){
+    shts = SheetList.map(function(value){return value.name});
+    return shts;
+}
+
+function logSheetNames(){
+    shts = SheetList.map(function(value){return value.name});
+    console.log("Sheet Names:", shts);
+}
+//_____________________________________________
+// SheetList[] object
 function getSheetList(){
-    console.log( "SheetList: ", SheetList);
     return SheetList;
 }
 
+function logSheetList(){
+    console.log( "SheetList[]:", SheetList);
+}
+//_____________________________________________
+// Active Sheet Data from SheetList[]
+// returns member of SheetList[] which pertains to the current
+// sheet (tab)
 function getActiveSheetData(){
-    console.log("activeSheet:", SheetList[activeSheetIndex]);
     return SheetList[activeSheetIndex];
+}
+
+function logActiveSheet(){
+    console.log("activeSheet:", SheetList[activeSheetIndex]);
 }
 //----------------------------------------------------------------
 //#####################_________________________###################

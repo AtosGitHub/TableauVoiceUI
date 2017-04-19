@@ -1,0 +1,29 @@
+1:Apr 14, 2017
+  problem: .includes() function will messed up when a certain sub-string of the legal name is also a legal name
+  example: on College tab(http://public.tableau.com/views/RegionalSampleWorkbook/College), the field 'gender' has 'men' and 'women',
+   so when command is show women, it will both run on the men and women, since the command.includes('men') also return true.
+  solution: N/A
+
+2:Apr 14, 2017
+  problem: since there maybe same filter name in different fields, it will call the function with the wrong argument
+  example: on Obesity tab(http://public.tableau.com/views/RegionalSampleWorkbook/Obesity), when trying to call function about Texas,
+   beside state Texas, there are also two county called Texas, so it will first call the county one since the field county is in index 0 and field state is in index 2
+  solution: User will notice this problem, and next time when do run this type of command they will probably add the field name, such as show me state Texas,
+   so I suggest to do search on field names before searching through filters, if it finds no matches, then keeps search on the whole filters,
+   else if it find a match result, then only search filters in that field. (Not yet implemented)
+
+3:Apr 14, 2017
+  problem: there are some situations that tab name is also one of the field or filter name, since we first search tab names for switch tab function,
+   it will ignore any other function that is about a field/filter with same the name
+  example: on College tab(http://public.tableau.com/views/RegionalSampleWorkbook/College), since the tab name and a field name is both 'College',
+   it will ignore the all function on field College.
+  solution: add a checking condition to avoid switch to current tab, so it will skip the switch function and search for other options in the example situation.
+   The limitation is if there is a field name in current tab that is same as the name of another tab, it will still cause trouble. (Implemented by Apr 14 2017)
+
+
+4:Apr 19, 2017
+  
+  problem: on tab "Obesity" command "Rhode Island" returns Island county in Washington State.
+  specifying 'State' with "Rhode Island" works, but we may want to implement a data structure for tracking duplicate values in fields of current tab. (justin)
+
+  problem: Web Speech is set to continuous, but the service times out if you wait too long between commands. Probably done by Google/Chrome to preserve resources. We may be able to add a function to check whether or not Chrome is still listening and reinitiate if needed. (justin)

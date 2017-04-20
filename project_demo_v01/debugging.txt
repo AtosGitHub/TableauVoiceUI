@@ -24,6 +24,10 @@
 4:Apr 19, 2017
   
   problem: on tab "Obesity" command "Rhode Island" returns Island county in Washington State.
-  specifying 'State' with "Rhode Island" works, but we may want to implement a data structure for tracking duplicate values in fields of current tab. (justin)
+  specifying 'State' with "Rhode Island" works, but we may want to consider other options. See/edit TODO.txt for ideas on how to fix. (justin)
+
+5:Apr 19, 2017
 
   problem: Web Speech is set to continuous, but the service times out if you wait too long between commands. Probably done by Google/Chrome to preserve resources. We may be able to add a function to check whether or not Chrome is still listening and reinitiate if needed. (justin)
+
+  

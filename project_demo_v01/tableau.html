@@ -28,7 +28,7 @@
         <div style="width:800px; height:28px; margin:0 auto;" align="right">
               <!--   -->
 
-            <input type="text" id="command" value="text command"/>
+            <input type="text" id="command" value="Wisconsin"/>
             <button onclick="speechParse()">Enter</button>
             Start Speech ->
             <button id="start_button" align="right" onclick="startReco(event)">
@@ -40,6 +40,7 @@
         <br>
 
          <div style="width:800px; height:28px; margin:0 auto;" align="right">
+         <button type="button" onclick="refreshData()" align="right">refreshData()</button> 
          Print to console: 
             <button type="button" onclick="logSheetList()" align="right">SheetList[]<br>(all tabs)</button> 
             <button type="button" onclick="logActiveSheet()" align="right">activeSheet<br>(current tab)</button> 

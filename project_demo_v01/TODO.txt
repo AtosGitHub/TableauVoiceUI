@@ -1,8 +1,38 @@
 TODO
 
+* In this document, to-do items ("items") are listed and marked by the following fields:
+---------------------------------------------------------------------------------------
+Header Fields{
+
+	item_id: uniqe identier for each field; assigned as ascending array index, where each item_id is in range: [000, 999]; use item_id to identiy items in all references and group communications; 
+
+	associated: file names associated with this item
+	
+	name(s): name(s) of contributor(s) to the item between the lines; please seperate your contribution from other's with white space and add yuor name in parenthesis at the end of your contribution;
+	
+	date: of original identification of item
+	
+	time: associated with 'date'
+	
+	priority: an integer in {0:"interesting", 1:"useful", 2:"practical", 3:"mandatory", 4:"immediate"} 
+	
+	status: elementOf({"OPEN", "IN_PROGRESS", "SOLVED"}); each can be appended with notes and other item references
+	
+}
+---------------------------------------------------------------------------------------
+
+
+
+Items:
 
 ------------------------------------------------------------------------------------------
-4:Apr 19, 2017 problem from 'debugging.txt'
+item_id: 000
+associated: from 'debug.txt' : "4:Apr 19, 2017"; 
+name: justin
+date: 4-19-17
+time: 11:03 pm
+priority: 
+status: ""
 
 	-Implement a data structure for tracking duplicate values in fields of current tab and then prompt user to specify which field to apply filter value.
 
@@ -10,6 +40,8 @@ TODO
 
 
 ------------------------------------------------------------------------------------------
+item_id: 001
+
 Range Filter for Tableau
 
 // prototype
@@ -32,16 +64,22 @@ API specification
 
 
 ------------------------------------------------------------------------------------------
+item_id: 002
+
 Reset All Filters in Current Tab
 
 -will need to loop through fields in current sheet and and clear each individually
 
 
 ------------------------------------------------------------------------------------------
+item_id: 003
+
 Determine cause of speech recognition timeout in Chrome and restart it when it happens.
 
 
 ------------------------------------------------------------------------------------------
+item_id: 004
+
 pauseAutomaticUpdatesAsync()
 resumeAutomaticUpdatesAsync()
 toggleAutomaticUpdatesAsync()
@@ -51,27 +89,17 @@ toggleAutomaticUpdatesAsync()
 
 
 
-------------------------------------------------------------------------------------------
-workbook.getActiveCustomView()
-
-	-save current state, and possibly last few states to support 'undo'
-
-
-
-
-
-
-
-
 
 
 
 ------------------------------------------------------------------------------------------
+Some values for fields in Sheets are wrong
 
+e.g. Obesity Map has 4 Regions as Categorical filters, but underlying data represents them as 4 arrays of relevant states
 
+*Is correct in Fields[] returned from Tableau
 
-
-
+------------------------------------------------------------------------------------------
 
 
 

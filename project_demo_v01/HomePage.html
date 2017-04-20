@@ -28,6 +28,10 @@
         <div style="width:800px; height:28px; margin:0 auto;" align="right">
               <!--   -->
 
+            <input type="text" id="field" value="State">
+            <input type="text" id="filter" value="Texas;Oklahoma;Arkansas">
+            <input type="text" id="type" value="replace">
+            <button type="button" onclick="process()" align="right">filter</button>
             <input type="text" id="command" value="Wisconsin"/>
             <button onclick="speechParse()">Enter</button>
             Start Speech ->
@@ -40,6 +44,16 @@
         <br>
 
          <div style="width:800px; height:28px; margin:0 auto;" align="right">
+
+         <select id="vizSelect" onchange="changeViz()">
+            <option value="0">Regional Sample</option>
+            <option value="1">Retail Sites</option>
+            <option value="2">Oil and Gas</option>
+            <option value="3">World Energy</option>
+        </select>
+
+         <button type="button" onclick="getDataSources()" align="right">getDataSources()</button> 
+         <button type="button" onclick="getFilters()" align="right">getFilters()</button> 
          <button type="button" onclick="refreshData()" align="right">refreshData()</button> 
          Print to console: 
             <button type="button" onclick="logSheetList()" align="right">SheetList[]<br>(all tabs)</button> 
@@ -82,6 +96,15 @@
         filterByName(field, filter, type);
     }</script>
     -->
+  <script>
+    function process(){
+        var field = document.getElementById("field").value;
+        var filter = document.getElementById("filter").value;
+        var type = document.getElementById("type").value;
+        //alert(field + "<br>" + filter + "<br>" + type);
+        filterByName(field, filter, type);
+    }</script>
+
 
 </body>
 

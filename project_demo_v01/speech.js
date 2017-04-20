@@ -87,16 +87,9 @@ recognition.onnomatch = function(event) {
 
 // after the app gets a voice result it prints it to log
 recognition.onresult = function(event) {
-
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
-
     parser(command);
-
-    //var log = document.getElementById('output');
-    //console.log('Command Received to be '+ command + ' ');
-    //log.textContent = 'Command Received to be '+ command + ' ';
-
 }
 
 var viz, workbook, activeSheet;

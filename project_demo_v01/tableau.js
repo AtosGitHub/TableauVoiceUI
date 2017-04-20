@@ -7,18 +7,36 @@
 
 var viz, workbook, activeSheet, sheets, views;        
 
+var urls = ["https://public.tableau.com/views/RegionalSampleWorkbook_9/Obesity?:embed=y&:display_count=yes", 
+            "https://public.tableau.com/views/Retail-New-Site-Analysis_10_0_3/NewRetailSites?:embed=y&:display_count=yes",
+            "https://public.tableau.com/views/Oil_and_Gas_10_0_2/Dashboard?:embed=y&:display_count=yes",
+            "https://public.tableau.com/views/BPWorldEnergy_10_0_0/Consumption?:embed=y&:display_count=yes"];
+
 //----------------------------------------------------------------
 // initialize Tableau Viz
 
-function initViz() {
+function initViz(vz) {
     var containerDiv = document.getElementById("vizContainer");
-    url = "https://public.tableau.com/views/RegionalSampleWorkbook_9/Obesity?:embed=y&:display_count=yes";
+    var url;
+
+    // console.log("new viz Index: ", vizIdx);
+    // console.log("urls[", vizIdx, "]: ", urls[vizIdx]);
+
+    if(vz != null){
+        viz.dispose();
+        url = vz;
+    }
+    else{
+        url = urls[0];
+    }
+
+    //console.log("new url: ", url);
   
     var options = {
         hideTabs: false,
         hideToolBar: false,
-        //width: "808px",
-        //height: "707px",
+        width: "800px",
+        height: "700px",
         //(optionl) instanceIdToClone: , height: ,width: ,device: ,"filterName": ,
         onFirstInteractive: function () {
             //viz.pauseAutomaticUpdatesAsync();
@@ -34,6 +52,16 @@ function initViz() {
     };
 
     viz = new tableau.Viz(containerDiv, url, options);
+}
+
+function changeViz(){
+    var vu = document.getElementById("vizSelect");
+    var nu = vu.options[vu.selectedIndex].value;
+
+    console.log("new viz index: ", nu);
+
+    initViz(urls[nu]);
+
 }
 
 //----------------------------------------------------------------
@@ -80,9 +108,6 @@ function applyFilter(sheet, field, filter, type){
     var fTypes = ["ALL", "REPLACE", "ADD", "REMOVE"];
     var t = fTypes.indexOf(type.toUpperCase());
 
-    //saveView();
-
-
     switch(t){
         case 0:
             type = tableau.FilterUpdateType.ALL;
@@ -101,36 +126,22 @@ function applyFilter(sheet, field, filter, type){
     }
 
     sheet.applyFilterAsync(field, filter, type).then(function(){
-        refreshData();
-    })
-
-
-
-    // switch(t){
-    //     case 0:
-    //         sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.ALL);
-    //         break;
-    //     case 1:
-    //         sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.REPLACE);
-    //         break;
-    //     case 2:
-    //         sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.ADD);
-    //         break;
-    //     case 3:
-    //         sheet.applyFilterAsync(field, filter, tableau.FilterUpdateType.REMOVE);
-    //         break;
-    //     default:
-    //         console.log("invalid filter type");
-    // }
+        //refreshData();
+    });
 
 }
-
 //----------------------------------------------------------------
+
+//#############################################################################
+//##########################__END_Main_Branch__#######################################
+//############################################################################################
+
+//#################################__Begin_Experimental__#####################################
+//----------------------------------------------------------------
+// INCLUDE IN MERGE
 function refreshData(){
     viz.refreshDataAsync();
 }
-
-
 
 //pauseAutomaticUpdatesAsync()
 //----------------------------------------------------------------
@@ -144,30 +155,6 @@ function getMarks(){
     });
 }
 //----------------------------------------------------------------
-function saveView(){
-    console.log("log saveView()");
-    cv = "savedView";
-    workbook = viz.getWorkbook();
-    console.log(workbook);
-    //cv = "view: " + views.length.toString();
-    try{
-        console.log("log saveView()  2");
-        workbook.rememberCustomViewAsync("savedView").then(function(){
-            console.log("Saved Custom View");
-            views.push(cv);
-        },function(err){
-            console.log("err code: ", err.tableauSoftwareErrorCode);
-            console.log("err message: ", err.message);
-
-        });
-    }
-    catch(err){
-        console.log("err code: ", err.tableauSoftwareErrorCode);
-        console.log("err message: ", err.message);
-    }
-    
-}
-
 function getFilters(){
 
     var sheet = activeSheet;
@@ -176,9 +163,9 @@ function getFilters(){
         
         sheets = sheet.getWorksheets();
         slen = sheets.length;
-        console.log("dashboard size: ", sheets.length);
+        //console.log("dashboard size: ", sheets.length);
         for(i = 0; i < slen; i++){
-            console.log("sheet in dashboard: ", i);
+            //console.log("sheet in dashboard: ", i);
             getWorksheetFilters(sheets[i]);
         }
     }
@@ -186,14 +173,12 @@ function getFilters(){
         //console.log("not dashboard: ", sheet.getSheetType());
         getWorksheetFilters(sheet);
     }
-
-
 }
 
 function getWorksheetFilters(sheet){
-    console.log("sheet: ", sheet);
-    console.log("sheet name: ", sheet.getName());
-    console.log("sheet type: ", sheet.getSheetType());
+    // console.log("sheet: ", sheet);
+    // console.log("sheet name: ", sheet.getName());
+    // console.log("sheet type: ", sheet.getSheetType());
     sheet.getFiltersAsync().then(function(filters){
         console.log(filters.length, "filters applied to ", sheet.getName(), ":", filters);
 
@@ -201,26 +186,36 @@ function getWorksheetFilters(sheet){
             console.log("filter: ", i, ", ", filter[i].getName(), filter[i]);
         }
     });
+}
+//----------------------------------------------------------------
+var fieldList = [];
 
+function getDataSources(){
+    sheet = activeSheet;
+
+    if(sheet.getSheetType() === "dashboard"){
+        sheets = sheet.getWorksheets();
+
+        for(i in sheets){
+            getWorksheetDataSources(sheets[i]);
+        }
+    }
+    else{
+        getWorksheetDataSources(sheet);
+    }
 }
 
-function undo(){
+function getWorksheetDataSources(sheet){
 
-    if(views.length > 0){
-        last = views.pop();
-    }
-    workbook.showCustomViewAsync(last).then(function(cv){
-        workbook.removeCustomViewAsync(cv.getName()).then(function(cv){
-
-        });
-
+    sheet.getDataSourcesAsync().then(function(ds){
+        for(i in ds){
+            console.log("ds: ", i, ": ", ds[i].getName());
+            fieldList.push(ds[i].getFields());
+        }
     });
 
-}
-
-function alertViewChange(){
-    console.log("view changed");
+    console.log("fieldList: ", fieldList);
 }
 
 //----------------------------------------------------------------
-//#####################_________________________###################
+//###############################_____EOF____________________###################################

@@ -56,8 +56,11 @@ Tableau filtering is done in one of four ways:
 -The text box next to the microphone icon processes text commands the same as it would if it received the command from speech recognition. Alternatively users can call parser(<string command>) at the console.
 
 -Demo video is included in this directory
+
 //---------------------------------------------------------------------
 Tableau JavaScript API:
+
+A data structure "SheetList[]" is created which holds all legal string and numeric values that apply to the current workbook and can be used as arguments to methods from the Tableau API. "SheetList[]" is created, maintained and updated by 
 
 The Tableau API allows us to apply filters to fields by passing appropriate string names/numeric values to functions. Our application currently supports applying named filters by calling applyFilterAsync(field, filter, type). 
 

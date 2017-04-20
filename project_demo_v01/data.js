@@ -45,6 +45,7 @@ function Sheet(name, type){
 // populates SheetList with Sheet objects, called right after Viz 
 // initialized
 function loadSheetList() {
+    SheetList = [];
 
     sheets = viz.getWorkbook().getPublishedSheetsInfo();
     var numSheets = sheets.length;    

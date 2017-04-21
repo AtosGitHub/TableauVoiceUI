@@ -31,13 +31,9 @@
 
         <div style="width:800px; height:28px; margin:0 auto; float:right" align="right">
             <!--    <font color="#E7E8EC">_________</font>    -->
-            <button id="start_button" align="right" onclick="startReco(event)">
-                <img id="start_img" src="mic.gif" height="35px" width="35px"></button>  
+                
 
-            <br>
-            <br>
-
-                <select id="vizSelect" onchange="changeViz()" style="height:25px; width:130px;" align="left">
+                <select id="vizSelect" onchange="changeViz()" style="height:25px; width:115px;" align="left">
                     <option value="">Select Workbook</option>
                     <option value="0">Regional Sample</option>
                     <option value="1">Retail Sites</option>
@@ -45,9 +41,14 @@
                     <option value="3">World Energy</option>
                 </select>  
 
+                 <button id="start_button" align="right" onclick="startReco(event)">
+                <img id="start_img" src="mic.gif" height="35px" width="35px"></button>  
+
                 <br>
-                <br>
-                <button type="button" onclick="logActiveSheet()" align="right">Data to Console</button> 
+
+                <button type="button" onclick="logActiveSheet()" align="right">Data to <br>Console</button> 
+
+                
         </div>
 
         <br>

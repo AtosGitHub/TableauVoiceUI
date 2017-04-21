@@ -1,6 +1,4 @@
-// Author: Justin Brewer
-// Contact: this.justinbrewer@gmail.com
-// from folder project_demo_v01 (bitbucket)
+UTD & Atos: Tableau VUI
 
 //---------------------------------------------------------------------
 API links:
@@ -10,6 +8,22 @@ https://dvcs.w3.org/hg/speech-api/raw-file/tip/speechapi.html
 
 Tableau Javascript API
 https://onlinehelp.tableau.com/current/api/js_api/en-us/JavaScriptAPI/js_api_ref.htm
+
+//---------------------------------------------------------------------
+Overview:
+
+
+The Tableau Javascript API supports almost all the user interactions they can experience with a mouse. The Tableau methods require arguments in most cases in the form of strings representing which field (column of spreadsheet data source) to operate on, what filter values to apply, and how. These methods do not accept arguments unless they are formatted exactly as stored in the workbook's data source, so we first extract the column names (fields), unique/appropriate values, and type of record. This information is compared against the speech recognition results, and when a match is found, the correctly formatted string is passed to the appropriate Tableau method. Legal sheet names, field names, and filter values are obtained for any workbook with its data source sharing permissions allowed with Tableau API; and stored locally in a hierarchical, programmer defined object by 'data.js' and is used by 'parser.js' in identifying legal words and returning the proper format (Tableau is case sensitive).
+
+This software uses the Web Speech API, which returns a structured object containing information about the speech results. It includes a multi-dimensional array [i][j] which contains the sequential recognition results in the first index (i), and corresponding alternate results along the second index (j) where recognition certainty decreases with increasing j.  Speech recognition is handled by 'speech.js'. Each time a speech recognition result is returned, the primary result is passed to function parser(command) in 'parser.js' where user's voice command is compared against legal sheet names, field names, filter values, and other commands and keywords. When legal combinations of words are identified, the properly formatted string names are passed as arguments to the Tableau Javascript API methods. 
+
+Methods that are directly involved with user interactions with Tableau are in 'tableau.js'. From the user's perspective, it can perform: changing tabs/sheets within a workbook (part of the Viz class in Tableau), perform four variants of categorical filtering (add, remove, replace, all) where all is quivalent to clearing the filter and each must be associated with a field and legal filter value to fulfill the argument requirements for the Tableau filter method.  	
+
+	filterByName() and its helper functionn applyFilter() perform the majority of user interactions which is applying a categorical filter. A categorical filter is one that can be  identified by a unique string/value/date and is associated with a field.
+
+
+Filtering numeric fields (e.g. date, time, percentage, etc.) requires different arguments and some improvement in 'data.js' in the formatting of the legal values for each field when numbers are sorted and stored as strings.
+
 
 
 //---------------------------------------------------------------------
@@ -87,20 +101,3 @@ SheetList data structure:
 This data is used to validate speech recognition results with appropriate values and their corresponding Field to be applied to. And are passed as arguments.
 
 //-------------------------------------------------------------------------
-Web Speech API:
-
-
-
-
-
-
-//-------------------------------------------------------------------------
-Connecting Speech to Tableau:
-
-
-
-
-
-//-------------------------------------------------------------------------
-
-

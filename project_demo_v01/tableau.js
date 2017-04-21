@@ -35,8 +35,8 @@ function initViz(vz) {
     var options = {
         hideTabs: false,
         hideToolBar: false,
-        width: "800px",
-        height: "700px",
+        width: "850px",
+        height: "730px",
         //(optionl) instanceIdToClone: , height: ,width: ,device: ,"filterName": ,
         onFirstInteractive: function () {
             //viz.pauseAutomaticUpdatesAsync();
@@ -72,7 +72,9 @@ function changeSheetByName(sheet){
     workbook.activateSheetAsync(newSheet);
 }
 
-// utility: changes active sheet (tab) by name from text box
+// early debugging utility: changes active sheet (tab) 
+// by name from text box
+// may or may not be called anywhwere
 function changeSheet(){
     var newSheet = document.getElementById("changeSheet").value;
     workbook = viz.getWorkbook();
@@ -81,7 +83,7 @@ function changeSheet(){
 
 //----------------------------------------------------------------
 // process and apply categorical filter
-
+// 
 function filterByName(field, filter, type) {
 
     //var sheet = viz.getWorkbook().getActiveSheet();

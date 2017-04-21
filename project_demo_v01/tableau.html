@@ -22,63 +22,39 @@
 </head>
 
 <body onload="initViz();" style="background-color:#E7E8EC">
-<!--    <body onload="initViz();" style="background-color:#E7E8EC">    -->
 
     <div id="main">
-      
 
+        <div style="width:800px; height:28px; margin:0 auto;" align="right">
+              <!--   -->
 
-
-        <div style="width:800px; height:28px; margin:0 auto; float:right" align="right">
-            <!--    <font color="#E7E8EC">_________</font>    -->
+            <input type="text" id="command" value="text command"/>
+            <button onclick="speechParse()">Enter</button>
+            Start Speech ->
             <button id="start_button" align="right" onclick="startReco(event)">
-                <img id="start_img" src="mic.gif" height="35px" width="35px"></button>  
-
-            <br>
-            <br>
-
-                <select id="vizSelect" onchange="changeViz()" style="height:25px; width:130px;" align="left">
-                    <option value="">Select Workbook</option>
-                    <option value="0">Regional Sample</option>
-                    <option value="1">Retail Sites</option>
-                    <option value="2">Oil and Gas</option>
-                    <option value="3">World Energy</option>
-                </select>  
-
-                <br>
-                <br>
-                <button type="button" onclick="logActiveSheet()" align="right">Data to Console</button> 
+            <img id="start_img" src="mic.gif" height="20px" width="20px"></button>
         </div>
 
-        <br>
-
-        <div id="vizContainer" style="width:820px; height:710px;"></div>
+        <div id="vizContainer" style="width:820px; height:710px; margin:0 auto; border:2px solid black;"></div>
 
         <br>
 
-        
+         <div style="width:800px; height:28px; margin:0 auto;" align="right">
+         Print to console: 
+            <button type="button" onclick="logSheetList()" align="right">SheetList[]<br>(all tabs)</button> 
+            <button type="button" onclick="logActiveSheet()" align="right">activeSheet<br>(current tab)</button> 
+        </div>
         
     </div>
+
+    <br>
 
      
 
     
     
 
-<!-- 
-
-     margin:0 auto;
-
-
-
-
-
-
-
-
-
-
-uncomment to add debugging buttons; better option would be to
+<!-- uncomment to add debugging buttons; better option would be to
     just call the commands you want to test from the console
 
     <br>
@@ -105,15 +81,6 @@ uncomment to add debugging buttons; better option would be to
         filterByName(field, filter, type);
     }</script>
     -->
-  <script>
-    function process(){
-        var field = document.getElementById("field").value;
-        var filter = document.getElementById("filter").value;
-        var type = document.getElementById("type").value;
-        //alert(field + "<br>" + filter + "<br>" + type);
-        filterByName(field, filter, type);
-    }</script>
-
 
 </body>
 

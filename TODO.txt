@@ -1,7 +1,10 @@
 TODO
 
+*****************************************************************************************
+Guidelines:
+
 * In this document, to-do items ("items") are listed and marked by the following fields:
----------------------------------------------------------------------------------------
+
 Header Fields{
 
 	item_id: uniqe identier for each field; assigned as ascending array index, where each item_id is in range: [000, 999]; use item_id to identiy items in all references and group communications; 
@@ -17,9 +20,15 @@ Header Fields{
 	status: elementOf({"OPEN", "IN_PROGRESS", "SOLVED"}); each can be appended with notes and other item references
 	
 }
----------------------------------------------------------------------------------------
 
-
+// Copy-Paste
+item_id:
+associated: 
+name:
+date:
+priority:
+status: 
+*****************************************************************************************
 
 Items:
 
@@ -29,7 +38,9 @@ associated: from 'debug.txt' : "4:Apr 19, 2017";
 name: justin
 date: 4-19-17
 priority: 2 
-status: 
+status: not started
+
+Track Duplicate Values in Field List
 
 	-Implement a data structure for tracking duplicate values in fields of current tab and then prompt user to specify which field to apply filter value.
 
@@ -42,7 +53,7 @@ associated:
 name: justin
 date: 4-19-17
 priority: 2
-status: ""
+status: not started
 
 Range Filter for Tableau
 
@@ -71,7 +82,7 @@ associated:
 name: justin
 date: 4-19-17
 priority: 2
-status: ""
+status: not started
 
 Reset All Filters in Current Tab
 
@@ -85,7 +96,9 @@ associated:
 name: justin
 date: 4-19-17
 priority: 2.5
-status: ""
+status: not started
+
+Speech Recognition Timeout
 
 Determine cause of speech recognition timeout in Chrome and restart it when it happens.
 
@@ -96,10 +109,40 @@ associated: from 'debug.txt' : "4:Apr 19, 2017";
 name: justin
 date: 4-20-17
 priority: 2.5
-status: ""
+status: not started
+
+Voice Feedback
 
 Use the speech synthesis abilities of the Web Speech API to give voice responses to user, and ask the user to clarify ambiguities in their command.
 
 
 
+------------------------------------------------------------------------------------------
+item_id: 005
+associated: 
+name: justin
+date: 4-21-17
+priority: 2.5
+status: not started
+
+Fix the 'and' vs. '&' problem in 'parser.js'
+
+
+
+------------------------------------------------------------------------------------------
+item_id: 006
+associated: 
+name:
+date:
+priority:
+status: 
+
+
+------------------------------------------------------------------------------------------
+item_id: 007
+associated: 
+name:
+date:
+priority:
+status: 
 ------------------------------------------------------------------------------------------

@@ -35,6 +35,10 @@ function Sheet(name, type){
     // dashboard or worksheet
     this.type = type;
 
+    // used to indicate whether or not a tab has been visited
+    // each Sheet in SheetList[] is created when the viz is loaded
+    // but this.fields[] is not set until the tab is visited to avoid 
+    // wasting time and space resources
     this.visited = false;
 
     this.fields = [];
@@ -64,7 +68,6 @@ function updateSheetList(){
     activeSheet = workbook.getActiveSheet();
 
     if(SheetList[activeSheetIndex].visited){
-                //console.log("already visited");
                 return;
     }
     else{
@@ -72,8 +75,11 @@ function updateSheetList(){
     }
 }
 //----------------------------------------------------------------
-// gets field data for active sheet
-
+// gets field and field value data for active sheet
+//
+// getUnderlyingDataAsync() can only be called on worksheets and it seems all 
+// worksheets in a tab share the same data, so it is only called on the first
+// worksheet in the dashboard if applicable
 function getData() {
 
             if(activeSheet.getSheetType() === "dashboard"){
@@ -85,6 +91,9 @@ function getData() {
             }
 }
 
+// helper function
+// was more helpful when I thought I had to get separate data for 
+// each worksheet in a dashboard
 function getWorksheetData(sheet){
 
     var summaryData;
@@ -239,3 +248,88 @@ function logActiveSheet(){
 }
 //----------------------------------------------------------------
 //#####################_________________________###################
+
+//########################################################################
+//##########################__End_Useable_Code__#############################
+//##############################################################################
+
+//#########################__Begin_Experimental__################################
+//----------------------------------------------------------------
+// these methods were attempts at retrieving workbook data to form our dynamic library;
+// I was not able to retrieve complete information with any of them, so I retrieved and parsed
+// the raw source data with worksheet.getUnderlyingDataAsync()
+//----------------------------------------------------------------
+function getMarks(){
+    activeSheet.getSelectedMarksAsync().then(function(marks){
+        pairs = marks[0].getPairs();
+        for(i in pairs){
+            console.log("pair ", i, ": ", pairs[i]);
+        }
+        //console.log("Selected Marks:", marks);
+    });
+}
+//----------------------------------------------------------------
+function getFilters(){
+
+    var sheet = activeSheet;
+
+    if(sheet.getSheetType() === "dashboard"){
+        
+        sheets = sheet.getWorksheets();
+        slen = sheets.length;
+        //console.log("dashboard size: ", sheets.length);
+        for(i = 0; i < slen; i++){
+            //console.log("sheet in dashboard: ", i);
+            getWorksheetFilters(sheets[i]);
+        }
+    }
+    else{
+        //console.log("not dashboard: ", sheet.getSheetType());
+        getWorksheetFilters(sheet);
+    }
+}
+
+function getWorksheetFilters(sheet){
+    // console.log("sheet: ", sheet);
+    // console.log("sheet name: ", sheet.getName());
+    // console.log("sheet type: ", sheet.getSheetType());
+    sheet.getFiltersAsync().then(function(filters){
+        console.log(filters.length, "filters applied to ", sheet.getName(), ":", filters);
+
+        for(i in filters){
+            console.log("filter: ", i, ", ", filter[i].getName(), filter[i]);
+        }
+    });
+}
+//----------------------------------------------------------------
+var fieldList = [];
+
+function getDataSources(){
+    sheet = activeSheet;
+
+    if(sheet.getSheetType() === "dashboard"){
+        sheets = sheet.getWorksheets();
+
+        for(i in sheets){
+            getWorksheetDataSources(sheets[i]);
+        }
+    }
+    else{
+        getWorksheetDataSources(sheet);
+    }
+}
+
+function getWorksheetDataSources(sheet){
+
+    sheet.getDataSourcesAsync().then(function(ds){
+        for(i in ds){
+            console.log("ds: ", i, ": ", ds[i].getName());
+            fieldList.push(ds[i].getFields());
+        }
+    });
+
+    console.log("fieldList: ", fieldList);
+}
+
+//----------------------------------------------------------------
+//###############################_____EOF____________________###################################

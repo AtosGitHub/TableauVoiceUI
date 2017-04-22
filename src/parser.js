@@ -51,6 +51,7 @@ function parser(command) {
     for (t in tabs){
       // it will switch to a tab when a tab name other than the the current one is found
       if (cmd.includes(tabs[t].toLowerCase()) && legal === false && tabs[t] != info.name){
+        // #talk
         console.log("Switch to tab: ", tabs[t]);
         switchToMapTab(tabs[t]);
         legal = true;
@@ -95,7 +96,8 @@ function parser(command) {
             // reset this field
             filterByName(info.fields[i].name, '', 'all');
             // print out the action for debug purpose
-            console.log("Cleared filter for: ", info.fields[i].name);
+            // #talk
+            console.log("Cleared filter for: ", info.fields[i].name); 
             legal = true;
             break searchLoop;
           }
@@ -131,6 +133,7 @@ function parser(command) {
                   }
                   // remove the specific filter from the sheet
                   filterByName(info.fields[i].name, info.fields[i].values[j], 'remove');
+                  // #talk
                   console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
                   legal = true;
                   break searchLoop;
@@ -152,6 +155,7 @@ function parser(command) {
                   }
                   // add the specific filter intom the sheet
                   filterByName(info.fields[i].name, info.fields[i].values[j], 'add');
+                  // #talk
                   console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
                   legal = true;
                   break searchLoop;
@@ -162,6 +166,7 @@ function parser(command) {
               if (legal == false){
                 // replace the field with the specific filter
                 filterByName(info.fields[i].name, info.fields[i].values[j], 'replace');
+                // #talk
                 console.log("Replaced: ", info.fields[i].values[j], " on: ", info.fields[i].name);
                 legal = true;
                 break searchLoop;
@@ -206,6 +211,7 @@ function parser(command) {
                     continue operationLoop4;//
                   }
                   filterByName(info.fields[a].name, info.fields[a].values[b], 'add');
+                  // #talk
                   console.log("Added: ", info.fields[a].values[b], "to: ", info.fields[a].name);
                   legal = true;
                   break searchLoop1;
@@ -226,6 +232,7 @@ function parser(command) {
                     continue operationLoop5;
                   }
                   filterByName(info.fields[a].name, info.fields[a].values[b], 'remove');
+                  // #talk
                   console.log("Removed ", info.fields[a].values[b], "from: ", info.fields[a].name);
                   legal = true;
                   break searchLoop1;
@@ -234,6 +241,7 @@ function parser(command) {
 
               if (legal == false){
                 filterByName(info.fields[a].name, info.fields[a].values[b], 'replace');
+                // #talk
                 console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);
                 legal = true;
                 break searchLoop1;
@@ -266,6 +274,7 @@ function parser(command) {
   // Invalid Command
   // at last if no legal action found, then notice the user it is a illegal command
   if (legal === false){
+    // #talk
     console.log("invalid command");
 
     //document.getElementById("output").innerHTML = "Sorry, your Command is not legal...";

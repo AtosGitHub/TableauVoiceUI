@@ -1,0 +1,33 @@
+#command {
+  position: absolute;
+  right: 75px;
+
+}
+
+#input {
+  position: absolute;
+  right: 35px;
+  top: 75px;
+
+}
+
+
+#parserButton {
+  position: absolute;
+  right: 45px;
+  bottom: 70px;
+
+}
+
+#log {
+  position: absolute;
+  right: 25px;
+  bottom: 125px;
+
+}
+
+.output{
+  font-size: 45px;
+  right: 15px;
+
+}

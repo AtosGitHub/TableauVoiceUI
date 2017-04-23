@@ -54,7 +54,8 @@ function parser(command) {
       // it will switch to a tab when a tab name other than the the current one is found
       if (cmd.includes(tabs[t].toLowerCase()) && legal === false && tabs[t] != info.name){
         //#talk
-        utterance=new SpeechSynthesisUtterance("Switching to tab: " + tabs[t]);
+        msg = SheetList[t].type + ', ' + tabs[t];
+        utterance=new SpeechSynthesisUtterance(msg);
         synth.speak(utterance);
         console.log("Switch to tab: ", tabs[t]);
         switchToMapTab(tabs[t]);
@@ -101,11 +102,12 @@ function parser(command) {
             filterByName(info.fields[i].name, '', 'all');
             
              //#talk
-             utterance=new SpeechSynthesisUtterance("Clearing filter for: " + info.fields[i].name);
+             msg = "Showing all " + info.fields[i].name + 's';
+             utterance=new SpeechSynthesisUtterance(msg);
               synth.speak(utterance);
               
             // print out the action for debug purpose
-            console.log("Cleared filter for: ", info.fields[i].name);
+            console.log(msg);
             legal = true;
             break searchLoop;
           }
@@ -143,7 +145,8 @@ function parser(command) {
                   filterByName(info.fields[i].name, info.fields[i].values[j], 'remove');
                   
                   //#talk
-                  utterance=new SpeechSynthesisUtterance("Removing " + info.fields[i].values[j] + " from " + info.fields[i].name);
+                  msg = "Removing " + info.fields[i].values[j] + " from " + info.fields[i].name;
+                  utterance=new SpeechSynthesisUtterance(msg);
                   synth.speak(utterance);
                     
                   console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
@@ -169,7 +172,8 @@ function parser(command) {
                   filterByName(info.fields[i].name, info.fields[i].values[j], 'add');
                   
                   //#talk
-                  utterance=new SpeechSynthesisUtterance("Adding " + info.fields[i].values[j] + " to: " + info.fields[i].name);
+                  msg = "Adding " + info.fields[i].values[j] + " to: " + info.fields[i].name;
+                  utterance=new SpeechSynthesisUtterance(msg);
                   synth.speak(utterance);
                     
                   console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
@@ -184,7 +188,8 @@ function parser(command) {
                 filterByName(info.fields[i].name, info.fields[i].values[j], 'replace');
                 
                 //#talk
-                utterance=new SpeechSynthesisUtterance("Replacing " + info.fields[i].values[j] + " on: " + info.fields[i].name);
+                msg = "Showing " + info.fields[i].name + ', ' + info.fields[i].values[j];
+                utterance=new SpeechSynthesisUtterance(msg);
                 synth.speak(utterance);
                 
                 console.log("Replaced: ", info.fields[i].values[j], " on: ", info.fields[i].name);
@@ -233,7 +238,8 @@ function parser(command) {
                   filterByName(info.fields[a].name, info.fields[a].values[b], 'add');
                   
                   //#talk
-                  utterance=new SpeechSynthesisUtterance("Addeding " + info.fields[a].values[b] +  "to " + info.fields[a].name);
+                  msg = "Adding " + info.fields[a].values[b] +  "to " + info.fields[a].name;
+                  utterance=new SpeechSynthesisUtterance(msg);
                   synth.speak(utterance);
                   
                   console.log("Added: ", info.fields[a].values[b], "to: ", info.fields[a].name);
@@ -258,7 +264,8 @@ function parser(command) {
                   filterByName(info.fields[a].name, info.fields[a].values[b], 'remove');
                   
                   //#talk
-                  utterance=new SpeechSynthesisUtterance("Removing" + info.fields[a].values[b] + "from: " + info.fields[a].name);
+                  msg = "Removing" + info.fields[a].values[b] + "from: " + info.fields[a].name;
+                  utterance=new SpeechSynthesisUtterance(msg);
                   synth.speak(utterance);
                   
                   console.log("Removed ", info.fields[a].values[b], "from: ", info.fields[a].name);
@@ -271,7 +278,9 @@ function parser(command) {
                 filterByName(info.fields[a].name, info.fields[a].values[b], 'replace');
                 
                 //#talk
-               utterance=new SpeechSynthesisUtterance("Replacing "+ info.fields[a].values[b] + "on: " + info.fields[a].name);
+                //msg = "Replacing "+ info.fields[a].values[b] + "on: " + info.fields[a].name;
+                msg = "Showing " + info.fields[a].name + ', ' + info.fields[a].values[b];
+               utterance=new SpeechSynthesisUtterance(msg);
                synth.speak(utterance);
                     
                 console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);

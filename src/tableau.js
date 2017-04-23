@@ -27,7 +27,7 @@ function initViz(vz) {
         url = vz;
     }
     else{
-        url = urls[1];
+        url = urls[0];
     }
 
     //console.log("new url: ", url);

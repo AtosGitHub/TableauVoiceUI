@@ -1,0 +1,105 @@
+TODO
+
+* In this document, to-do items ("items") are listed and marked by the following fields:
+---------------------------------------------------------------------------------------
+Header Fields{
+
+	item_id: uniqe identier for each field; assigned as ascending array index, where each item_id is in range: [000, 999]; use item_id to identiy items in all references and group communications; 
+
+	associated: file names associated with this item
+	
+	name(s): name(s) of contributor(s) to the item between the lines; please seperate your contribution from other's with white space and add yuor name in parenthesis at the end of your contribution;
+	
+	date: of original identification of item
+	
+	priority: an integer in {0:"interesting", 1:"useful", 2:"practical", 3:"mandatory", 4:"immediate"} 
+	
+	status: elementOf({"OPEN", "IN_PROGRESS", "SOLVED"}); each can be appended with notes and other item references
+	
+}
+---------------------------------------------------------------------------------------
+
+
+
+Items:
+
+------------------------------------------------------------------------------------------
+item_id: 000
+associated: from 'debug.txt' : "4:Apr 19, 2017"; 
+name: justin
+date: 4-19-17
+priority: 2 
+status: 
+
+	-Implement a data structure for tracking duplicate values in fields of current tab and then prompt user to specify which field to apply filter value.
+
+    -Remove words from the command as they are recognized until we have only the filter value left. Then when we search it for legal filter values, we could put the constraint that the legal value be > 50% of what is left in the command by word count (e.g. 'Island' is exactly 50% of 'Rhode Island' so it won't match, but "Chicago O'Hare" and "Chicago International" are > 50% of "Chicago O'Hare International" which would match.
+
+
+------------------------------------------------------------------------------------------
+item_id: 001
+associated: 
+name: justin
+date: 4-19-17
+priority: 2
+status: ""
+
+Range Filter for Tableau
+
+// prototype
+function rangeFilter(field, range){
+	...
+	worksheet.applyRangeFilterAsync(fieldName: string, range: RangeFilterOptions);
+	
+}
+
+API specification
+{
+	applyRangeFilterAsync( 
+	fieldName: string, 
+	range: RangeFilterOptions)
+
+		returns Promise<string>
+
+	Applies a quantitative filter to a field or to a date. If a range is specified that is outside of the domain min/max values, no error is raised and the command is allowed. Subsequent calls to getFiltersAsync[] will return these values even if they are outside of the bounds of the domain. This is equivalent to the behavior in Tableau Desktop.
+}
+
+
+------------------------------------------------------------------------------------------
+item_id: 002
+associated: 
+name: justin
+date: 4-19-17
+priority: 2
+status: ""
+
+Reset All Filters in Current Tab
+
+-will need to loop through fields in current sheet and and clear each individually to avoid refreshing the
+the page and clearing filters in other tabs.
+
+
+------------------------------------------------------------------------------------------
+item_id: 003
+associated: 
+name: justin
+date: 4-19-17
+priority: 2.5
+status: ""
+
+Determine cause of speech recognition timeout in Chrome and restart it when it happens.
+
+
+------------------------------------------------------------------------------------------
+item_id: 004
+associated: from 'debug.txt' : "4:Apr 19, 2017"; 
+name: justin
+date: 4-20-17
+priority: 2.5
+status: ""
+
+Use the speech synthesis abilities of the Web Speech API to give voice responses to user, and ask the user to clarify ambiguities in their command.
+
+
+
+------------------------------------------------------------------------------------------

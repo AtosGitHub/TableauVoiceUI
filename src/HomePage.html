@@ -1,0 +1,121 @@
+<!--
+// Author: Justin Brewer
+// Contact: this.justinbrewer@gmail.com
+// from folder project_demo_v01
+ -->
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Filter</title>
+
+    <script type="text/javascript"
+        src="https://public.tableau.com/javascripts/api/tableau-2.js">
+    </script>
+    <script src="tableau.js"></script>
+    <script src="speech.js"></script>
+    <script src="data.js"></script>
+    <script src="parser.js"></script>
+    <!--      -->
+
+</head>
+
+<body onload="initViz();" style="background-color:#E7E8EC">
+<!--    <body onload="initViz();" style="background-color:#E7E8EC">    -->
+
+    <div id="main">
+      
+
+
+
+        <div style="width:800px; height:28px; margin:0 auto; float:right" align="right">
+            <!--    <font color="#E7E8EC">_________</font>    -->
+                
+
+                <select id="vizSelect" onchange="changeViz()" style="height:25px; width:115px;" align="left">
+                    <option value="">Select Workbook</option>
+                    <option value="0">Regional Sample</option>
+                    <option value="1">Retail Sites</option>
+                    <option value="2">Oil and Gas</option>
+                    <option value="3">World Energy</option>
+                </select>  
+
+                 <button id="start_button" align="right" onclick="startReco(event)">
+                <img id="start_img" src="mic.gif" height="35px" width="35px"></button>  
+
+                <br>
+
+                <button type="button" onclick="logActiveSheet()" align="right">Data to <br>Console</button> 
+
+                
+        </div>
+
+        <br>
+
+        <div id="vizContainer" style="width:820px; height:710px;"></div>
+
+        <br>
+
+        
+        
+    </div>
+
+     
+
+    
+    
+
+<!-- 
+
+     margin:0 auto;
+
+
+
+
+
+
+
+
+
+
+uncomment to add debugging buttons; better option would be to
+    just call the commands you want to test from the console
+
+    <br>
+    <input type="text" id="field" value="State">
+    <input type="text" id="filter" value="Texas;Oklahoma;Arkansas">
+    <input type="text" id="type" value="replace">
+    <button type="button" onclick="process()" align="right">filter</button>
+    <br>
+    <div id="filterInstructions">(case sensitive)____(case sensitive)____(add/replace/remove/all)</div>
+    <div>(Field)____________(str_filter)____________(filter_type)</div>
+    <br>
+
+    <input type="text" id="changeSheet" value="Flights">
+    <button type="button" onclick="changeSheet()" align="right">changeSheet</button>
+    <div id="csInstr">(Enter any tab name)</div>
+
+
+    <script>
+    function process(){
+        var field = document.getElementById("field").value;
+        var filter = document.getElementById("filter").value;
+        var type = document.getElementById("type").value;
+        //alert(field + "<br>" + filter + "<br>" + type);
+        filterByName(field, filter, type);
+    }</script>
+    -->
+  <script>
+    function process(){
+        var field = document.getElementById("field").value;
+        var filter = document.getElementById("filter").value;
+        var type = document.getElementById("type").value;
+        //alert(field + "<br>" + filter + "<br>" + type);
+        filterByName(field, filter, type);
+    }</script>
+
+
+</body>
+
+</html>

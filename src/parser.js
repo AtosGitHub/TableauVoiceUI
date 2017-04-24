@@ -5,18 +5,20 @@
 
 */
 var info;
-var utterance;
-var synth = window.speechSynthesis;
+
+
+
 var addLibrary = ['add', 'ad', 'ed', 'at', 'plus', 'put in', 'include'];
 var removeLibrary = ['remove', 'reduce', 'delete'];
 var allLibrary = ['reset','all', 'everything', 'clear', 'reload', 'refresh'];
-
+var matches;
 
 // this function is called with each voice command
 // so far it is a bunch of if statements based on the word spoken
 function parser(command) {
   // for testing purposes, print the recieved command into console
   console.log("Recieved command: ", "\"", command, "\"");
+  matches = [];
 
   // information section
   info = getActiveSheetData();// info is the sheet object of the current sheet, it has an array of field object and a name of itself
@@ -55,8 +57,11 @@ function parser(command) {
       if (cmd.includes(tabs[t].toLowerCase()) && legal === false && tabs[t] != info.name){
         //#talk
         msg = SheetList[t].type + ', ' + tabs[t];
-        utterance=new SpeechSynthesisUtterance(msg);
-        synth.speak(utterance);
+
+        speak(msg, "narrate");
+        //utterance=new SpeechSynthesisUtterance(msg);
+        //synth.speak(utterance);
+        
         console.log("Switch to tab: ", tabs[t]);
         switchToMapTab(tabs[t]);
         legal = true;
@@ -103,8 +108,9 @@ function parser(command) {
             
              //#talk
              msg = "Showing all " + info.fields[i].name + 's';
-             utterance=new SpeechSynthesisUtterance(msg);
-              synth.speak(utterance);
+             speak(msg, "narrate");
+             // utterance=new SpeechSynthesisUtterance(msg);
+             //  synth.speak(utterance);
               
             // print out the action for debug purpose
             console.log(msg);
@@ -141,17 +147,23 @@ function parser(command) {
                   if (operationFlag == true){
                     continue operationLoop2;
                   }
+
+
                   // remove the specific filter from the sheet
-                  filterByName(info.fields[i].name, info.fields[i].values[j], 'remove');
+                  // #matches
+                  matches.push([info.fields[i].name, info.fields[i].values[j], 'remove']);
+                  //filterByName(info.fields[i].name, info.fields[i].values[j], 'remove');
                   
                   //#talk
                   msg = "Removing " + info.fields[i].values[j] + " from " + info.fields[i].name;
-                  utterance=new SpeechSynthesisUtterance(msg);
-                  synth.speak(utterance);
+                  speak(msg, "narrate");
+                  // utterance=new SpeechSynthesisUtterance(msg);
+                  // synth.speak(utterance);
                     
                   console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
                   legal = true;
-                  break searchLoop;
+                  // #matches
+                  //break searchLoop;
                 }
               }
 
@@ -169,32 +181,40 @@ function parser(command) {
                     continue operationLoop3;
                   }
                   // add the specific filter intom the sheet
-                  filterByName(info.fields[i].name, info.fields[i].values[j], 'add');
+                  // #matches
+                  matches.push([info.fields[i].name, info.fields[i].values[j], 'add']);
+                  //filterByName(info.fields[i].name, info.fields[i].values[j], 'add');
                   
                   //#talk
                   msg = "Adding " + info.fields[i].values[j] + " to: " + info.fields[i].name;
-                  utterance=new SpeechSynthesisUtterance(msg);
-                  synth.speak(utterance);
+                  speak(msg, "narrate");
+                  // utterance=new SpeechSynthesisUtterance(msg);
+                  // synth.speak(utterance);
                     
                   console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
                   legal = true;
-                  break searchLoop;
+                  // #matches
+                  //break searchLoop;
                 }
               }
 
               //default action is replace, which means if no action type found in command, then we do replace
               if (legal == false){
                 // replace the field with the specific filter
-                filterByName(info.fields[i].name, info.fields[i].values[j], 'replace');
+                // #matches
+                matches.push([info.fields[i].name, info.fields[i].values[j], 'replace']);
+                //filterByName(info.fields[i].name, info.fields[i].values[j], 'replace');
                 
                 //#talk
                 msg = "Showing " + info.fields[i].name + ', ' + info.fields[i].values[j];
-                utterance=new SpeechSynthesisUtterance(msg);
-                synth.speak(utterance);
+                speak(msg, "narrate");
+                // utterance=new SpeechSynthesisUtterance(msg);
+                // synth.speak(utterance);
                 
                 console.log("Replaced: ", info.fields[i].values[j], " on: ", info.fields[i].name);
                 legal = true;
-                break searchLoop;
+                // #matches
+                //break searchLoop;
               }
             }
           }
@@ -235,16 +255,21 @@ function parser(command) {
                   if (operationFlag == true){
                     continue operationLoop4;//
                   }
-                  filterByName(info.fields[a].name, info.fields[a].values[b], 'add');
+
+                  // #matches
+                  matches.push([info.fields[a].name, info.fields[a].values[b], 'add']);
+                  //filterByName(info.fields[a].name, info.fields[a].values[b], 'add');
                   
                   //#talk
                   msg = "Adding " + info.fields[a].values[b] +  "to " + info.fields[a].name;
-                  utterance=new SpeechSynthesisUtterance(msg);
-                  synth.speak(utterance);
+                  speak(msg, "narrate");
+                  // utterance=new SpeechSynthesisUtterance(msg);
+                  // synth.speak(utterance);
                   
                   console.log("Added: ", info.fields[a].values[b], "to: ", info.fields[a].name);
                   legal = true;
-                  break searchLoop1;
+                  // #matches
+                  //break searchLoop1;
                 }
               }
 
@@ -261,31 +286,39 @@ function parser(command) {
                   if (operationFlag == true){
                     continue operationLoop5;
                   }
-                  filterByName(info.fields[a].name, info.fields[a].values[b], 'remove');
+                  // #matches
+                  matches.push([info.fields[a].name, info.fields[a].values[b], 'remove']);
+                  //filterByName(info.fields[a].name, info.fields[a].values[b], 'remove');
                   
                   //#talk
                   msg = "Removing" + info.fields[a].values[b] + "from: " + info.fields[a].name;
-                  utterance=new SpeechSynthesisUtterance(msg);
-                  synth.speak(utterance);
+                  speak(msg, "narrate");
+                  // utterance=new SpeechSynthesisUtterance(msg);
+                  // synth.speak(utterance);
                   
                   console.log("Removed ", info.fields[a].values[b], "from: ", info.fields[a].name);
                   legal = true;
-                  break searchLoop1;
+                  // #matches
+                  //break searchLoop1;
                 }
               }
 
               if (legal == false){
-                filterByName(info.fields[a].name, info.fields[a].values[b], 'replace');
+                // #matches
+                matches.push([info.fields[a].name, info.fields[a].values[b], 'replace']);
+                //filterByName(info.fields[a].name, info.fields[a].values[b], 'replace');
                 
                 //#talk
                 //msg = "Replacing "+ info.fields[a].values[b] + "on: " + info.fields[a].name;
                 msg = "Showing " + info.fields[a].name + ', ' + info.fields[a].values[b];
-               utterance=new SpeechSynthesisUtterance(msg);
-               synth.speak(utterance);
+                speak(msg, "narrate");
+               // utterance=new SpeechSynthesisUtterance(msg);
+               // synth.speak(utterance);
                     
                 console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);
                 legal = true;
-                break searchLoop1;
+                // #matches
+                //break searchLoop1;
               }
             }
           }
@@ -295,6 +328,16 @@ function parser(command) {
     }
   }
 
+  if(matches.length > 1){
+    msg  = "Multiple fields with " + matches[0][1] + ', ';
+
+    for(i in matches){
+      msg += matches[i][0] + ", ";
+    }
+
+
+  }
+
   //refresh the page use allLibrary, but only when no field or filter found
   if(legal == false){
     for (var reloadIndex in allLibrary){
@@ -302,8 +345,10 @@ function parser(command) {
       if (cmd.includes(allLibrary[reloadIndex])){
       
       //talk reload
-       utterance=new SpeechSynthesisUtterance("reloading");
-       synth.speak(utterance);
+      msg = "reloading";
+      speak(msg, "narrate");
+       // utterance=new SpeechSynthesisUtterance(msg);
+       // synth.speak(utterance);
          
         console.log("reloading");
 		    window.location.reload();
@@ -322,8 +367,10 @@ function parser(command) {
   if (legal === false){
   
   //#talk
-   utterance=new SpeechSynthesisUtterance("invalid command");
-   synth.speak(utterance);
+  msg = "invalid command";
+  speak(msg, "narrate");
+   // utterance=new SpeechSynthesisUtterance(msg);
+   // synth.speak(utterance);
    
     console.log("invalid command");
 

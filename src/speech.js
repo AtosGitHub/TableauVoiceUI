@@ -33,6 +33,13 @@ var recognizing = false;
 
 
 
+var utterance;
+var synth = window.speechSynthesis;
+
+var msgTypes = {narrate: true, debug: false, question: true};
+
+
+
 
 
 // what runs after the click on the mic
@@ -119,3 +126,19 @@ function speechParse() {
   parser(command);
 
 }
+
+
+//----------------------------------------------------------------------
+function speak(msg, spk){
+
+  if(msgTypes[spk]){
+    utterance=new SpeechSynthesisUtterance(msg);
+    synth.speak(utterance);
+  }
+  else{
+    console.log("invalid spoken message type");
+  }
+
+}
+
+//----------------------------------------------------------------------

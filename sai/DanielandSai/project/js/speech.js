@@ -49,9 +49,120 @@ window.onload = function() {
 
       }
 
+      fillRecent();
+
+
 
 
 };
+
+
+// this function fills all the recent URL into the dropdown box
+function fillRecent() {
+
+
+
+      if (localStorage.getItem("recent1") != null) {
+
+          var rec1 = localStorage.getItem("recent1");
+          var tag1 = urlToTag(rec1);
+
+          document.getElementById('recent1').innerHTML = tag1;
+
+
+          if (localStorage.getItem("recent2") != null) {
+
+              var rec2 = localStorage.getItem("recent2");
+              var tag2 = urlToTag(rec2);
+
+              document.getElementById('recent2').innerHTML = tag2;
+
+
+
+
+
+              if (localStorage.getItem("recent3") != null) {
+
+                  var rec3 = localStorage.getItem("recent3");
+                  var tag3 = urlToTag(rec3);
+
+                  document.getElementById('recent3').innerHTML = tag3;
+
+
+
+
+              }
+
+
+          }
+
+
+
+
+
+      }
+
+
+
+
+}
+
+
+// function that runs if user clicks on a recent URL tag
+// It reloads the page with the clicked URL set up to run
+function clickRecent(n) {
+
+      if (n == 0) {
+
+          var newLink = localStorage.getItem("recent1");
+          localStorage.setItem("urlSet", newLink);
+
+          location.reload();
+
+
+      }
+      else if (n == 1) {
+
+          var newLink = localStorage.getItem("recent2");
+          localStorage.setItem("urlSet", newLink);
+
+          location.reload();
+
+
+      }
+      else {
+
+          var newLink = localStorage.getItem("recent3");
+          localStorage.setItem("urlSet", newLink);
+
+          location.reload();
+
+
+
+      }
+
+
+
+
+
+
+}
+
+
+
+// this function takes in a url and returns just the worksheet title
+function urlToTag(s) {
+
+    var temp = s.split("http://public.tableau.com/views/");
+    var holder = temp[1];
+
+    var finalTag = holder.split("/");
+
+    return finalTag[0];
+
+
+
+}
 
 
 // function is to merely capitlise first letter of string
@@ -170,8 +281,14 @@ function testLocal() {
 
       document.getElementById('output').innerHTML = localStorage.getItem("urlSet") + " URLSET data";
 
-      document.getElementById('output').innerHTML = localStorage.getItem("recent1") + "recent DATA";
+      if (localStorage.getItem("recent1") != null) {
 
+
+
+          document.getElementById('output').innerHTML = localStorage.getItem("recent1") + "recent DATA";
+
+
+        }
 
 
     }
@@ -186,11 +303,28 @@ function testLocal() {
 }
 
 
+// this function is when you log out, clears your session and takes you to the homepage
+function clearStorage() {
+
+
+
+
+    window.localStorage.clear();
+
+    location.href ="../login/main.html";
+
+
+}
+
+
+
 /*
     This is an elementary speech-parse-to-command function.
     It only executes select commands and displays what its doing
     in the log
 */
+
+
 
 
 function speechParse() {

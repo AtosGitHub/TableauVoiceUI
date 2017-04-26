@@ -34,7 +34,7 @@ function addToSecond() {
 
 
 // add the URL from the "input buffer" which is the url in the urlSet local storage key to the third recent URL key
-function addToSecond() {
+function addToThird() {
 
   var recentURL = localStorage.getItem("urlSet");
 

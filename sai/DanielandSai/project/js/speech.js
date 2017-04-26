@@ -166,7 +166,22 @@ function hide() {
 // only for testing local storage usage for url
 function testLocal() {
 
-  initViz();
+    if (localStorage.getItem("urlSet") != null) {
+
+      document.getElementById('output').innerHTML = localStorage.getItem("urlSet") + " URLSET data";
+
+      document.getElementById('output').innerHTML = localStorage.getItem("recent1") + "recent DATA";
+
+
+
+    }
+    else {
+
+      document.getElementById('output').innerHTML = "urlSet doesn't exist";
+
+    }
+
+
 
 }
 

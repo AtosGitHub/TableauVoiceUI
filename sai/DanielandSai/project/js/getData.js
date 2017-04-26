@@ -9,8 +9,16 @@ var FieldList = [];
 
 function initViz() {
     var containerDiv = document.getElementById("vizContainer");
+
+
     //url = "http://public.tableau.com/views/ATOSCarrierReport/Sheet1?:retry=yes&:embed=y&:display_count=yes&:showTabs=y";
-    url = "http://public.tableau.com/views/RegionalSampleWorkbook/College";
+
+
+    /*
+        The URL comes from a local storage key, whatever the user entered
+        in the input page is set to the URL variable in this function
+    */
+    url = localStorage.getItem("urlSet");
 
     var options = {
         hideTabs: false,

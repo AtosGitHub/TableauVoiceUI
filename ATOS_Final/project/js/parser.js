@@ -70,7 +70,7 @@ function parser(command) {
 
 
   // this part executes if the user would like to navigate to a recently opened URL
-  if (cmd.contains('recent')) {
+  if (cmd.includes('recent')) {
 
 
 

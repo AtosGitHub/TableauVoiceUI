@@ -1,6 +1,18 @@
 UTD & Atos: Tableau VUI
 
 //---------------------------------------------------------------------
+About this branch "talkback"
+
+	This branch collects a list of matches and asks the user to specify which they
+	want to apply instead of assuming the first match it good. 
+
+	The matching process is functional, but further work is needed to synchronize
+	stopping voice recognition when synthesis starts and then immediately restarting it.
+
+	
+
+
+//---------------------------------------------------------------------
 API links:
 
 Web Speech API

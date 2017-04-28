@@ -104,16 +104,26 @@ recognition.onresult = function(event) {
 
 
 recognition.onend = function(event){
-  //recognizing = false;
+  recognizing = false;
   start_img.src = 'mic.gif';
   console.log("### recognition.onend: ", recognizing);
   //sythPause = false;
 
-  if(recognizing && !synthPause){
-    recognition.start();  
-  } else{
-    recognizing = false;
-  }
+  // while(synthPause){
+
+  // }
+
+  // if(recognizing){
+  //   recognition.start();
+  // } else{
+  //   recognizing = false;
+  // }
+
+  // if(recognizing){
+  //   recognition.start();  
+  // } else{
+  //   recognizing = false;
+  // }
   
 }
 
@@ -154,19 +164,32 @@ function speak(msg, spk){
     synthPause = true;
     recognition.stop();
     console.log("rec stop");
-    recognizing = false;
+    // recognizing = false;
 
-    // t = new Date().getTime();
-    // var tDiff = 0;
+    t = new Date().getTime()/1000;
+    var tDiff = 0;
 
     // console.log("rec 152");
     // while(synthPause & tDiff > 5){
     //     tDiff = new Date().getTime() - t;
     // }
 
+    console.log("01speaking? ", synth.speaking);
+
     // console.log("speak: ", msg);
     utterance = new SpeechSynthesisUtterance(msg);
     synth.speak(utterance);
+    console.log("01speaking? ", synth.speaking);
+
+
+
+    while(synth.speaking & tDiff  < 4){
+      tDiff = (new Date().getTime()/1000) - t;
+
+    }
+
+
+    //synthPause = false;
 
     console.log("speaking: ", msg);
 
@@ -175,6 +198,10 @@ function speak(msg, spk){
   else{
     console.log("Message type: ", spk, " = false/undefined.");
   }
+
+}
+
+function resumeReco(){
 
 }
 

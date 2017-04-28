@@ -35,8 +35,9 @@ var recognizing = false;
 
 var utterance;
 var synth = window.speechSynthesis;
+var synthPause = false;
 
-var msgTypes = {narrate: true, debug: false, question: true};
+var msgTypes = {narrate: true, debug: false, question: true, welcome: true};
 
 
 
@@ -56,7 +57,7 @@ function startReco(event){
       recognition.stop();
       recognizing = false;
 
-      start_img.src = 'mic.gif';
+      //start_img.src = 'mic.gif';
       console.log("recognition stopped");
       //log.textContent = 'recognition stopped';
 
@@ -68,7 +69,7 @@ function startReco(event){
       recognition.start();
 
       recognizing = true;
-      start_img.src = 'mic-slash.gif';
+      //start_img.src = 'mic-slash.gif';
       console.log("recognition started");
       //log.textContent = 'recognition started';
 
@@ -77,6 +78,8 @@ function startReco(event){
 }
 
 recognition.onstart = function(event) {
+  console.log("### recognition.onstart");
+    start_img.src = 'mic-slash.gif';
     recognizing = true;
 
   }
@@ -97,6 +100,21 @@ recognition.onresult = function(event) {
     var last = event.results.length - 1;
     var command = event.results[last][0].transcript;
     parser(command);
+}
+
+
+recognition.onend = function(event){
+  //recognizing = false;
+  start_img.src = 'mic.gif';
+  console.log("### recognition.onend: ", recognizing);
+  //sythPause = false;
+
+  if(recognizing && !synthPause){
+    recognition.start();  
+  } else{
+    recognizing = false;
+  }
+  
 }
 
 var viz, workbook, activeSheet;
@@ -132,13 +150,34 @@ function speechParse() {
 function speak(msg, spk){
 
   if(msgTypes[spk]){
-    utterance=new SpeechSynthesisUtterance(msg);
+
+    synthPause = true;
+    recognition.stop();
+    console.log("rec stop");
+    recognizing = false;
+
+    // t = new Date().getTime();
+    // var tDiff = 0;
+
+    // console.log("rec 152");
+    // while(synthPause & tDiff > 5){
+    //     tDiff = new Date().getTime() - t;
+    // }
+
+    // console.log("speak: ", msg);
+    utterance = new SpeechSynthesisUtterance(msg);
     synth.speak(utterance);
+
+    console.log("speaking: ", msg);
+
+    //recognition.start();
   }
   else{
-    console.log("invalid spoken message type");
+    console.log("Message type: ", spk, " = false/undefined.");
   }
 
 }
 
-//----------------------------------------------------------------------
+function sayIt(msg){
+
+}

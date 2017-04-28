@@ -115,14 +115,17 @@ function getWorksheetData(sheet){
         idx = sheet.getIndex();
     }
     
-     options = {
+    options = {
                 ignoreAliases: true,
                 ignoreSelection: true,
                 includeAllColumns: true,
                 maxRows: 0, // Max rows to return. Use 0 to return all rows
-            };
+    };
 
     sheet.getUnderlyingDataAsync(options).then(function(summaryData){
+
+        console.log("getUnderLyingData success");
+        
         this.summaryData = summaryData;
         columns = summaryData.getColumns();
         numColumns = columns.length;
@@ -171,6 +174,9 @@ function getWorksheetData(sheet){
         SheetList[idx].fields = flds;
         SheetList[idx].visited = true;
 
+    }, function(err){
+        console.log("getUnderLyingData fail");
+        console.log(err);
     });
     
 }

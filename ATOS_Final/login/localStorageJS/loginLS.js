@@ -64,11 +64,11 @@ function mainLocal() {
 function checkURL() {
 
     var url = document.getElementById('locationURL').value;
-    if (url.includes(".com")){
+    if (url.includes('https://public.tableau.com/views/') || url.includes('http://public.tableau.com/views/')){
         return true;
     }
     else {
-        alert("The URL you have provided is not a public supported Worksheet");
+        alert("The URL you have provided is not a public supported Worksheet \n It should be in the form https://public.tableau.com/views/ or http://public.tableau.com/views/");
         return false;
     }
 

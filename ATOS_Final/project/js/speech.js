@@ -153,9 +153,19 @@ function clickRecent(n) {
 
 // this function takes in a url and returns just the worksheet title
 // which gets placed in the dropdown box for one click opening
+// make sure the url being input is either in HTTP or HTTP form
 function urlToTag(s) {
 
-    var temp = s.split("http://public.tableau.com/views/");
+
+    if (s.includes('http')) {
+      var temp = s.split("http://public.tableau.com/views/");
+
+    }
+    else if (s.includes('https')) {
+      var temp = s.split("https://public.tableau.com/views/");
+
+    }
+
     var holder = temp[1];
 
     var finalTag = holder.split("/");

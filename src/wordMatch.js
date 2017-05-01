@@ -1,9 +1,10 @@
 // This is a word macthing file
-// It first use .includes() to check if the key word is inside the command
+
+
+// This fucntion first use .includes() to check if the key word is inside the command
 // If .includes() returns ture, then it makes both cmd and key word into string array
 // Use a indexOf() function inside a for loop to do exact matching
 // This function will returns true if it find a exact match, false if not
-
 function exactMatch(matchWord, cmd){
   var legal = false;
 
@@ -28,7 +29,9 @@ function exactMatch(matchWord, cmd){
   return legal;
 }
 
-
+// This function checks wether the number inside command is in any of the numeric field's range 
+// It convert the minimun, maximun value of this field and the number inside command to pure numbers
+// Then if check if the number inside command is in range
 var command = 0;
 
 function numberMatch(value, cmd, type){
@@ -68,6 +71,9 @@ function numberMatch(value, cmd, type){
   return legal
 }
 
+// This function convert the number inside command into suitable type
+// i.e. if the field has value like "13.2%", it will convert the "52.2" inside command into "52.2"
+// if the field has value like "2,014", it will convert the "15400613" inside command into "15,400,613"
 
 function findLegalNum(value){
   var legalNum = '';

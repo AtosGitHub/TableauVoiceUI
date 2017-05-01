@@ -34,6 +34,7 @@ function parser(command) {
   // console.log("parser; command: ", command, "; clarify: ", clarify);
 
   if(cmd == "cancel"){
+    speak("canceled pending command", "narrate");
     clarify = false;
     return;
   }
@@ -427,23 +428,28 @@ function parser(command) {
   // IF MULTIPLE MATCHES FOUND
   //
   if(matches.length > 1){
-    console.log("multiple matches: ", matches);
+    // console.log("multiple matches: ", matches);
 
     mt = [];
 
     for(i in matches){
       mt.push(matches[i][0]);
     }
-    console.log("mt og", mt);
     mt = uniqueD(mt);
-    console.log("mt unique", mt);
 
+    mats = [];
     
     if(mt.length > 1){
-      msg  = "Multiple fields with " + matches[0][1] + ', ';
+      msg  = "Multiple fields with " + matches[0][1] + '. ';
       for(i in mt){
-        msg += mt[i] + ", ";
+        mats.push(mt[i]);
       }
+
+      mats.splice(mats.length-1, 0, "and");
+
+      msg += mats + ". ";
+
+      //strFields.splice(strFields.length - 1, 0, "and");
 
       //msg.splice
       msg += "Which would you like?";
@@ -451,14 +457,12 @@ function parser(command) {
       clarify = true;
       return;
     } else{
-      console.log("single match: ", matches);
       filterByName(matches[0][0], matches[0][1], matches[0][2]);
       return;
     }
    
   }
   else if(matches.length == 1){
-    console.log("single match: ", matches);
 
     filterByName(matches[0][0], matches[0][1], matches[0][2]);
     return;
@@ -477,7 +481,6 @@ function parser(command) {
       msg = "reloading";
       speak(msg, "narrate");
          
-        console.log("reloading");
 		    window.location.reload();
         legal = true;
       }
@@ -499,7 +502,6 @@ function parser(command) {
 
 function checkMatches(command){
 
-  console.log("checkMatches");
   cmd = command.toLowerCase();
   cntnu = true;
   //cmd = cmd.split(' ');
@@ -507,9 +509,7 @@ function checkMatches(command){
   matchLoop:
   for(i in matches){
     for(j in cmd){
-      console.log("command: ", command, "; matches[", i, "][0]: ", matches[i][0]);
       if(cmd.indexOf(matches[i][0].toLowerCase()) >= 0){
-        console.log("match found");
         clarify = false;
         filterByName(matches[i][0], matches[i][1], matches[i][2]);
         matches = [];

@@ -178,24 +178,6 @@ function parser(command) {
         else if (legal == false){
           legal = numberFiltering(info.fields[i], cmd);
         }
-        // else if ((info.fields[i].type == 'integer' || info.fields[i].type == 'float') && legal == false){
-        //
-        //   if(numberMatch(info.fields[i].values, cmd, info.fields[i].type)){
-        //     var filterNum = findLegalNum(info.fields[i].values);
-        //     console.log('select number: ' + filterNum + " in field: " + info.fields[i].name);
-        //
-        //     legal = removeFilter(info.fields[i].name, filterNum, cmd);
-        //     if (legal == false){
-        //       legal = addFilter(info.fields[i].name, filterNum, cmd);
-        //     }
-        //
-        //     if (legal == false){
-        //       filterByName(info.fields[i].name, filterNum, 'replace');
-        //       return;
-        //       legal = true;
-        //     }
-        //   }
-        // }
       }
 
     }

@@ -264,27 +264,30 @@ function logActiveSheet(){
     console.log("activeSheet:", SheetList[activeSheetIndex]);
 }
 //----------------------------------------------------------------
-//#####################_________________________###################
 
-//########################################################################
-//##########################__End_Useable_Code__#############################
-//##############################################################################
+function getStringFields(){
+    var info = getActiveSheetData();
+    console.log("info: ", info);
+    var flds = info.fields;
+    console.log("flds: ", flds);
+    var strFields = ["Available fields are: "];
 
-//#########################__Begin_Experimental__################################
-//----------------------------------------------------------------
-// these methods were attempts at retrieving workbook data to form our dynamic library;
-// I was not able to retrieve complete information with any of them, so I retrieved and parsed
-// the raw source data with worksheet.getUnderlyingDataAsync()
-//----------------------------------------------------------------
-function getMarks(){
-    activeSheet.getSelectedMarksAsync().then(function(marks){
-        pairs = marks[0].getPairs();
-        for(i in pairs){
-            console.log("pair ", i, ": ", pairs[i]);
+    for(i in flds){
+        console.log("flds[i].type: ", flds[i].type);
+        if(flds[i].type === "string"){
+            strFields.push(flds[i].name + ", ");
+            console.log("str field: ", flds[i].name);
         }
-        //console.log("Selected Marks:", marks);
-    });
+    }
+
+    strFields.splice(strFields.length - 1, 0, "and");
+
+    speak(strFields, "narrate");
 }
+//#####################_________________________###################
+//##__End of used code, the following functions should be useful for future 
+// functionality
+
 //----------------------------------------------------------------
 function getFilters(){
 
@@ -348,25 +351,7 @@ function getWorksheetDataSources(sheet){
     console.log("fieldList: ", fieldList);
 }
 
-function getStringFields(){
-    var info = getActiveSheetData();
-    console.log("info: ", info);
-    var flds = info.fields;
-    console.log("flds: ", flds);
-    var strFields = ["Available fields are: "];
 
-    for(i in flds){
-        console.log("flds[i].type: ", flds[i].type);
-        if(flds[i].type === "string"){
-            strFields.push(flds[i].name + ", ");
-            console.log("str field: ", flds[i].name);
-        }
-    }
-
-    strFields.splice(strFields.length - 1, 0, "and");
-
-    speak(strFields, "narrate");
-}
 
 //----------------------------------------------------------------
 //###############################_____EOF____________________###################################

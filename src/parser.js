@@ -24,14 +24,14 @@ var matches;
 function parser(command) {
 
   if(synth.speaking){
-    console.log("ignoring: ", command);
+    // console.log("ignoring: ", command);
     return;
   }
 
   // this turn the recieved command into lower case, in case to do strict comparison
   var cmd = command.toLowerCase();
 
-  console.log("parser; command: ", command, "; clarify: ", clarify);
+  // console.log("parser; command: ", command, "; clarify: ", clarify);
 
   if(cmd == "cancel"){
     clarify = false;
@@ -47,7 +47,12 @@ function parser(command) {
   console.log("Recieved command: \n\t", "\"", command, "\"");
 
   if(!cmd.includes(assistantName) && requireName){
-    console.log("IGNORING: as I am not being spoken to...");
+    // console.log("IGNORING: as I am not being spoken to...");
+    return;
+  }
+
+  if(cmd.includes("help") || cmd.includes("get information") || cmd.includes("what can i say")){
+    getStringFields();
     return;
   }
 
@@ -86,27 +91,14 @@ function parser(command) {
 
 
   //------------------------------------------------------------------------------
-  // CHECK HIDE VIZ
-  //
-	// if(cmd == 'exit' || cmd == 'hide' || cmd == 'close') {
- //    console.log("hiding");
- //    hide();
- //    //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
- //    legal = true;
-	// }
-
-
-  //------------------------------------------------------------------------------
   // STOP LISTENING
   //
    if(cmd.includes('exit') || cmd.includes('hide') || cmd.includes('close') || cmd.includes('stop') || cmd.includes('ignore')) {
-      console.log("stop listening from voice command");
+      // console.log("stop listening from voice command");
       recReset = false;
       recognition.abort();
       speak("goodbye", "narrate");
       return;
-      //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
-      //legal = true;
   }
 
   
@@ -123,7 +115,7 @@ function parser(command) {
 
         speak(msg, "narrate");
         
-        console.log("Switch to tab: ", tabs[t]);
+        // console.log("Switch to tab: ", tabs[t]);
         switchToMapTab(tabs[t]);
         legal = true;
         return;
@@ -183,7 +175,7 @@ function parser(command) {
              //#talk
              msg = "Showing all " + info.fields[i].name + 's';
             // print out the action for debug purpose
-            console.log(msg);
+            // console.log(msg);
             legal = true;
             break searchLoop;
           }
@@ -248,15 +240,11 @@ function parser(command) {
 
 
                   // remove the specific filter from the sheet
-                  // #matches
-                  //matches.push([info.fields[i].name, info.fields[i].values[j], 'remove', 202]);
                   filterByName(info.fields[i].name, info.fields[i].values[j], 'remove');
                   return;
                     
                   //console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
                   legal = true;
-                  // #matches
-                  //break searchLoop;
                 }
               }
 
@@ -287,17 +275,11 @@ function parser(command) {
                   }
              
                   // add the specific filter intom the sheet
-                  // #matches
-                  //matches.push([info.fields[i].name, info.fields[i].values[j], 'add', 241]);
                   filterByName(info.fields[i].name, info.fields[i].values[j], 'add');
                   return;
-                  
-                  
                     
                   //console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
                   legal = true;
-                  // #matches
-                  //break searchLoop;
                 }
               }
 
@@ -305,19 +287,16 @@ function parser(command) {
               // found in command, then we do replace
               if (legal == false){
                 // replace the field with the specific filter
-                // #matches
-                //matches.push([info.fields[i].name, info.fields[i].values[j], 'replace', 257]);
                 filterByName(info.fields[i].name, info.fields[i].values[j], 'replace');
                 return;
                 //console.log("Replaced: ", info.fields[i].values[j], " on: ", info.fields[i].name);
                 legal = true;
-                // #matches
-                //break searchLoop;
+
               }
             }
           }
         }
-        //else if (info.fields[i].type == 'integer')  {}
+
       }
 
     }
@@ -396,12 +375,6 @@ function parser(command) {
 
                   // #matches
                   matches.push([info.fields[a].name, info.fields[a].values[b], 'add', 340]);
-                  //filterByName(info.fields[a].name, info.fields[a].values[b], 'add');
-                  
-                  console.log("Added: ", info.fields[a].values[b], "to: ", info.fields[a].name);
-                  //legal = true;
-                  // #matches
-                  //break searchLoop1;
                 }
               }
 
@@ -422,33 +395,22 @@ function parser(command) {
                     continue operationLoop5;
                   }
                   // #matches
-                  matches.push([info.fields[a].name, info.fields[a].values[b], 'remove', 365]);
-                  //filterByName(info.fields[a].name, info.fields[a].values[b], 'remove');
-                  
-               
-                  
-                  console.log("Removed ", info.fields[a].values[b], "from: ", info.fields[a].name);
-                  //legal = true;
-                  // #matches
-                  //break searchLoop1;
+                  matches.push([info.fields[a].name, info.fields[a].values[b], 'remove', 365]);      
+                  // console.log("Removed ", info.fields[a].values[b], "from: ", info.fields[a].name);
+            
                 }
               }
 
               if (legal == false){
                 // #matches
                 matches.push([info.fields[a].name, info.fields[a].values[b], 'replace', 379]);
-                //filterByName(info.fields[a].name, info.fields[a].values[b], 'replace');
-                
-                    
-                console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);
-                //legal = true;
-                // #matches
-                //break searchLoop1;
+                // console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);
+            
               }
             }
           }
         }
-        //else if (info.fields[i].type == 'integer')  {}
+
       }
     }
   }
@@ -482,6 +444,8 @@ function parser(command) {
       for(i in mt){
         msg += mt[i] + ", ";
       }
+
+      //msg.splice
       msg += "Which would you like?";
       speak(msg, "question");
       clarify = true;
@@ -508,7 +472,7 @@ function parser(command) {
     for (var reloadIndex in allLibrary){
       fieldFlag = false;
       if (cmd.includes(allLibrary[reloadIndex])){
-      
+      //recognition.abort();
       //talk reload
       msg = "reloading";
       speak(msg, "narrate");

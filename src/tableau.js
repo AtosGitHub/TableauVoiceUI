@@ -45,16 +45,13 @@ function initViz(vz) {
     var containerDiv = document.getElementById("vizContainer");
     var url;
 
-    // console.log("new viz Index: ", vizIdx);
-    // console.log("urls[", vizIdx, "]: ", urls[vizIdx]);
-
     if(vz != null){
         viz.dispose();
         url = vz;
         welcome = false;
     }
     else{
-        url = urls[3];
+        url = urls[0];
         welcome = true;
     }
 
@@ -95,7 +92,7 @@ function changeViz(){
     var vu = document.getElementById("vizSelect");
     var nu = vu.options[vu.selectedIndex].value;
 
-    console.log("new viz index: ", nu);
+    // console.log("new viz index: ", nu);
 
     initViz(urls[nu]);
 
@@ -122,7 +119,7 @@ function changeSheet(){
 // process and apply categorical filter
 function filterByName(field, filter, type) {
 
-    console.log("filter: ", field, filter, type);
+    // console.log("filter: ", field, filter, type);
 
     sheet = activeSheet;
     // if(filter.includes(";")){

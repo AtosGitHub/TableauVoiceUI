@@ -24,8 +24,13 @@ recognition.grammars = speechRecognitionList;
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
-var assistantName = "howard";
+
+// program currently ignores audio while it speaks
+// to force program to ignore when not being addressed explicitly
+// set 'var requireName' to true and set your preferred assistantName
+var assistantName = "assistant";
 var requireName = false;
+
 var recognizing = false;
 var recReset = true;
 
@@ -37,9 +42,6 @@ voiceList = speechSynthesis.getVoices();
 var synthPause = false;
 
 var msgTypes = {narrate: true, debug: false, question: true, welcome: true};
-
-
-
 
 //-----------------------------------------------------------------------
 //
@@ -64,16 +66,22 @@ function startReco(event){
 
 //-----------------------------------------------------------------------
 recognition.onstart = function(event) {
-  recognizing = true;
-  console.log("### recognition.onstart");
+  if(synth.speaking){
+    recognition.abort();
+    // console.log("aborting");
+    return;
+  } else{
+    recognizing = true;
+    // console.log("### recognition.onstart");
     start_img.src = 'mic-slash.gif';
-
   }
+}
 //-----------------------------------------------------------------------
 recognition.onend = function(event){
   recognizing = false;
   start_img.src = 'mic.gif';
-  console.log("### recognition.onend; synthPause: ", synthPause);
+  // console.log("### recognition.onend; \nsynthPause: ", synthPause, "\nrecReset: ", recReset);
+  synth.resume();
 
   if(!synthPause && recReset){
     recognition.start();
@@ -82,17 +90,24 @@ recognition.onend = function(event){
   
 }
 
+utterance.onpause = function(event){
+  // console.log("synth paused");
+}
+
+utterance.onresume = function(event){
+  // console.log("synth resumed");
+}
 //-----------------------------------------------------------------------
 utterance.onstart = function(event){
           synthPause = true;
-          console.log("begin speaking"); 
+          // console.log("begin speaking"); 
           recognition.abort();
 }
 //-----------------------------------------------------------------------
 //recognition.start();
 utterance.onend = function(event){
           synthPause = false; 
-          console.log("stopped speaking"); 
+          // console.log("stopped speaking"); 
           if(!recognizing && recReset){
               recognition.start();  
           }
@@ -117,20 +132,16 @@ recognition.onresult = function(event) {
 //----------------------------------------------------------------------
 function speak(msg, spk){
 
+  synth.pause();
   if(msgTypes[spk]){
 
     synthPause = true;
     recognition.stop();
 
-    console.log("01speaking? ", synth.speaking);
-
-    // console.log("speak: ", msg);
-    //utterance = new SpeechSynthesisUtterance(msg);
     utterance.text = msg;
     utterance.rate = 1.2;
 
     synth.speak(utterance);
-    console.log("01  speaking? ", synth.speaking);
 
 
     console.log("speaking: ", msg);

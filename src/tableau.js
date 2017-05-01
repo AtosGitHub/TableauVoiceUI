@@ -54,7 +54,7 @@ function initViz(vz) {
         welcome = false;
     }
     else{
-        url = urls[0];
+        url = urls[3];
         welcome = true;
     }
 

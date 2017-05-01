@@ -35,6 +35,7 @@ function parser(command) {
 
   if(cmd == "cancel"){
     clarify = false;
+    return;
   }
 
   if(clarify){
@@ -43,7 +44,13 @@ function parser(command) {
   }
 
   // for testing purposes, print the recieved command into console
-  console.log("Recieved command: ", "\"", command, "\"");
+  console.log("Recieved command: \n\t", "\"", command, "\"");
+
+  if(!cmd.includes(assistantName) && requireName){
+    console.log("IGNORING: as I am not being spoken to...");
+    return;
+  }
+
   matches = [];
 
   // information section
@@ -81,23 +88,26 @@ function parser(command) {
   //------------------------------------------------------------------------------
   // CHECK HIDE VIZ
   //
-	if(cmd == 'exit' || cmd == 'hide' || cmd == 'close') {
-    console.log("hiding");
-    hide();
-    //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
-    legal = true;
-	}
+	// if(cmd == 'exit' || cmd == 'hide' || cmd == 'close') {
+ //    console.log("hiding");
+ //    hide();
+ //    //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
+ //    legal = true;
+	// }
 
 
   //------------------------------------------------------------------------------
   // STOP LISTENING
   //
-  //  if(cmd == 'exit' || cmd == 'hide' || cmd == 'close' || cmd = 'stop' || cmd == 'ignore') {
-  //     console.log("stop listening from voice command");
-  //     recognition.stop();
-  //     //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
-  //     //legal = true;
-  // }
+   if(cmd.includes('exit') || cmd.includes('hide') || cmd.includes('close') || cmd.includes('stop') || cmd.includes('ignore')) {
+      console.log("stop listening from voice command");
+      recReset = false;
+      recognition.abort();
+      speak("goodbye", "narrate");
+      return;
+      //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
+      //legal = true;
+  }
 
   
   if(legal == false){
@@ -168,8 +178,8 @@ function parser(command) {
               continue operationLoop1;
             }
             // reset this field
-            filterByName(info.fields[i].name, '', 'all');
-            
+            filterByName(info.fields[i].name, 'placeholder', 'all');
+            return;
              //#talk
              msg = "Showing all " + info.fields[i].name + 's';
             // print out the action for debug purpose
@@ -239,11 +249,11 @@ function parser(command) {
 
                   // remove the specific filter from the sheet
                   // #matches
-                  matches.push([info.fields[i].name, info.fields[i].values[j], 'remove', 202]);
-                  //filterByName(info.fields[i].name, info.fields[i].values[j], 'remove');
-                  
+                  //matches.push([info.fields[i].name, info.fields[i].values[j], 'remove', 202]);
+                  filterByName(info.fields[i].name, info.fields[i].values[j], 'remove');
+                  return;
                     
-                  console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
+                  //console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
                   legal = true;
                   // #matches
                   //break searchLoop;
@@ -278,12 +288,13 @@ function parser(command) {
              
                   // add the specific filter intom the sheet
                   // #matches
-                  matches.push([info.fields[i].name, info.fields[i].values[j], 'add', 241]);
-                  //filterByName(info.fields[i].name, info.fields[i].values[j], 'add');
+                  //matches.push([info.fields[i].name, info.fields[i].values[j], 'add', 241]);
+                  filterByName(info.fields[i].name, info.fields[i].values[j], 'add');
+                  return;
                   
                   
                     
-                  console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
+                  //console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
                   legal = true;
                   // #matches
                   //break searchLoop;
@@ -295,10 +306,10 @@ function parser(command) {
               if (legal == false){
                 // replace the field with the specific filter
                 // #matches
-                matches.push([info.fields[i].name, info.fields[i].values[j], 'replace', 257]);
-                //filterByName(info.fields[i].name, info.fields[i].values[j], 'replace');
-                
-                console.log("Replaced: ", info.fields[i].values[j], " on: ", info.fields[i].name);
+                //matches.push([info.fields[i].name, info.fields[i].values[j], 'replace', 257]);
+                filterByName(info.fields[i].name, info.fields[i].values[j], 'replace');
+                return;
+                //console.log("Replaced: ", info.fields[i].values[j], " on: ", info.fields[i].name);
                 legal = true;
                 // #matches
                 //break searchLoop;
@@ -341,16 +352,15 @@ function parser(command) {
             filterFlag = false;
   
             if (cmd.includes(info.fields[a].values[b].toLowerCase())){
-              console.log("info.fields[a].values[b]: ", info.fields[a].values[b]);
               filterTemp = info.fields[a].values[b].toLowerCase().split(' ');
-              console.log("filterTemp: ", filterTemp);
   
               for (var z in filterTemp){
+
+                idxOf = cmdArray.indexOf(filterTemp[z]);
   
-                if (cmdArray.indexOf(filterTemp[z]) == -1){
+                if (idxOf == -1){
   
                   filterFlag = true;
-                  console.log(filterTemp[z]);
                 }
               }
   
@@ -388,7 +398,7 @@ function parser(command) {
                   matches.push([info.fields[a].name, info.fields[a].values[b], 'add', 340]);
                   //filterByName(info.fields[a].name, info.fields[a].values[b], 'add');
                   
-                  //console.log("Added: ", info.fields[a].values[b], "to: ", info.fields[a].name);
+                  console.log("Added: ", info.fields[a].values[b], "to: ", info.fields[a].name);
                   //legal = true;
                   // #matches
                   //break searchLoop1;
@@ -430,7 +440,7 @@ function parser(command) {
                 //filterByName(info.fields[a].name, info.fields[a].values[b], 'replace');
                 
                     
-                //console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);
+                console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);
                 //legal = true;
                 // #matches
                 //break searchLoop1;
@@ -483,8 +493,9 @@ function parser(command) {
     }
    
   }
-  else{
+  else if(matches.length == 1){
     console.log("single match: ", matches);
+
     filterByName(matches[0][0], matches[0][1], matches[0][2]);
     return;
   }

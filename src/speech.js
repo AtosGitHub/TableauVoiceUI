@@ -13,13 +13,10 @@ var comms = ['start', 'exit', 'test'];
 
 // This is the Grammar we would like to target for commands
 var grammar = '#JSGF V1.0; grammer commands; public <commands> = (start | exit | test);'
-
-
 // Grammar and Speech variable set up
 var recognition = new SpeechRecognition();
 var speechRecognitionList = new SpeechGrammarList();
 speechRecognitionList.addFromString(grammar, 1);
-
 // Recognition attributes
 //recognition will continue even if the user pauses while speaking
 recognition.continuous = true;
@@ -27,15 +24,14 @@ recognition.grammars = speechRecognitionList;
 recognition.lang = 'en-US';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
-
-
+var assistantName = "howard";
+var requireName = false;
 var recognizing = false;
-
+var recReset = true;
 
 
 var utterance = new SpeechSynthesisUtterance();
 utterance.lang = 'en-US';
-
 var synth = window.speechSynthesis;
 voiceList = speechSynthesis.getVoices();
 var synthPause = false;
@@ -45,58 +41,65 @@ var msgTypes = {narrate: true, debug: false, question: true, welcome: true};
 
 
 
-
+//-----------------------------------------------------------------------
+//
 // what runs after the click on the mic
 function startReco(event){
 
-
     var log = document.getElementById('output');
-
-
     // if app is listening already, then stop
     if(recognizing){
-
-
       recognition.stop();
-      recognizing = false;
-
-      //start_img.src = 'mic.gif';
-      // console.log("recognition stopped");
-      //log.textContent = 'recognition stopped';
+      recReset = false;
 
       return;
-    }
-    else {
 
-
+    } else {
       recognition.start();
-
-      recognizing = true;
-      //start_img.src = 'mic-slash.gif';
-      // console.log("recognition started");
-      //log.textContent = 'recognition started';
-
+      recReset = true;
     }
 
 }
 
+
+//-----------------------------------------------------------------------
 recognition.onstart = function(event) {
+  recognizing = true;
   console.log("### recognition.onstart");
     start_img.src = 'mic-slash.gif';
-    //recognizing = true;
 
   }
+//-----------------------------------------------------------------------
+recognition.onend = function(event){
+  recognizing = false;
+  start_img.src = 'mic.gif';
+  console.log("### recognition.onend; synthPause: ", synthPause);
 
-
-
-// no match for the voice calls this
-// I believe this only applies if you're using a grammar
-//    which we aren't because it isn't supported in chrome. -Justin
-recognition.onnomatch = function(event) {
-      //log.textContent = 'No match for Command';
-      //console.log('No match for Command');
+  if(!synthPause && recReset){
+    recognition.start();
+    // synthPause = false;
   }
+  
+}
 
+//-----------------------------------------------------------------------
+utterance.onstart = function(event){
+          synthPause = true;
+          console.log("begin speaking"); 
+          recognition.abort();
+}
+//-----------------------------------------------------------------------
+//recognition.start();
+utterance.onend = function(event){
+          synthPause = false; 
+          console.log("stopped speaking"); 
+          if(!recognizing && recReset){
+              recognition.start();  
+          }
+          
+}
+
+//-----------------------------------------------------------------------
 
 // after the app gets a voice result it prints it to log
 recognition.onresult = function(event) {
@@ -106,40 +109,64 @@ recognition.onresult = function(event) {
 }
 
 
-recognition.onend = function(event){
-  //recognizing = false;
-  start_img.src = 'mic.gif';
-  console.log("### recognition.onend; synthPause: ", synthPause);
+//-----------------------------------------------------------------------
 
-  if(!synthPause && recognizing){
-    recognition.start();
-    // synthPause = false;
+
+
+
+//----------------------------------------------------------------------
+function speak(msg, spk){
+
+  if(msgTypes[spk]){
+
+    synthPause = true;
+    recognition.stop();
+
+    console.log("01speaking? ", synth.speaking);
+
+    // console.log("speak: ", msg);
+    //utterance = new SpeechSynthesisUtterance(msg);
+    utterance.text = msg;
+    utterance.rate = 1.2;
+
+    synth.speak(utterance);
+    console.log("01  speaking? ", synth.speaking);
+
+
+    console.log("speaking: ", msg);
+
+    //recognition.start();
   }
-  //sythPause = false;
+  else{
+    console.log("Message type: ", spk, " = false/undefined.");
+  }
 
-  // while(synthPause){
-
-  // }
-
-  // if(recognizing){
-  //   recognition.start();
-  // } else{
-  //   recognizing = false;
-  // }
-
-  // if(recognizing){
-  //   recognition.start();  
-  // } else{
-  //   recognizing = false;
-  // }
-  
 }
+
+
+//############################################################
+//####################_________################################
+//############################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 var viz, workbook, activeSheet;
 
 function hide() {
 
-	viz.hide();
+  viz.hide();
 }
 
 // only for testing local storage usage for url
@@ -160,74 +187,5 @@ function speechParse() {
   var command = document.getElementById('command').value.toLowerCase();
 
   parser(command);
-
-}
-
-
-utterance.onstart = function(event){synthPause = true;
-                  console.log("begin speaking"); recognition.abort();}
-
-//recognition.start();
-utterance.onend = function(event){synthPause = false; console.log("stopped speaking"); }
-
-//----------------------------------------------------------------------
-function speak(msg, spk){
-
-  if(msgTypes[spk]){
-
-    //synthPause = true;
-    //recognition.stop();
-    //console.log("rec stop");
-    // recognizing = false;
-
-    // t = new Date().getTime()/1000;
-    // var tDiff = 0;
-
-    // console.log("rec 152");
-    // while(synthPause & tDiff > 5){
-    //     tDiff = new Date().getTime() - t;
-    // }
-
-    console.log("01speaking? ", synth.speaking);
-
-    // console.log("speak: ", msg);
-    //utterance = new SpeechSynthesisUtterance(msg);
-    utterance.text = msg;
-    utterance.rate = 1.2;
-
-    synth.speak(utterance);
-    console.log("01  speaking? ", synth.speaking);
-
-
-
-    // while(synth.speaking & tDiff  < 4){
-    //   tDiff = (new Date().getTime()/1000) - t;
-
-    // }
-
-
-    //synthPause = false;
-
-    console.log("speaking: ", msg);
-
-    //recognition.start();
-  }
-  else{
-    console.log("Message type: ", spk, " = false/undefined.");
-  }
-
-}
-
-
-
-// function voiceTest(voices){
-
-//   for(i in voices){
-
-//   }
-
-// }
-
-function sayIt(msg){
 
 }

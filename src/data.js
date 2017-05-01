@@ -5,6 +5,7 @@
 
 var SheetList = []; // type Sheet
 var activeSheetIndex;
+var ignoreNonStrings = true;
 
 //----------------------------------------------------------------
 // Data structures for undlerying spreadsheet data to be passed to 
@@ -124,13 +125,17 @@ function getWorksheetData(sheet){
 
     sheet.getUnderlyingDataAsync(options).then(function(summaryData){
 
-        console.log("getUnderLyingData success");
+        //console.log("getUnderLyingData success");
         
         this.summaryData = summaryData;
         columns = summaryData.getColumns();
         numColumns = columns.length;
 
+        // console.log("summaryData:", summaryData);
+        // console.log("columns:", columns);
+
         var rawdata = summaryData.getData();
+        // console.log("rawdata:", rawdata)
         var strData = rawdata.map(JSON.stringify);
         var flds = [];
         var dta = [];
@@ -140,6 +145,12 @@ function getWorksheetData(sheet){
         // getIsReferenced() {boolean: is field referenced in worksheet?}, 
         // getIndex() {index of object in columns[i]}
         for(i = 0; i < numColumns; i++){
+            // typD = columns[i].getDataType();
+            // console.log("typD: ", typD);
+            // if(!(typD === "string") && ignoreNonStrings){
+            //     console.log("ignoreNonStrings: ", typD);
+            //     continue;
+            // }
             var fld = new Field(columns[i].getFieldName(), columns[i].getDataType());
             flds.push(fld);
         }
@@ -335,6 +346,26 @@ function getWorksheetDataSources(sheet){
     });
 
     console.log("fieldList: ", fieldList);
+}
+
+function getStringFields(){
+    var info = getActiveSheetData();
+    console.log("info: ", info);
+    var flds = info.fields;
+    console.log("flds: ", flds);
+    var strFields = ["Available fields are: "];
+
+    for(i in flds){
+        console.log("flds[i].type: ", flds[i].type);
+        if(flds[i].type === "string"){
+            strFields.push(flds[i].name + ", ");
+            console.log("str field: ", flds[i].name);
+        }
+    }
+
+    strFields.splice(strFields.length - 1, 0, "and");
+
+    speak(strFields, "narrate");
 }
 
 //----------------------------------------------------------------

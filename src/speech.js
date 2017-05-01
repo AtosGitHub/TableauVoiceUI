@@ -33,8 +33,11 @@ var recognizing = false;
 
 
 
-var utterance;
+var utterance = new SpeechSynthesisUtterance();
+utterance.lang = 'en-US';
+
 var synth = window.speechSynthesis;
+voiceList = speechSynthesis.getVoices();
 var synthPause = false;
 
 var msgTypes = {narrate: true, debug: false, question: true, welcome: true};
@@ -58,7 +61,7 @@ function startReco(event){
       recognizing = false;
 
       //start_img.src = 'mic.gif';
-      console.log("recognition stopped");
+      // console.log("recognition stopped");
       //log.textContent = 'recognition stopped';
 
       return;
@@ -70,7 +73,7 @@ function startReco(event){
 
       recognizing = true;
       //start_img.src = 'mic-slash.gif';
-      console.log("recognition started");
+      // console.log("recognition started");
       //log.textContent = 'recognition started';
 
     }
@@ -80,7 +83,7 @@ function startReco(event){
 recognition.onstart = function(event) {
   console.log("### recognition.onstart");
     start_img.src = 'mic-slash.gif';
-    recognizing = true;
+    //recognizing = true;
 
   }
 
@@ -104,9 +107,14 @@ recognition.onresult = function(event) {
 
 
 recognition.onend = function(event){
-  recognizing = false;
+  //recognizing = false;
   start_img.src = 'mic.gif';
-  console.log("### recognition.onend: ", recognizing);
+  console.log("### recognition.onend; synthPause: ", synthPause);
+
+  if(!synthPause && recognizing){
+    recognition.start();
+    // synthPause = false;
+  }
   //sythPause = false;
 
   // while(synthPause){
@@ -156,18 +164,24 @@ function speechParse() {
 }
 
 
+utterance.onstart = function(event){synthPause = true;
+                  console.log("begin speaking"); recognition.abort();}
+
+//recognition.start();
+utterance.onend = function(event){synthPause = false; console.log("stopped speaking"); }
+
 //----------------------------------------------------------------------
 function speak(msg, spk){
 
   if(msgTypes[spk]){
 
-    synthPause = true;
-    recognition.stop();
-    console.log("rec stop");
+    //synthPause = true;
+    //recognition.stop();
+    //console.log("rec stop");
     // recognizing = false;
 
-    t = new Date().getTime()/1000;
-    var tDiff = 0;
+    // t = new Date().getTime()/1000;
+    // var tDiff = 0;
 
     // console.log("rec 152");
     // while(synthPause & tDiff > 5){
@@ -177,16 +191,19 @@ function speak(msg, spk){
     console.log("01speaking? ", synth.speaking);
 
     // console.log("speak: ", msg);
-    utterance = new SpeechSynthesisUtterance(msg);
+    //utterance = new SpeechSynthesisUtterance(msg);
+    utterance.text = msg;
+    utterance.rate = 1.2;
+
     synth.speak(utterance);
-    console.log("01speaking? ", synth.speaking);
+    console.log("01  speaking? ", synth.speaking);
 
 
 
-    while(synth.speaking & tDiff  < 4){
-      tDiff = (new Date().getTime()/1000) - t;
+    // while(synth.speaking & tDiff  < 4){
+    //   tDiff = (new Date().getTime()/1000) - t;
 
-    }
+    // }
 
 
     //synthPause = false;
@@ -201,9 +218,15 @@ function speak(msg, spk){
 
 }
 
-function resumeReco(){
 
-}
+
+// function voiceTest(voices){
+
+//   for(i in voices){
+
+//   }
+
+// }
 
 function sayIt(msg){
 

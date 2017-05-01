@@ -23,6 +23,11 @@ var matches;
 // so far it is a bunch of if statements based on the word spoken
 function parser(command) {
 
+  if(synth.speaking){
+    console.log("ignoring: ", command);
+    return;
+  }
+
   // this turn the recieved command into lower case, in case to do strict comparison
   var cmd = command.toLowerCase();
 

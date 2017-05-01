@@ -83,6 +83,7 @@ function initViz(vz) {
     if(welcome){
         speak("Welcome", "welcome");  
         recognition.start();
+        recognizing = true;
           
     }
     
@@ -147,7 +148,7 @@ function filterByName(field, filter, type) {
             msg = "Showing all " + field + "s";
             break;
         case 1:
-            msg = "Showing " + field + " " + filter;
+            msg = "Showing " + field + ", " + filter;
             break;
         case 2:
             msg = "Added " + filter + " to " + field;

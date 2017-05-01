@@ -61,9 +61,28 @@ function parser(command) {
   var tabs = getSheetNames();
 
 
+  // temporary data section
+  // this is an array that split the command into words
+  var cmdArray = cmd.split(' ');
+  // this later will hold an word array that split form the found field name
+  var fieldTemp = '';
+  // this later will hold an word array that split form the found filter name
+  var filterTemp = '';
+  // this later will hold an word array that split form the found action type
+  var operationTemp = '';
+
   // flag section
   // this flag shows whether the command is found legal so far
   var legal = false;
+  // this flag shows whether the field name that turns true in .includes()
+  // function is actually in the command
+  var fieldFlag = false;
+  // this flag shows whether the action type that turns true
+  // in .includes() function is actually in the command
+  var operationFlag = false;
+  // this flag shows whether the filter name that returns
+  //true in .includes() function is actually in the command
+  var filterFlag = false;
 
 
   //------------------------------------------------------------------------------
@@ -117,17 +136,48 @@ function parser(command) {
     // the first loop search through all the field names in the current sheet
     searchLoop:
     for (var i in info.fields){
-      if (exactMatch(info.fields[i].name, cmd)){
+      fieldFlag = false;
+      // use .includes() to find if any field name is part of the command
+      if (cmd.includes(info.fields[i].name.toLowerCase())){
+        // because true in .includes() does not mean the words are strictly match,
+        // so use indexOf to double check
+        fieldTemp = info.fields[i].name.toLowerCase().split(' ');
+        for (var x in fieldTemp){
+          if (cmdArray.indexOf(fieldTemp[x]) == -1){
+            // if any word of the found field name is not an element of command array,
+            // then set the flag to true
+            fieldFlag = true;
+          }
+        }
+
+        // #? : {should it be "break searchLoop;"?}
+        // if the flag is true, then skip this searching iteration,
+        // reason not to break or keep going is because the rest of
+        // the field names may still meet the requirement
+        if (fieldFlag == true){
+          continue searchLoop;
+        }
 
         //-------------------------------------------------------------------
         // CHECK "ALL" FILTER ON FIELD
         //
         // check if the command contains a key word to apply the "ALL" filter option
         // which clears the filter and shows all data values for the given field
-
+        operationLoop1:
         for (var allIndex in allLibrary){
-          if (exactMatch(allLibrary[allIndex], cmd)){
-
+          operationFlag = false;
+          if (cmd.includes(allLibrary[allIndex])){
+            // same idea, but just another version to check action type
+            operationTemp = allLibrary[allIndex].split(' ');
+            for (var o in operationTemp){
+              if (cmdArray.indexOf(operationTemp[o]) == -1){
+                operationFlag = true;
+              }
+            }
+            if (operationFlag == true){
+              continue operationLoop1;
+            }
+            // reset this field
             filterByName(info.fields[i].name, 'placeholder', 'all');
             return;
              //#talk
@@ -146,17 +196,109 @@ function parser(command) {
         // if a field name is found in command and it is not about reseting this field,
         // then search filters only in this field
         if (info.fields[i].type == 'string'){
+
+          filterLoop:
           for (var j in info.fields[i].values){
-            if (exactMatch(info.fields[i].values[j], cmd)){
-              legal = removeFilter(info.fields[i].name, info.fields[i].values[j], cmd);
+
+            filterFlag == false;
+
+            if (cmd.includes(info.fields[i].values[j].toLowerCase())){
+
+              // same double check, but just another version to check filter name
+              filterTemp = info.fields[i].values[j].toLowerCase().split(' ');
+
+              for (var y in filterTemp){
+
+                if (cmdArray.indexOf(filterTemp[y]) == -1){
+
+                  filterFlag = true;
+                }
+
+              }
+
+              if (filterFlag == true){
+
+                continue filterLoop;
+              }
+
+              //----------------------------------------
+              // TEST "REMOVE" FILTER
+              //
+              operationLoop2:
+              for (var removeIndex in removeLibrary){
+
+                operationFlag == false;
+
+                if (cmd.includes(removeLibrary[removeIndex])){
+
+                  operationTemp = removeLibrary[removeIndex].split(' ');
+
+                  for (var o in operationTemp){
+
+                    if (cmdArray.indexOf(operationTemp[o]) == -1){
+
+                      operationFlag = true;
+                    }
+                  }
+
+                  if (operationFlag == true){
+
+                    continue operationLoop2;
+                  }
+
+
+                  // remove the specific filter from the sheet
+                  // #matches
+                  //matches.push([info.fields[i].name, info.fields[i].values[j], 'remove', 202]);
+                  filterByName(info.fields[i].name, info.fields[i].values[j], 'remove');
+                  return;
+
+                  //console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
+                  legal = true;
+                  // #matches
+                  //break searchLoop;
+                }
+              }
 
 
               //-----------------------------------------------------
               // TEST "ADD" FILTER
               //
-              console.log(legal);
-              if (legal == false){
-                legal = addFilter(info.fields[i].name, info.fields[i].values[j], cmd);
+              operationLoop3:
+              for (var addIndex in addLibrary){
+
+                operationFlag = false;
+
+                if (cmd.includes(addLibrary[addIndex])){
+
+                  operationTemp = addLibrary[addIndex].split(' ');
+
+                  for (var o in operationTemp){
+
+                    if (cmdArray.indexOf(operationTemp[o]) == -1){
+
+                      operationFlag = true;
+                    }
+                  }
+
+                  if (operationFlag == true){
+
+                    continue operationLoop3;
+                  }
+
+                  // add the specific filter intom the sheet
+                  // #matches
+                  //matches.push([info.fields[i].name, info.fields[i].values[j], 'add', 241]);
+                  filterByName(info.fields[i].name, info.fields[i].values[j], 'add');
+                  return;
+
+
+
+                  //console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
+                  legal = true;
+                  // #matches
+                  //break searchLoop;
+                }
               }
 
               // default action is replace, which means if no action type
@@ -175,33 +317,13 @@ function parser(command) {
             }
           }
         }
-        else if (legal == false){
-          legal = numberFiltering(info.fields[i], cmd);
-        }
-        // else if ((info.fields[i].type == 'integer' || info.fields[i].type == 'float') && legal == false){
-        //
-        //   if(numberMatch(info.fields[i].values, cmd, info.fields[i].type)){
-        //     var filterNum = findLegalNum(info.fields[i].values);
-        //     console.log('select number: ' + filterNum + " in field: " + info.fields[i].name);
-        //
-        //     legal = removeFilter(info.fields[i].name, filterNum, cmd);
-        //     if (legal == false){
-        //       legal = addFilter(info.fields[i].name, filterNum, cmd);
-        //     }
-        //
-        //     if (legal == false){
-        //       filterByName(info.fields[i].name, filterNum, 'replace');
-        //       return;
-        //       legal = true;
-        //     }
-        //   }
-        // }
+        //else if (info.fields[i].type == 'integer')  {}
       }
 
     }
     // END searchLoop
     //------------------------------------------------------------------------------
-//academic year 2013
+
 
 
     //##############################################################################
@@ -221,17 +343,56 @@ function parser(command) {
 
       searchLoop1:
       for (var a in info.fields){
+
         if (info.fields[a].type == 'string'){
 
+          filterLoop1:
           for (var b in info.fields[a].values){
-            if (exactMatch(info.fields[a].values[b], cmd)){
+
+            filterFlag = false;
+
+            if (cmd.includes(info.fields[a].values[b].toLowerCase())){
+              filterTemp = info.fields[a].values[b].toLowerCase().split(' ');
+
+              for (var z in filterTemp){
+
+                idxOf = cmdArray.indexOf(filterTemp[z]);
+
+                if (idxOf == -1){
+
+                  filterFlag = true;
+                }
+              }
+
+              if (filterFlag == true){
+
+                continue filterLoop1;
+              }
 
               //--------------------------------------------------------
               // TEST "ADD" FILTER
               //
-
+              operationLoop4:
               for (var addIndex1 in addLibrary){
-                if (exactMatch(addLibrary[addIndex1], cmd)){
+
+                operationFlag = false;
+
+                if (cmd.includes(addLibrary[addIndex1])){
+
+                  operationTemp = addLibrary[addIndex1].split(' ');
+
+                  for (var o in operationTemp){
+
+                    if (cmdArray.indexOf(operationTemp[o]) == -1){
+
+                      operationFlag = true;
+                    }
+                  }
+
+                  if (operationFlag == true){
+
+                    continue operationLoop4;//
+                  }
 
                   // #matches
                   matches.push([info.fields[a].name, info.fields[a].values[b], 'add', 340]);
@@ -247,13 +408,24 @@ function parser(command) {
               //--------------------------------------------------------------
               // TEST "REMOVE" LIBRARY
               //
-
+              operationLoop5:
               for (var removeIndex1 in removeLibrary){
-                if (exactMatch(removeLibrary[removeIndex1], cmd)){
-
+                operationFlag = false;
+                if (cmd.includes(removeLibrary[removeIndex1])){
+                  operationTemp = removeLibrary[removeIndex1].split(' ');
+                  for (var o in operationTemp){
+                    if (cmdArray.indexOf(operationTemp[o]) == -1){
+                      operationFlag = true;
+                    }
+                  }
+                  if (operationFlag == true){
+                    continue operationLoop5;
+                  }
                   // #matches
                   matches.push([info.fields[a].name, info.fields[a].values[b], 'remove', 365]);
                   //filterByName(info.fields[a].name, info.fields[a].values[b], 'remove');
+
+
 
                   console.log("Removed ", info.fields[a].values[b], "from: ", info.fields[a].name);
                   //legal = true;
@@ -267,6 +439,7 @@ function parser(command) {
                 matches.push([info.fields[a].name, info.fields[a].values[b], 'replace', 379]);
                 //filterByName(info.fields[a].name, info.fields[a].values[b], 'replace');
 
+
                 console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);
                 //legal = true;
                 // #matches
@@ -275,35 +448,7 @@ function parser(command) {
             }
           }
         }
-        // else if (legal == false){
-        //   legal = numberFiltering(info.fields[a], cmd);
-        // }
-        else if ((info.fields[a].type == 'integer' || info.fields[a].type == 'float') && legal == false){
-
-          if(numberMatch(info.fields[a].values, cmd, info.fields[a].type)){
-            var filterNum = findLegalNum(info.fields[i].values);
-            console.log('select number: ' + filterNum + " in field: " + info.fields[a].name);
-
-            for (var addIndex1 in addLibrary){
-              if (exactMatch(addLibrary[addIndex1], cmd)){
-                matches.push([info.fields[a].name, filterNum, 'add', 340]);
-                console.log("Added: ", filterNum, "to: ", info.fields[a].name);
-              }
-            }
-            // legal = removeFilter(info.fields[a].name, filterNum, cmd);
-            for (var removeIndex1 in removeLibrary){
-              if (exactMatch(removeLibrary[removeIndex1], cmd)){
-                matches.push([info.fields[a].name, filterNum, 'remove', 365]);
-                console.log("Removed ", filterNum, "from: ", info.fields[a].name);
-              }
-            }
-
-            if (legal == false){
-              matches.push([info.fields[a].name, filterNum, 'replace', 379]);
-              console.log("Replaced: ", filterNum, "on: ", info.fields[a].name);
-            }
-          }
-        }
+        //else if (info.fields[i].type == 'integer')  {}
       }
     }
   }
@@ -312,6 +457,8 @@ function parser(command) {
   //#############################################################################
   //#############################################################################
   //#############################################################################
+
+
 
 
   //---------------------------------------------------------
@@ -359,6 +506,7 @@ function parser(command) {
   //refresh the page use allLibrary, but only when no field or filter found
   if(legal == false){
     for (var reloadIndex in allLibrary){
+      fieldFlag = false;
       if (cmd.includes(allLibrary[reloadIndex])){
 
       //talk reload
@@ -425,68 +573,11 @@ function switchToMapTab(toTab) {
 function transpose(array){
 
   return array[0].map(function(col, i) {
-    return array.map(function(row) {
-      return row[i]
-    })
-  });
-}
+  return array.map(function(row) {
+    return row[i]
+  })
+});
 
-// Remove certain filter from a field
-function removeFilter(field, filter, cmd){
-  for (var removeIndex in removeLibrary){
-    if (exactMatch(removeLibrary[removeIndex], cmd)){
-      // remove the specific filter from the sheet
-      // #matches
-      //matches.push([info.fields[i].name, info.fields[i].values[j], 'remove', 202]);
-      filterByName(field, filter, 'remove');
-      //console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
-      return true;
-
-    }
-    else{
-      return false;
-    }
-  }
-}
-
-// Add certain filter from a field
-function addFilter(field, filter, cmd){
-  for (var addIndex in addLibrary){
-    if (exactMatch(addLibrary[addIndex], cmd)){
-      // add the specific filter intom the sheet
-      // #matches
-      //matches.push([info.fields[i].name, info.fields[i].values[j], 'add', 241]);
-      filterByName(field, filter, 'add');
-      return true;
-      //console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
-    }
-    else {
-      return false;
-    }
-  }
-}
-
-function numberFiltering(field, cmd){
-  var fl = false;
-  if (field.type == 'integer' || field.type == 'float'){
-
-    if(numberMatch(field.values, cmd, field.type)){
-      var filterNum = findLegalNum(field.values);
-      console.log('select number: ' + filterNum + " in field: " + field.name);
-
-      fl = removeFilter(field.name, filterNum, cmd);
-      if (fl == false){
-        fl = addFilter(field.name, filterNum, cmd);
-      }
-
-      if (fl == false){
-        filterByName(field.name, filterNum, 'replace');
-        return;
-        fl = true;
-      }
-    }
-  }
-  return fl;
 }
 
 //---------------------------------------------------

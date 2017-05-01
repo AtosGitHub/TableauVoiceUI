@@ -8,25 +8,25 @@ var activeSheetIndex;
 var ignoreNonStrings = true;
 
 //----------------------------------------------------------------
-// Data structures for undlerying spreadsheet data to be passed to 
+// Data structures for undlerying spreadsheet data to be passed to
 // Web Speech implementation to dynamically define a grammar
 //
 // TODO : current configuration stores some redundant data when
 //  multiple sheets in the same dashboard have overlapping fields;
-//  task: modify functions: Field(), Sheet(), getUnderlying(), and printUnderlying() to 
-//  create only unique instances of Field() with a list of associated Sheets 
+//  task: modify functions: Field(), Sheet(), getUnderlying(), and printUnderlying() to
+//  create only unique instances of Field() with a list of associated Sheets
 //  stored as a list of strings.
 
 function Field(name, type){
-    
-    this.name = name; 
+
+    this.name = name;
 
     //float, integer, string, boolean, date, datetime
-    this.type = type; 
+    this.type = type;
 
     // if(type == string){values = an array of strings for all unique values}
     // else { : array[0] = minVal, array[1] = maxVal}
-    this.values = []; 
+    this.values = [];
 }
 
 function Sheet(name, type){
@@ -38,7 +38,7 @@ function Sheet(name, type){
 
     // used to indicate whether or not a tab has been visited
     // each Sheet in SheetList[] is created when the viz is loaded
-    // but this.fields[] is not set until the tab is visited to avoid 
+    // but this.fields[] is not set until the tab is visited to avoid
     // wasting time and space resources
     this.visited = false;
 
@@ -47,13 +47,13 @@ function Sheet(name, type){
 }
 
 //----------------------------------------------------------------
-// populates SheetList with Sheet objects, called right after Viz 
+// populates SheetList with Sheet objects, called right after Viz
 // initialized
 function loadSheetList() {
     SheetList = [];
 
     sheets = viz.getWorkbook().getPublishedSheetsInfo();
-    var numSheets = sheets.length;    
+    var numSheets = sheets.length;
     var i;
     var actS = workbook.getActiveSheet();
 
@@ -78,7 +78,7 @@ function updateSheetList(){
 //----------------------------------------------------------------
 // gets field and field value data for active sheet
 //
-// getUnderlyingDataAsync() can only be called on worksheets and it seems all 
+// getUnderlyingDataAsync() can only be called on worksheets and it seems all
 // worksheets in a tab share the same data, so it is only called on the first
 // worksheet in the dashboard if applicable
 function getData() {
@@ -93,7 +93,7 @@ function getData() {
 }
 
 // helper function
-// was more helpful when I thought I had to get separate data for 
+// was more helpful when I thought I had to get separate data for
 // each worksheet in a dashboard
 function getWorksheetData(sheet){
 
@@ -102,20 +102,20 @@ function getWorksheetData(sheet){
     var numColumns;
     var i;
     var dash = sheet.getParentDashboard();
-    
+
     var dname;
     var idx;
 
 
     if(dash){
-        dname = dash.getName();    
+        dname = dash.getName();
         idx = dash.getIndex();
     }
     else{
         dname = sheet.getName();
         idx = sheet.getIndex();
     }
-    
+
     options = {
                 ignoreAliases: true,
                 ignoreSelection: true,
@@ -126,7 +126,7 @@ function getWorksheetData(sheet){
     sheet.getUnderlyingDataAsync(options).then(function(summaryData){
 
         //console.log("getUnderLyingData success");
-        
+
         this.summaryData = summaryData;
         columns = summaryData.getColumns();
         numColumns = columns.length;
@@ -139,10 +139,10 @@ function getWorksheetData(sheet){
         var strData = rawdata.map(JSON.stringify);
         var flds = [];
         var dta = [];
-        
+
         // columns[] contains tableau-column objects
-        // with methods: getFieldName(), getDataType() {string/int/float/date}, 
-        // getIsReferenced() {boolean: is field referenced in worksheet?}, 
+        // with methods: getFieldName(), getDataType() {string/int/float/date},
+        // getIsReferenced() {boolean: is field referenced in worksheet?},
         // getIndex() {index of object in columns[i]}
         for(i = 0; i < numColumns; i++){
             // typD = columns[i].getDataType();
@@ -159,14 +159,14 @@ function getWorksheetData(sheet){
         for(j = 0; j < strData.length; j++){
             var sdsplit = strData[j].split("},{");
             var row = [];
-    
+
             for(i = 0; i < sdsplit.length; i++){
                 var rw = sdsplit[i].split("\"");
                 row.push(rw[rw.length-2]);
             }
             dta.push(row);
         }
-        
+
         dlen = dta[0].length;
 
         for(i = 0; i < dlen; i++){
@@ -174,10 +174,10 @@ function getWorksheetData(sheet){
             col = uniqueD(col, columns[i].getDataType());
 
             if(flds[i].type === "string"){
-                flds[i].values = col;  
+                flds[i].values = col;
             }
             else{
-                flds[i].values = [col[0], col[col.length-1]]; 
+                flds[i].values = [col[0], col[col.length-1]];
             }
 
         }
@@ -189,7 +189,7 @@ function getWorksheetData(sheet){
         console.log("getUnderLyingData fail");
         console.log(err);
     });
-    
+
 }
 //----------------------------------------------------------------
 
@@ -218,17 +218,17 @@ function isSheet(str){
 // utility function: returns ascending-ordered array of unique items from xs
 // used to efficiently store/search array 'values' in function-object 'Field'
 var uniqueD = function(xs, type) {
-  
+
   var seen = {};
   xs.sort();
-  
+
   return xs.filter(function(x) {
     if (seen[x])
       return;
     seen[x] = true;
     return x;
   })
-    
+
 }
 
 //----------------------------------------------------------------
@@ -291,7 +291,7 @@ function getFilters(){
     var sheet = activeSheet;
 
     if(sheet.getSheetType() === "dashboard"){
-        
+
         sheets = sheet.getWorksheets();
         slen = sheets.length;
         //console.log("dashboard size: ", sheets.length);

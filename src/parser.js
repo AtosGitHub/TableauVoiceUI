@@ -24,17 +24,16 @@ var matches;
 function parser(command) {
 
   if(synth.speaking){
-    // console.log("ignoring: ", command);
+    console.log("ignoring: ", command);
     return;
   }
 
   // this turn the recieved command into lower case, in case to do strict comparison
   var cmd = command.toLowerCase();
 
-  // console.log("parser; command: ", command, "; clarify: ", clarify);
+  console.log("parser; command: ", command, "; clarify: ", clarify);
 
   if(cmd == "cancel"){
-    speak("canceled pending command", "narrate");
     clarify = false;
     return;
   }
@@ -48,63 +47,52 @@ function parser(command) {
   console.log("Recieved command: \n\t", "\"", command, "\"");
 
   if(!cmd.includes(assistantName) && requireName){
-    // console.log("IGNORING: as I am not being spoken to...");
-    return;
-  }
-
-  if(cmd.includes("help") || cmd.includes("get information") || cmd.includes("what can i say")){
-    getStringFields();
+    console.log("IGNORING: as I am not being spoken to...");
     return;
   }
 
   matches = [];
 
   // information section
-  // info is the sheet object of the current sheet, 
+  // info is the sheet object of the current sheet,
   // it has an array of field object and a name of itself
   info = getActiveSheetData();
   // tabs is an array of all the tab's names
   var tabs = getSheetNames();
-  
 
-  // temporary data section
-  // this is an array that split the command into words
-  var cmdArray = cmd.split(' ');
-  // this later will hold an word array that split form the found field name
-  var fieldTemp = '';
-  // this later will hold an word array that split form the found filter name
-  var filterTemp = '';
-  // this later will hold an word array that split form the found action type
-  var operationTemp = '';
 
   // flag section
   // this flag shows whether the command is found legal so far
   var legal = false;
-  // this flag shows whether the field name that turns true in .includes() 
-  // function is actually in the command
-  var fieldFlag = false;
-  // this flag shows whether the action type that turns true
-  // in .includes() function is actually in the command
-  var operationFlag = false;
-  // this flag shows whether the filter name that returns 
-  //true in .includes() function is actually in the command
-  var filterFlag = false;
+
+
+  //------------------------------------------------------------------------------
+  // CHECK HIDE VIZ
+  //
+	// if(cmd == 'exit' || cmd == 'hide' || cmd == 'close') {
+ //    console.log("hiding");
+ //    hide();
+ //    //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
+ //    legal = true;
+	// }
 
 
   //------------------------------------------------------------------------------
   // STOP LISTENING
   //
    if(cmd.includes('exit') || cmd.includes('hide') || cmd.includes('close') || cmd.includes('stop') || cmd.includes('ignore')) {
-      // console.log("stop listening from voice command");
+      console.log("stop listening from voice command");
       recReset = false;
       recognition.abort();
       speak("goodbye", "narrate");
       return;
+      //bog.textContent == 'Command received is '+ command + ' note how the Workbook is hidden';
+      //legal = true;
   }
 
-  
+
   if(legal == false){
-    
+
     //------------------------------------------------------------------------------
     // CHECK CHANGE TAB
     //
@@ -115,8 +103,8 @@ function parser(command) {
         msg = SheetList[t].type + ', ' + tabs[t];
 
         speak(msg, "narrate");
-        
-        // console.log("Switch to tab: ", tabs[t]);
+
+        console.log("Switch to tab: ", tabs[t]);
         switchToMapTab(tabs[t]);
         legal = true;
         return;
@@ -129,54 +117,23 @@ function parser(command) {
     // the first loop search through all the field names in the current sheet
     searchLoop:
     for (var i in info.fields){
-      fieldFlag = false;
-      // use .includes() to find if any field name is part of the command
-      if (cmd.includes(info.fields[i].name.toLowerCase())){
-        // because true in .includes() does not mean the words are strictly match, 
-        // so use indexOf to double check
-        fieldTemp = info.fields[i].name.toLowerCase().split(' ');
-        for (var x in fieldTemp){
-          if (cmdArray.indexOf(fieldTemp[x]) == -1){
-            // if any word of the found field name is not an element of command array, 
-            // then set the flag to true
-            fieldFlag = true;
-          }
-        }
-
-        // #? : {should it be "break searchLoop;"?}
-        // if the flag is true, then skip this searching iteration,
-        // reason not to break or keep going is because the rest of 
-        // the field names may still meet the requirement
-        if (fieldFlag == true){
-          continue searchLoop;
-        }
+      if (exactMatch(info.fields[i].name, cmd)){
 
         //-------------------------------------------------------------------
         // CHECK "ALL" FILTER ON FIELD
         //
         // check if the command contains a key word to apply the "ALL" filter option
         // which clears the filter and shows all data values for the given field
-        operationLoop1:
+
         for (var allIndex in allLibrary){
-          operationFlag = false;
-          if (cmd.includes(allLibrary[allIndex])){
-            // same idea, but just another version to check action type
-            operationTemp = allLibrary[allIndex].split(' ');
-            for (var o in operationTemp){
-              if (cmdArray.indexOf(operationTemp[o]) == -1){
-                operationFlag = true;
-              }
-            }
-            if (operationFlag == true){
-              continue operationLoop1;
-            }
-            // reset this field
+          if (exactMatch(allLibrary[allIndex], cmd)){
+
             filterByName(info.fields[i].name, 'placeholder', 'all');
             return;
              //#talk
              msg = "Showing all " + info.fields[i].name + 's';
             // print out the action for debug purpose
-            // console.log(msg);
+            console.log(msg);
             legal = true;
             break searchLoop;
           }
@@ -184,126 +141,49 @@ function parser(command) {
 
 
         //------------------------------------------------------------------------
-        // SEARCH FILTER VALUES IN FIELD 
+        // SEARCH FILTER VALUES IN FIELD
         //
-        // if a field name is found in command and it is not about reseting this field, 
+        // if a field name is found in command and it is not about reseting this field,
         // then search filters only in this field
         if (info.fields[i].type == 'string'){
-
-          filterLoop:
           for (var j in info.fields[i].values){
-
-            filterFlag == false;
-            
-            if (cmd.includes(info.fields[i].values[j].toLowerCase())){
-            
-              // same double check, but just another version to check filter name
-              filterTemp = info.fields[i].values[j].toLowerCase().split(' ');
-            
-              for (var y in filterTemp){
-            
-                if (cmdArray.indexOf(filterTemp[y]) == -1){
-            
-                  filterFlag = true;
-                }
-            
-              }
-            
-              if (filterFlag == true){
-            
-                continue filterLoop;
-              }
-            
-              //----------------------------------------
-              // TEST "REMOVE" FILTER
-              //
-              operationLoop2:
-              for (var removeIndex in removeLibrary){
-            
-                operationFlag == false;
-            
-                if (cmd.includes(removeLibrary[removeIndex])){
-            
-                  operationTemp = removeLibrary[removeIndex].split(' ');
-            
-                  for (var o in operationTemp){
-            
-                    if (cmdArray.indexOf(operationTemp[o]) == -1){
-            
-                      operationFlag = true;
-                    }
-                  }
-            
-                  if (operationFlag == true){
-            
-                    continue operationLoop2;
-                  }
-
-
-                  // remove the specific filter from the sheet
-                  filterByName(info.fields[i].name, info.fields[i].values[j], 'remove');
-                  return;
-                    
-                  //console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
-                  legal = true;
-                }
-              }
+            if (exactMatch(info.fields[i].values[j], cmd)){
+              legal = removeFilter(info.fields[i].name, info.fields[i].values[j], cmd);
 
 
               //-----------------------------------------------------
               // TEST "ADD" FILTER
               //
-              operationLoop3:
-              for (var addIndex in addLibrary){
-             
-                operationFlag = false;
-             
-                if (cmd.includes(addLibrary[addIndex])){
-             
-                  operationTemp = addLibrary[addIndex].split(' ');
-             
-                  for (var o in operationTemp){
-             
-                    if (cmdArray.indexOf(operationTemp[o]) == -1){
-             
-                      operationFlag = true;
-                    }
-                  }
-             
-                  if (operationFlag == true){
-             
-                    continue operationLoop3;
-                  }
-             
-                  // add the specific filter intom the sheet
-                  filterByName(info.fields[i].name, info.fields[i].values[j], 'add');
-                  return;
-                    
-                  //console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
-                  legal = true;
-                }
+              console.log(legal);
+              if (legal == false){
+                legal = addFilter(info.fields[i].name, info.fields[i].values[j], cmd);
               }
 
-              // default action is replace, which means if no action type 
+              // default action is replace, which means if no action type
               // found in command, then we do replace
               if (legal == false){
                 // replace the field with the specific filter
+                // #matches
+                //matches.push([info.fields[i].name, info.fields[i].values[j], 'replace', 257]);
                 filterByName(info.fields[i].name, info.fields[i].values[j], 'replace');
                 return;
                 //console.log("Replaced: ", info.fields[i].values[j], " on: ", info.fields[i].name);
                 legal = true;
-
+                // #matches
+                //break searchLoop;
               }
             }
           }
         }
-
+        else if (legal == false){
+          legal = numberFiltering(info.fields[i], cmd);
+        }
       }
 
     }
     // END searchLoop
-    //------------------------------------------------------------------------------    
-
+    //------------------------------------------------------------------------------
+//academic year 2013
 
 
     //##############################################################################
@@ -320,98 +200,92 @@ function parser(command) {
     //
     // search all filters if no field name found
     if (legal == false){
-  
+
       searchLoop1:
       for (var a in info.fields){
-  
         if (info.fields[a].type == 'string'){
-  
-          filterLoop1:
-          for (var b in info.fields[a].values){
-  
-            filterFlag = false;
-  
-            if (cmd.includes(info.fields[a].values[b].toLowerCase())){
-              filterTemp = info.fields[a].values[b].toLowerCase().split(' ');
-  
-              for (var z in filterTemp){
 
-                idxOf = cmdArray.indexOf(filterTemp[z]);
-  
-                if (idxOf == -1){
-  
-                  filterFlag = true;
-                }
-              }
-  
-              if (filterFlag == true){
-  
-                continue filterLoop1;
-              }
-  
+          for (var b in info.fields[a].values){
+            if (exactMatch(info.fields[a].values[b], cmd)){
+
               //--------------------------------------------------------
               // TEST "ADD" FILTER
               //
-              operationLoop4:
+
               for (var addIndex1 in addLibrary){
-  
-                operationFlag = false;
-  
-                if (cmd.includes(addLibrary[addIndex1])){
-  
-                  operationTemp = addLibrary[addIndex1].split(' ');
-  
-                  for (var o in operationTemp){
-  
-                    if (cmdArray.indexOf(operationTemp[o]) == -1){
-  
-                      operationFlag = true;
-                    }
-                  }
-  
-                  if (operationFlag == true){
-  
-                    continue operationLoop4;//
-                  }
+                if (exactMatch(addLibrary[addIndex1], cmd)){
 
                   // #matches
                   matches.push([info.fields[a].name, info.fields[a].values[b], 'add', 340]);
+                  //filterByName(info.fields[a].name, info.fields[a].values[b], 'add');
+
+                  console.log("Added: ", info.fields[a].values[b], "to: ", info.fields[a].name);
+                  //legal = true;
+                  // #matches
+                  //break searchLoop1;
                 }
               }
 
               //--------------------------------------------------------------
               // TEST "REMOVE" LIBRARY
               //
-              operationLoop5:
+
               for (var removeIndex1 in removeLibrary){
-                operationFlag = false;
-                if (cmd.includes(removeLibrary[removeIndex1])){
-                  operationTemp = removeLibrary[removeIndex1].split(' ');
-                  for (var o in operationTemp){
-                    if (cmdArray.indexOf(operationTemp[o]) == -1){
-                      operationFlag = true;
-                    }
-                  }
-                  if (operationFlag == true){
-                    continue operationLoop5;
-                  }
+                if (exactMatch(removeLibrary[removeIndex1], cmd)){
+
                   // #matches
-                  matches.push([info.fields[a].name, info.fields[a].values[b], 'remove', 365]);      
-                  // console.log("Removed ", info.fields[a].values[b], "from: ", info.fields[a].name);
-            
+                  matches.push([info.fields[a].name, info.fields[a].values[b], 'remove', 365]);
+                  //filterByName(info.fields[a].name, info.fields[a].values[b], 'remove');
+
+                  console.log("Removed ", info.fields[a].values[b], "from: ", info.fields[a].name);
+                  //legal = true;
+                  // #matches
+                  //break searchLoop1;
                 }
               }
 
               if (legal == false){
                 // #matches
                 matches.push([info.fields[a].name, info.fields[a].values[b], 'replace', 379]);
-                // console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);
-            
+                //filterByName(info.fields[a].name, info.fields[a].values[b], 'replace');
+
+                console.log("Replaced: ", info.fields[a].values[b], "on: ", info.fields[a].name);
+                //legal = true;
+                // #matches
+                //break searchLoop1;
               }
             }
           }
         }
+        // else if (legal == false){
+        //   legal = numberFiltering(info.fields[a], cmd);
+        // }
+        else if ((info.fields[a].type == 'integer' || info.fields[a].type == 'float') && legal == false){
 
+          if(numberMatch(info.fields[a].values, cmd, info.fields[a].type)){
+            var filterNum = findLegalNum(info.fields[i].values);
+            console.log('select number: ' + filterNum + " in field: " + info.fields[a].name);
+
+            for (var addIndex1 in addLibrary){
+              if (exactMatch(addLibrary[addIndex1], cmd)){
+                matches.push([info.fields[a].name, filterNum, 'add', 340]);
+                console.log("Added: ", filterNum, "to: ", info.fields[a].name);
+              }
+            }
+            // legal = removeFilter(info.fields[a].name, filterNum, cmd);
+            for (var removeIndex1 in removeLibrary){
+              if (exactMatch(removeLibrary[removeIndex1], cmd)){
+                matches.push([info.fields[a].name, filterNum, 'remove', 365]);
+                console.log("Removed ", filterNum, "from: ", info.fields[a].name);
+              }
+            }
+
+            if (legal == false){
+              matches.push([info.fields[a].name, filterNum, 'replace', 379]);
+              console.log("Replaced: ", filterNum, "on: ", info.fields[a].name);
+            }
+          }
+        }
       }
     }
   }
@@ -422,47 +296,40 @@ function parser(command) {
   //#############################################################################
 
 
-
-
   //---------------------------------------------------------
   // IF MULTIPLE MATCHES FOUND
   //
   if(matches.length > 1){
-    // console.log("multiple matches: ", matches);
+    console.log("multiple matches: ", matches);
 
     mt = [];
 
     for(i in matches){
       mt.push(matches[i][0]);
     }
+    console.log("mt og", mt);
     mt = uniqueD(mt);
+    console.log("mt unique", mt);
 
-    mats = [];
-    
+
     if(mt.length > 1){
-      msg  = "Multiple fields with " + matches[0][1] + '. ';
+      msg  = "Multiple fields with " + matches[0][1] + ', ';
       for(i in mt){
-        mats.push(mt[i]);
+        msg += mt[i] + ", ";
       }
-
-      mats.splice(mats.length-1, 0, "and");
-
-      msg += mats + ". ";
-
-      //strFields.splice(strFields.length - 1, 0, "and");
-
-      //msg.splice
       msg += "Which would you like?";
       speak(msg, "question");
       clarify = true;
       return;
     } else{
+      console.log("single match: ", matches);
       filterByName(matches[0][0], matches[0][1], matches[0][2]);
       return;
     }
-   
+
   }
   else if(matches.length == 1){
+    console.log("single match: ", matches);
 
     filterByName(matches[0][0], matches[0][1], matches[0][2]);
     return;
@@ -474,13 +341,13 @@ function parser(command) {
   //refresh the page use allLibrary, but only when no field or filter found
   if(legal == false){
     for (var reloadIndex in allLibrary){
-      fieldFlag = false;
       if (cmd.includes(allLibrary[reloadIndex])){
-      //recognition.abort();
+
       //talk reload
       msg = "reloading";
       speak(msg, "narrate");
-         
+
+        console.log("reloading");
 		    window.location.reload();
         legal = true;
       }
@@ -502,6 +369,7 @@ function parser(command) {
 
 function checkMatches(command){
 
+  console.log("checkMatches");
   cmd = command.toLowerCase();
   cntnu = true;
   //cmd = cmd.split(' ');
@@ -509,7 +377,9 @@ function checkMatches(command){
   matchLoop:
   for(i in matches){
     for(j in cmd){
+      console.log("command: ", command, "; matches[", i, "][0]: ", matches[i][0]);
       if(cmd.indexOf(matches[i][0].toLowerCase()) >= 0){
+        console.log("match found");
         clarify = false;
         filterByName(matches[i][0], matches[i][1], matches[i][2]);
         matches = [];
@@ -536,12 +406,69 @@ function switchToMapTab(toTab) {
 
 function transpose(array){
 
-  return array[0].map(function(col, i) { 
-  return array.map(function(row) { 
-    return row[i] 
-  })
-});
+  return array[0].map(function(col, i) {
+    return array.map(function(row) {
+      return row[i]
+    })
+  });
+}
 
+// Remove certain filter from a field
+function removeFilter(field, filter, cmd){
+  for (var removeIndex in removeLibrary){
+    if (exactMatch(removeLibrary[removeIndex], cmd)){
+      // remove the specific filter from the sheet
+      // #matches
+      //matches.push([info.fields[i].name, info.fields[i].values[j], 'remove', 202]);
+      filterByName(field, filter, 'remove');
+      //console.log("Removed: ", info.fields[i].values[j], " from: ", info.fields[i].name);
+      return true;
+
+    }
+    else{
+      return false;
+    }
+  }
+}
+
+// Add certain filter from a field
+function addFilter(field, filter, cmd){
+  for (var addIndex in addLibrary){
+    if (exactMatch(addLibrary[addIndex], cmd)){
+      // add the specific filter intom the sheet
+      // #matches
+      //matches.push([info.fields[i].name, info.fields[i].values[j], 'add', 241]);
+      filterByName(field, filter, 'add');
+      return true;
+      //console.log("Added: ", info.fields[i].values[j], " to: ", info.fields[i].name);
+    }
+    else {
+      return false;
+    }
+  }
+}
+
+function numberFiltering(field, cmd){
+  var fl = false;
+  if (field.type == 'integer' || field.type == 'float'){
+
+    if(numberMatch(field.values, cmd, field.type)){
+      var filterNum = findLegalNum(field.values);
+      console.log('select number: ' + filterNum + " in field: " + field.name);
+
+      fl = removeFilter(field.name, filterNum, cmd);
+      if (fl == false){
+        fl = addFilter(field.name, filterNum, cmd);
+      }
+
+      if (fl == false){
+        filterByName(field.name, filterNum, 'replace');
+        return;
+        fl = true;
+      }
+    }
+  }
+  return fl;
 }
 
 //---------------------------------------------------

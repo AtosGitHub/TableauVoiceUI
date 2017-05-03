@@ -271,17 +271,22 @@ function getStringFields(){
     var flds = info.fields;
     console.log("flds: ", flds);
     var strFields = ["Available fields are: "];
+    var count = 0;
 
     for(i in flds){
         console.log("flds[i].type: ", flds[i].type);
-        if(flds[i].type === "string"){
-            strFields.push(flds[i].name + ", ");
-            console.log("str field: ", flds[i].name);
+        if(flds[i].type === "string" || flds[i].type == "integer"){
+            if(flds[i].values.length > 1 && flds[i].values[0] != flds[i].values[1]){
+                strFields.push(flds[i].name + ", ");    
+                count++;
+            }
         }
     }
-
-    strFields.splice(strFields.length - 1, 0, "and");
-
+    if(count == 0){
+        return;
+    } else if(count > 1){
+        strFields.splice(strFields.length - 1, 0, "and");    
+    }
     speak(strFields, "narrate");
 }
 //#####################_________________________###################

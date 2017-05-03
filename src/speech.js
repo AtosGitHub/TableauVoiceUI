@@ -160,19 +160,6 @@ function speak(msg, spk){
 //############################################################
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 var viz, workbook, activeSheet;
 
 function hide() {

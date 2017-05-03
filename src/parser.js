@@ -51,6 +51,16 @@ function parser(command) {
     return;
   }
 
+
+  //------------------------------------------------------------------
+  // ME
+  //
+  if(cmd.includes("help") || cmd.includes("get information") || cmd.includes("what can i say")){
+    getStringFields();
+    return;
+  }
+  //------------------------------------------------------------------
+
   matches = [];
 
   // information section
@@ -307,30 +317,31 @@ function parser(command) {
     for(i in matches){
       mt.push(matches[i][0]);
     }
-    console.log("mt og", mt);
     mt = uniqueD(mt);
-    console.log("mt unique", mt);
 
+    mats = [];
 
     if(mt.length > 1){
-      msg  = "Multiple fields with " + matches[0][1] + ', ';
+      msg  = "Multiple fields with " + matches[0][1] + '. ';
       for(i in mt){
-        msg += mt[i] + ", ";
+        mats.push(mt[i]);
       }
+
+      mats.splice(mats.length-1, 0, "and");
+
+      msg += mats + ". ";
+
       msg += "Which would you like?";
       speak(msg, "question");
       clarify = true;
       return;
     } else{
-      console.log("single match: ", matches);
       filterByName(matches[0][0], matches[0][1], matches[0][2]);
       return;
     }
 
   }
   else if(matches.length == 1){
-    console.log("single match: ", matches);
-
     filterByName(matches[0][0], matches[0][1], matches[0][2]);
     return;
   }
